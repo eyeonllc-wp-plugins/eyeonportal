@@ -1,0 +1,276 @@
+== Changelog ==
+
+= 5.14 - 28 Sep 2019 =
+
+- Design options added to change text and background color of categories sidebar in default, hover and active states.
+- Can change the background color of retailer logo in Retailers grid.
+
+= 5.13 - 27 Sep 2019 =
+
+- Plugin 404 was showing because of All in One SEO Pack plugin doing Hard Flushing URLs - Fixed!
+
+= 5.12.12 - 30 August 2019 =
+
+- Careers design changed in mobile view.
+
+= 5.12.11 - 27 August 2019 =
+
+- Careers list Recently Added & Expiring Soon filters added.
+- 2 Deals & Events per row in mobile.
+
+= 5.12.10 - 22 August 2019 =
+
+- MCD Slider's item gap config added.
+
+= 5.12.9 - 22 August 2019 =
+
+- Generate uniqid() for Owl Carousel to differentiate between multiple sliders on a single page.
+
+= 5.12.8 - 22 August 2019 =
+
+- MCD Slider library changed from slick to owl-carousel for multiple slider support on a single page.
+
+= 5.12.7 - 22 August 2019 =
+
+- Multiple slick slider support on a single page.
+
+= 5.12.6 - 21 August 2019 =
+
+- You can show slider dots navigation using new `show-dots` shortcode attributes. By Default dots navigation is off for all sliders.
+
+= 5.12.5 - 20 August 2019 =
+
+- Retailer logo will stay in Deals slider, if metadata is turned off.
+
+= 5.12.4 - 16 August 2019 =
+
+- Slick Slider additional shortcode parameters like: autoSlide, autoSlideSpeed, metadata etc.
+
+= 5.12.3 - 13 August 2019 =
+
+- Slick Slider ul>li design overwrite.
+
+= 5.12.2 - 13 August 2019 =
+
+- Slick Slider - Event Title & Event Date Time added.
+- Slick Slider Mobile responsiveness.
+- Slick Slider dots navigation.
+
+= 5.12.1 - 12 August 2019 =
+
+- Slider Shortcode for Deals, Events & Careers.
+
+= 5.12 - 02 August 2019 =
+
+- All libraries upgraded in plugin to make sure you're secure.
+- StripSlashes added in search form.
+
+= 5.11.3 - 30 June 2019 =
+
+- Date format changed to American style (e.g. July 11th, 2019).
+
+= 5.11.2 - 30 June 2019 =
+
+- Upcoming date on single page events opened from Grid View.
+
+= 5.11.1 - 28 June 2019 =
+
+- Default Page Width field in Plugin Settings to set the page container max-width.
+
+= 5.11 - 27 June 2019 =
+
+- Recurring Events with more options now.
+
+= 5.10.7 - 27 June 2019 =
+
+- Regenerate Rewrite URLs after plugin update - Code placed in Shortcode so it will work from frontend.
+
+= 5.10.6 - 26 June 2019 =
+
+- Regenerate Rewrite URLs after plugin update.
+
+= 5.10.5 - 22 June 2019 =
+
+- Change mcd_api_data functiont to use curl calls to get data from APIs.
+
+= 5.10.4 - 11 June 2019 =
+
+- HTTPs on Dev Mode API calls.
+- Search bar in Store listing will show up after API data received.
+
+= 5.10.3 - 7 June 2019 =
+
+- Accent Color applied on View Map button left to Search bar in Store listing page.
+
+= 5.10.2 - 7 June 2019 =
+
+- View Map button left to Search bar in Store Listing page. You can enabled it in Plugin settings.
+
+= 5.10.1 - 4 June 2019 =
+
+- Categories Sidebar design changes.
+
+= 5.10 - 4 June 2019 =
+
+- Categories design changed.
+- Accent Color added in Plugin Settings
+- Categorized View removed.
+- Retailers Search bar in Store Listing.
+
+= 5.9.3 - 9 May 2019 =
+
+- Search form dark theme was not working - Fixed!
+- Search form design changes.
+
+= 5.9.2 - 9 May 2019 =
+
+- Grayscale effect removed from retailer listing for mobile devices.
+- Search form design changes.
+- Calendar design changes for dt-armada theme.
+
+= 5.9.1 - 7 May 2019 =
+
+- Virtual Shoppers Link added.
+- Search page results links are now slug based.
+- Find IT button on retailers single page is now slug based.
+
+= 5.9 - 7 May 2019 =
+
+- Add to Calendar (Apple & Google) button added on Event Single pages.
+
+= 5.8.8 - 7 May 2019 =
+
+- Career Grid responsiveness.
+
+= 5.8.7 - 7 May 2019 =
+
+- Career Position field removed.
+- Move content below the image to right side in Events & Careers Single pages.
+
+= 5.8.6 - 6 May 2019 =
+
+- Made white background Retailer Logos looks better in Careers Pages.
+
+= 5.8.5 - 6 May 2019 =
+
+- Careers design changes.
+- Careers share icons position moved under contact details.
+
+= 5.8.4 - 6 May 2019 =
+
+- Events QR Code size can't be resized by theme.
+
+= 5.8.3 - 6 May 2019 =
+
+- Only show Apply Link & Contact Details if data is available.
+
+= 5.8.2 - 4 May 2019 =
+
+- Careers Grid and Career Single page layout changes.
+- Events Single page layout changes.
+- Introduced Local, Dev & Live Modes in plugin settings.
+- Responsiveness bug fixes.
+
+= 5.8.1 - 3 May 2019 =
+
+- Minor bug fixes.
+
+= 5.8 - 3 May 2019 =
+
+- Careers shortcode added to show the Jobs available in selected Center.
+- You can now choose Custom page template for search page.
+- Search results page SEO friendly URL implemented.
+- You can now insert content on top of Single pages of all types by using different page templates. (This will help you to set the header background color in page content).
+
+= 5.7 - 25 April 2019 =
+
+- You can choose different Page templates for different types of single pages.
+- You can customize the URL for different types of single pages.
+- Slugs are used now in single page URLs instead of ID, you can customize the slugs in portal. But old slug URL won't redirect it to new slug page.
+- New permanlinks are saved as soon as you click Save Changes in Plugin Settings.
+
+= 5.6.2 - 25 April 2019 =
+
+- On/off QR Code for events page in Settings.
+- "Find IT" Floor 2 stores now working.
+
+= 5.6.1 - 22 April 2019 =
+
+- "MAP It" text changed to "Find IT".
+- Small bug fixes.
+
+= 5.6 - 22 April 2019 =
+
+- Map panning working smooth. Not selecting retailer anymore on panning.
+- Click on Stores will make it center and zoom it to value set in settings (Plugin Settings -> Map -> Select Store Zoom Level).
+- MAP It button on single retailer pages. You need to set the Map Page in plugin settings in order to see this button.
+
+= 5.5.1 - 20 April 2019 =
+
+- Minor bug fixes.
+
+= 5.5 - 20 April 2019 =
+
+- A page "MyCenterPortal Single Page" created automatically. You can use it as template for all single pages.
+- SEO friend URLs for all single pages (no more query string URLs).
+
+= 5.4 - 18 April 2019 =
+
+- Iframe Map implemented.
+- Pinch zoom issue resolved.
+- iOS devices pinch zoom bug fixed.
+
+= 5.3 - 17 April 2019 =
+
+- Added **mycenterdeals-single** class to single Deal, Event & Store pages.
+
+= 5.2 - 16 April 2019 =
+
+- Bug fixes
+
+= 5.1 - 16 April 2019 =
+
+- Some design tweaks and added count in search results page.
+- Search form is also placed on search results page.
+
+= 5.0 - 13 April 2019 =
+
+- Seach form Shortcode has been added. It can be used on both light or dark background. Check out the Shortcodes code before implement in Plugin Settings.
+- Search results page showing results from Stores, Deals, Events and WP Posts.
+
+= 4.12.1 - 2 April 2019 =
+
+- Set Map height wasn't pushed in last update. It will work now.
+
+= 4.12 - 4 April 2019 =
+
+- Map Floor switch animations.
+- Scroll zoom disabled.
+- Map zoom in/out, pinch zoom, reset checked.
+- Now you can set default page width in plugin settings under "General Settings". Make sure you have set page width of each page to Default.
+- You can now set height of the Map for Desktop, Tablet & Mobile individually.
+
+= 4.10 - 2 April 2019 =
+
+- Files permission fixed.
+
+= 4.9 - 2 April 2019 =
+
+- Map bug fixes.
+
+= 4.7 - 31 March 2019 =
+
+- Map zoom in/out not working initially and when we switch floors then only it start working. (curr_floor value set to 1 resolved the issue) - `Fixed!`
+
+= 4.5 - 12 March 2019 =
+
+- Readme.txt fixed
+- Single Deal page doesn't showing the retailer logo - `Fixed!`
+
+= 4.4 - 11 March 2019 =
+
+- Compatible with WordPress 5.1
+- You can click on any retailer to zoom in/out (Still working on it).
+- Color changes on hover on retailers in Map.
+- QR code scanner is added for the events, so that you can scan and store event date directly into your mobile calendar.
+

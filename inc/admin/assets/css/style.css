@@ -1,0 +1,23 @@
+.ui-checkboxradio-icon.ui-corner-all.ui-icon.ui-icon-background.ui-icon-blank {
+	display: none !important;
+}
+
+#mcd_settings-mcp_stores_categories {
+	position: absolute;
+	right: 0;
+	top: 50px;
+	background-color: #FFF;
+	padding: 15px;
+}
+
+#mcd_settings-mcp_stores_categories table {
+	border-collapse: collapse;
+}
+#mcd_settings-mcp_stores_categories th {
+	font-weight: bold;
+}
+#mcd_settings-mcp_stores_categories th,
+#mcd_settings-mcp_stores_categories td {
+	padding: 4px 8px;
+	border: 1px solid #666;
+}

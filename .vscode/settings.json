@@ -1,0 +1,48 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  "editor.detectIndentation": false,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "[scss]": {
+    "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[php]": {
+    "editor.defaultFormatter": "vscode.php-language-features"
+  },
+  "search.exclude": {
+    "assets/plugins/**": true,
+    "assets/css/**": true,
+    "assets/fonts/**": true,
+    "assets/angular/angular.js": true,
+    "assets/angular/angular.min.js": true,
+    "assets/angular/angular.min.js.map": true,
+    "assets/angular/angular-sanitize.min.js": true,
+    "assets/angular/angular-sanitize.min.js.map": true,
+    "inc/redux-core/**": true
+  },
+  "liveSassCompile.settings.compileOnWatch": true,
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "expanded",
+      "extensionName": ".css",
+      "savePath": "/assets/css"
+    },
+    {
+      "format": "compressed",
+      "extensionName": ".min.css",
+      "savePath": "/assets/css"
+    }
+  ],
+  "liveSassCompile.settings.includeItems": ["/assets/scss/**.scss"],
+  "liveSassCompile.settings.generateMap": true,
+  //autoprefix, will auto add perfix like -webkit- -moz-..
+  "liveSassCompile.settings.autoprefix": ["> 1%", "last 2 versions"]
+}
