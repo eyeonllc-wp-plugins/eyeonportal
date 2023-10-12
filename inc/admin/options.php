@@ -86,7 +86,7 @@ $args = array(
 	'opt_name'                  => 'mycenterdeals',
 
 	// Name that appears at the top of your panel.
-	'display_name'              => esc_html__( 'My Center Portal - Settings', 'mycenterportal.com' ),
+	'display_name'              => esc_html__( 'EyeOn Portal - Settings', 'mycenterportal.com' ),
 
 	// Version that appears at the top of your panel.
 	'display_version'           => MCD_PLUGIN_VERSION,
