@@ -42,7 +42,10 @@
       "savePath": "/assets/css"
     }
   ],
-  "liveSassCompile.settings.includeItems": ["/assets/scss/**.scss"],
+  "liveSassCompile.settings.includeItems": [
+    "/assets/scss/**.scss",
+    "/elementor/scss/**.scss"
+  ],
   "liveSassCompile.settings.generateMap": true,
   //autoprefix, will auto add perfix like -webkit- -moz-..
   "liveSassCompile.settings.autoprefix": ["> 1%", "last 2 versions"]

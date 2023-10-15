@@ -11,8 +11,6 @@
 
 !.gitignore
 !eyeonportal.php
-!gulpfile.js
-!package.json
 !readme.txt
 !uninstall.php
 

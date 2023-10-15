@@ -17,74 +17,106 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       return ['eyeon'];
   }
 
+  protected function render() {
+    global $mcd_settings;
+    $settings = $this->get_settings_for_display();
+    add_action('elementor/frontend/after_enqueue_styles', function() {
+      wp_enqueue_style('eyeon-stores-widget-styles', MCD_PLUGIN_URL . 'elementor/stores/css/style.css', [], '1.0.0');
+    });
+    include dirname(__FILE__) . '/render.php';
+  }
+
   protected function register_controls() {
 
-		$this->start_controls_section(
+    $this->start_controls_section(
 			'content_section',
 			[
-				'label' => esc_html__( 'Settings', EYEON_NAMESPACE ),
+				'label' => esc_html__( 'Grid Settings', EYEON_NAMESPACE ),
 				'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
 			]
 		);
 
-		// $this->add_control(
-		// 	'title',
-		// 	[
-		// 		'type' => \Elementor\Controls_Manager::TEXT,
-		// 		'label' => esc_html__( 'Title', EYEON_NAMESPACE ),
-		// 		'placeholder' => esc_html__( 'Enter your title', EYEON_NAMESPACE ),
-		// 	]
-		// );
+    $this->add_control(
+			'fetch_all',
+			[
+				'label' => esc_html__( 'Fetch All Retailers', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Yes', 'textdomain' ),
+				'label_off' => esc_html__( 'No', 'textdomain' ),
+				'return_value' => 'yes',
+				'default' => 'yes',
+			]
+		);
+
+		$this->add_control(
+			'fetch_limit',
+			[
+				'type' => \Elementor\Controls_Manager::NUMBER,
+				'label' => esc_html__( 'Retailers Limit', EYEON_NAMESPACE ),
+				'placeholder' => '0',
+				'min' => 1,
+				'max' => 1000,
+				'step' => 1,
+				'default' => 20,
+        'condition' => [
+          'fetch_all' => '',
+        ],
+        'validate' => function( $value ) {
+          if ( $value < 0 || $value > 100 ) {
+            return __( 'Invalid value. Please enter a value between 0 and 100.', 'your-text-domain' );
+          }
+          return true;
+        },
+			]
+		);
 
 		$this->add_responsive_control(
 			'items_per_row',
 			[
 				'type' => \Elementor\Controls_Manager::NUMBER,
 				'label' => esc_html__( 'Items per Row', EYEON_NAMESPACE ),
-				'placeholder' => '0',
 				'min' => 1,
 				'max' => 10,
 				'step' => 1,
-				'default' => 6,
+        'default' => 6,
+        'tablet_default' => 4,
+        'mobile_default' => 2,
         'render_type' => 'ui',
-        'selectors' => [
-          '{{WRAPPER}}' => 'grid-gap: {{SIZE}}px;',
-        ],
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .stores-list' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+				],
 			]
 		);
 
-    // $this->add_responsive_control(
-    //   'padding1',
-    //   [
-    //     'type' => \Elementor\Controls_Manager::DIMENSIONS,
-    //     'label' => esc_html__('Padding', EYEON_NAMESPACE),
-    //     'size_units' => ['px', 'em', '%'],
-    //     'selectors' => [
-    //       '{{SELECTOR}} .your-element-class' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-    //     ],
-    //     'render_type' => 'ui',
-    //   ]
-    // );
+    $this->add_control(
+			'store_bg_color',
+			[
+				'label' => esc_html__( 'Imgae Background Color', 'textdomain' ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .stores-list .eyeon-store-image img' => 'background-color: {{VALUE}}',
+				],
+			]
+		);
 
     $this->add_responsive_control(
-      'items_spacing1',
+      'items_spacing',
       [
         'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
 				'range' => [
 					'px' => [
 						'min' => 0,
-						'max' => 100,
+						'max' => 50,
 					],
 				],
-        'size_units' => ['px', 'em', '%'],
-				'devices' => [ 'desktop', 'tablet', 'mobile' ],
-				'desktop_default' => [
-					'size' => 30,
+        'size_units' => ['px'],
+				'default' => [
+					'size' => 20,
 					'unit' => 'px',
 				],
 				'tablet_default' => [
-					'size' => 20,
+					'size' => 15,
 					'unit' => 'px',
 				],
 				'mobile_default' => [
@@ -92,58 +124,13 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
 					'unit' => 'px',
 				],
 				'selectors' => [
-					'{{WRAPPER}}' => 'padding: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .eyeon-stores .stores-list' => 'grid-gap: {{SIZE}}{{UNIT}};',
 				],
       ]
     );
 
-		// $this->add_control(
-		// 	'open_lightbox',
-		// 	[
-		// 		'type' => \Elementor\Controls_Manager::SELECT,
-		// 		'label' => esc_html__( 'Lightbox', EYEON_NAMESPACE ),
-		// 		'options' => [
-		// 			'default' => esc_html__( 'Default', EYEON_NAMESPACE ),
-		// 			'yes' => esc_html__( 'Yes', EYEON_NAMESPACE ),
-		// 			'no' => esc_html__( 'No', EYEON_NAMESPACE ),
-		// 		],
-		// 		'default' => 'no',
-		// 	]
-		// );
-
-		// $this->add_control(
-		// 	'alignment',
-		// 	[
-		// 		'type' => \Elementor\Controls_Manager::CHOOSE,
-		// 		'label' => esc_html__( 'Alignment', EYEON_NAMESPACE ),
-		// 		'options' => [
-		// 			'left' => [
-		// 				'title' => esc_html__( 'Left', EYEON_NAMESPACE ),
-		// 				'icon' => 'eicon-text-align-left',
-		// 			],
-		// 			'center' => [
-		// 				'title' => esc_html__( 'Center', EYEON_NAMESPACE ),
-		// 				'icon' => 'eicon-text-align-center',
-		// 			],
-		// 			'right' => [
-		// 				'title' => esc_html__( 'Right', EYEON_NAMESPACE ),
-		// 				'icon' => 'eicon-text-align-right',
-		// 			],
-		// 		],
-		// 		'default' => 'center',
-		// 	]
-		// );
-
 		$this->end_controls_section();
 
 	}
-
-  protected function render() {
-    $settings = $this->get_settings();
-    add_action('elementor/frontend/after_enqueue_styles', function() {
-      wp_enqueue_style('eyeon-stores-widget-styles', MCD_PLUGIN_URL . 'elementor/stores/css/style.css', [], '1.0.0');
-    });
-    include dirname(__FILE__) . '/render.php';
-  }
 
 }
