@@ -1,7 +1,7 @@
 <?php
 
 // print array and variables for debugging 
-function mcp_debug($item = array(), $die = true, $display = true) {
+function eyeon_debug($item = array(), $die = true, $display = true) {
 	if( is_array($item) || is_object($item) ) {
 		echo '<pre style="padding-left:180px;'.($display?'':'display:none').'">'; print_r($item); echo '</pre>';
 	} else {

@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: EyeOnPortal
+Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal. (new)
 Version: 0.0.1
@@ -11,9 +11,9 @@ Licence: GPLv2 or later
 
 require 'plugin-update-checker/plugin-update-checker.php';
 $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
-	'https://github.com/eyeonllc-wp-plugins/mycenterportal-new',
+	'https://github.com/eyeonllc-wp-plugins/eyeonportal',
 	__FILE__,
-	'mycenterportal-new'
+	'eyeonportal'
 );
 $myUpdateChecker->setBranch('master');
 // $myUpdateChecker->setAuthentication('token_here');
@@ -26,13 +26,14 @@ if( !defined('ABSPATH') ) die();
 $mcd_settings = get_option(MCD_REDUX_OPT_NAME);
 
 // Common Constants
-define( 'MCD_PLUGIN_NAME', 'mycenterdeals' );
-define( 'MCD_PLUGIN_TITLE', 'My Center Portal' );
+defined('EYEON_NAMESPACE') OR define('EYEON_NAMESPACE', 'eyeon_elementor_widgets');
+define( 'MCD_PLUGIN_NAME', 'eyeonportal' );
+define( 'MCD_PLUGIN_TITLE', 'EyeOn Portal' );
 define( 'MCD_PLUGIN', plugin_basename( __FILE__ ) );
 define( 'MCD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'MCD_PLUGIN_URL', plugins_url( '', __FILE__ ).'/' );
 
-$plugin_data = get_file_data(MCD_PLUGIN_PATH.'my-center-deals.php', array("version"=>"Version"));
+$plugin_data = get_file_data(MCD_PLUGIN_PATH.'eyeonportal.php', array("version"=>"Version"));
 define('MCD_PLUGIN_VERSION', $plugin_data['version']);
 
 // API to get data from mycenterdeals portal
@@ -82,4 +83,5 @@ if ( is_admin() ) {
 // if ( !is_admin() && !wp_is_json_request() ) {
 	// Frontend Shortcodes
 	require_once MCD_PLUGIN_PATH . 'inc/Shortcodes.php';
+	require_once MCD_PLUGIN_PATH . 'elementor/RegisterWidgets.php';
 // }

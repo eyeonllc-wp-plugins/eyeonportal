@@ -19,7 +19,7 @@ if( !class_exists('MyCenterPortal') ) {
 		}
 
 		function settings_link($links) {
-			$settings_link = '<a href="admin.php?page=mycenterdeals">Settings</a>';
+			$settings_link = '<a href="admin.php?page='.MCD_PLUGIN_NAME.'">Settings</a>';
 			array_push( $links, $settings_link );
 			return $links;
 		}

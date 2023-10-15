@@ -2,7 +2,7 @@
 $mcd_settings = get_option(MCD_REDUX_OPT_NAME);
 
 function on_mcd_plugin_page() {
-	return isset($_GET['page']) && $_GET['page']=='mycenterdeals';
+	return isset($_GET['page']) && $_GET['page']===MCD_PLUGIN_NAME;
 }
 
 function mcd_centers_dropdown_values() {

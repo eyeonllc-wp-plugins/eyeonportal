@@ -26,7 +26,8 @@
     "assets/angular/angular.min.js.map": true,
     "assets/angular/angular-sanitize.min.js": true,
     "assets/angular/angular-sanitize.min.js.map": true,
-    "inc/redux-core/**": true
+    "inc/redux-core/**": true,
+    "plugin-update-checker/**": true
   },
   "liveSassCompile.settings.compileOnWatch": true,
   "liveSassCompile.settings.formats": [

@@ -83,7 +83,7 @@ $theme = wp_get_theme(); // For use with some settings. Not necessary.
 // TYPICAL -> Change these values as you need/desire.
 $args = array(
 	// This is where your data is stored in the database and also becomes your global variable name.
-	'opt_name'                  => 'mycenterdeals',
+	'opt_name'                  => MCD_PLUGIN_NAME,
 
 	// Name that appears at the top of your panel.
 	'display_name'              => esc_html__( 'EyeOn Portal - Settings', 'mycenterportal.com' ),
@@ -98,7 +98,7 @@ $args = array(
 	'allow_sub_menu'            => false,
 
 	// The text to appear in the admin menu.
-	'menu_title'                => esc_html__( 'EyeOnPortal', 'mycenterportal.com' ),
+	'menu_title'                => esc_html__( 'EyeOn Portal', 'mycenterportal.com' ),
 
 	// The text to appear on the page title.
 	'page_title'                => esc_html__( 'My Center Portal', 'mycenterportal.com' ),
@@ -152,7 +152,7 @@ $args = array(
 	'page_icon'                 => 'icon-themes',
 
 	// Page slug used to denote the panel, will be based off page title, then menu title, then opt_name if not provided.
-	'page_slug'                 => 'mycenterdeals',
+	'page_slug'                 => MCD_PLUGIN_NAME,
 
 	// On load save the defaults to DB before user clicks save.
 	'save_defaults'             => true,

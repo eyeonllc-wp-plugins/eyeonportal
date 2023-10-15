@@ -63,17 +63,6 @@
   #mcd-events-grid {
     grid-template-columns: repeat(2, 1fr) !important;
   }
-  .mcd_instagram_gallery .mcd_item .mcd_ig_overlay {
-    display: none;
-  }
-  .mcd_instagram_gallery .mcd_item .mcd_ig_image {
-    -webkit-transform: none !important;
-    transform: none !important;
-  }
-  #mcd-retailer-products .products {
-    grid-template-columns: repeat(3, 1fr) !important;
-    grid-gap: 50px 30px !important;
-  }
 }
 @media screen and (max-width: 767px) {
   .mcp_btn {
@@ -123,24 +112,6 @@
     -webkit-column-count: 2 !important;
        -moz-column-count: 2 !important;
             column-count: 2 !important;
-  }
-  #mcd-retailer-products .products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-gap: 40px 20px !important;
-  }
-  #sharerails-filters {
-    -webkit-box-flex: 0;
-        -ms-flex: 0 0 180px;
-            flex: 0 0 180px;
-  }
-  #mycentershopping {
-    grid-gap: 20px;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  #shopping_guide_articles,
-  .article-sections .article-section .article-products {
-    grid-gap: 20px;
-    grid-template-columns: repeat(3, 1fr);
   }
 }
 @media screen and (max-width: 599px) {
@@ -246,65 +217,6 @@
   .mcd-post-featured-image .mcd-post-date .mcd-month {
     font-size: 14px;
   }
-  #mcp-product .mcp-product-cols {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-  }
-  #mcp-product .mcp-product-image-col {
-    margin-bottom: 30px;
-  }
-  #mcp-product .mcp-product-details {
-    padding-left: 0;
-  }
-  #mcp-product .mcp-product-details .actions_btns {
-    text-align: center;
-  }
-  #mcp-product .mcp-product-single-store {
-    padding-left: 0;
-    padding-top: 30px;
-  }
-  #mcd-retailer-products h3 {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    font-size: 24px;
-    text-align: center;
-  }
-  #mcd-retailer-products .sharerails-data {
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-            flex-direction: column;
-  }
-  #sharerails-filters {
-    -webkit-box-flex: 1;
-        -ms-flex: auto;
-            flex: auto;
-    margin-bottom: 30px;
-  }
-  #mcd-retailer-products .sharerails-data .sharerails-products {
-    padding-left: 0;
-  }
-  #mycentershopping {
-    grid-gap: 20px;
-    grid-template-columns: repeat(2, 1fr);
-  }
-  #mycentershopping .mcp-retailer-item.featured {
-    grid-column: auto;
-    grid-row: auto;
-  }
-  #shopping_guide_articles,
-  .article-sections .article-section .article-products {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .article-sections .banner-article-section .article-guide-title h1 {
-    font-size: 2.3rem;
-    line-height: 2.6rem;
-  }
-  .article-sections .article-section .header-section h3 {
-    font-size: 1.7rem;
-  }
   body.mycenterdeals-plugin.code-mycentermap2 #threejs-map .amenities .amenity .img img {
     width: 40px;
     height: 40px;
@@ -399,15 +311,5 @@
     -webkit-filter: url("../img/grayscale.svg#normal");
             filter: url("../img/grayscale.svg#normal");
     opacity: 1;
-  }
-  .mcd_instagram_gallery .mcd_item .mcd-popup .mcd_popup_header .mcd_ig_account_profile_picture {
-    margin-right: 8px;
-  }
-  .mcd_instagram_gallery .mcd_item .mcd-popup .mcd_popup_header .mcd_ig_view_link {
-    padding: 4px 6px;
-    font-size: 11px;
-  }
-  #mycentershopping {
-    grid-gap: 15px;
   }
 }/*# sourceMappingURL=responsive.css.map */

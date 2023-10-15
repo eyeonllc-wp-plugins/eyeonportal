@@ -175,7 +175,6 @@ if( !class_exists('MCDShortcodes') ) {
 			}
 
 			$api_response = mcd_api_data($api_call_url);
-      // mcp_debug($api_response, false);
 			$this->mcd_settings['slider_items'] = array();
 
 			if( $atts['type'] == 'events' ) {
