@@ -29,9 +29,9 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
   protected function register_controls() {
 
     $this->start_controls_section(
-			'content_section',
+			'content_settings',
 			[
-				'label' => esc_html__( 'Grid Settings', EYEON_NAMESPACE ),
+				'label' => esc_html__( 'Settings', EYEON_NAMESPACE ),
 				'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
 			]
 		);
@@ -41,8 +41,8 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
 			[
 				'label' => esc_html__( 'Fetch All Retailers', EYEON_NAMESPACE ),
 				'type' => \Elementor\Controls_Manager::SWITCHER,
-				'label_on' => esc_html__( 'Yes', 'textdomain' ),
-				'label_off' => esc_html__( 'No', 'textdomain' ),
+				'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
+				'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
 				'return_value' => 'yes',
 				'default' => 'yes',
 			]
@@ -83,24 +83,35 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'mobile_default' => 2,
         'render_type' => 'ui',
 				'selectors' => [
-					'{{WRAPPER}} .eyeon-stores .stores-list' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+					'{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
 				],
 			]
 		);
 
     $this->add_control(
-			'store_bg_color',
+			'show_categories',
 			[
-				'label' => esc_html__( 'Imgae Background Color', 'textdomain' ),
-				'type' => \Elementor\Controls_Manager::COLOR,
-				'selectors' => [
-					'{{WRAPPER}} .eyeon-stores .stores-list .eyeon-store-image img' => 'background-color: {{VALUE}}',
-				],
+				'label' => esc_html__( 'Show Categories', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
+				'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
+				'return_value' => 'yes',
+				'default' => '',
+			]
+		);
+
+    $this->end_controls_section();
+
+    $this->start_controls_section(
+			'grid_style_settings',
+			[
+				'label' => esc_html__( 'Grid', EYEON_NAMESPACE ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
 			]
 		);
 
     $this->add_responsive_control(
-      'items_spacing',
+      'grid_gap',
       [
         'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
@@ -108,29 +119,103 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
 					'px' => [
 						'min' => 0,
 						'max' => 50,
+            'step' => 1,
 					],
 				],
         'size_units' => ['px'],
-				'default' => [
-					'size' => 20,
+        'default' => [
 					'unit' => 'px',
-				],
-				'tablet_default' => [
 					'size' => 15,
-					'unit' => 'px',
-				],
-				'mobile_default' => [
-					'size' => 10,
-					'unit' => 'px',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .eyeon-stores .stores-list' => 'grid-gap: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-gap: {{SIZE}}{{UNIT}};',
 				],
       ]
     );
 
+    $this->end_controls_section();
+
+    $this->start_controls_section(
+			'grid_item_style_settings',
+			[
+				'label' => esc_html__( 'Grid Item', EYEON_NAMESPACE ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+    $this->add_control(
+			'store_bg_color',
+			[
+				'label' => esc_html__( 'Imgae Background Color', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img' => 'background-color: {{VALUE}}',
+				],
+			]
+		);
+
+    $this->add_responsive_control(
+      'store_padding',
+      [
+        'label' => esc_html__( 'Padding', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+				'range' => [
+					'px' => [
+						'min' => 0,
+						'max' => 30,
+            'step' => 1
+					],
+				],
+        'size_units' => ['px'],
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img' => 'padding: {{SIZE}}{{UNIT}};',
+				],
+      ]
+    );
+
+    $this->add_control(
+			'hover_style',
+			[
+				'label' => esc_html__( 'Hover Style', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::SELECT,
+				'default' => '',
+				'options' => [
+					'' => esc_html__( 'None', EYEON_NAMESPACE ),
+					'grayscale' => esc_html__( 'Grayscale', EYEON_NAMESPACE ),
+				],
+			]
+		);
+
 		$this->end_controls_section();
 
-	}
+    $this->start_controls_section(
+			'categories_style_settings',
+			[
+				'label' => esc_html__( 'Categories', EYEON_NAMESPACE ),
+				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+			]
+		);
+
+    $this->add_responsive_control(
+      'categories_width',
+      [
+        'label' => esc_html__( 'Width', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+				'range' => [
+					'px' => [
+						'min' => 200,
+						'max' => 400,
+            'step' => 1
+					],
+				],
+        'size_units' => ['px'],
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .content-cols .stores-categories' => 'flex: 0 0 {{SIZE}}{{UNIT}};',
+				],
+      ]
+    );
+
+    $this->end_controls_section();
+  }
 
 }

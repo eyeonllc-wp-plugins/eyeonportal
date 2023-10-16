@@ -3,27 +3,38 @@
 $unique_id = uniqid();
 ?>
 
-<div class="eyeon-stores">
-  <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
+<div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
+  <div class="eyeon-wrapper eyeon-hide">
+    <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
 
-  <select id="stores-categories-<?= $unique_id ?>" class="stores-categories">
-    <option value="all">All Retailers</option>
-  </select>
-    
-  <div id="stores-list-<?= $unique_id ?>" class="stores-list"></div>
+    <div class="content-cols">
+      <?php if( $settings['show_categories'] === 'yes' ) : ?>
+      <div class="stores-categories">
+        <ul id="stores-categories-<?= $unique_id ?>">
+          <li data-value="all" class="active">All Stores</li>
+        </ul>
+      </div>
+      <?php endif; ?>
+        
+      <div class="stores-list">
+        <div id="stores-list-<?= $unique_id ?>" class="stores <?= $settings['hover_style'] ?>"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script type="text/javascript">
   jQuery(document).ready(function($) {
     const settings = <?= json_encode($settings) ?>;
-    const categoryFilter = $('#stores-categories-<?= $unique_id ?>');
+    const eyeonStores = $('#eyeon-stores-<?= $unique_id ?>');
+    const categoryList = $('#stores-categories-<?= $unique_id ?>');
     const searchInput = $('#stores-search-<?= $unique_id ?>');
     const retailersList = $('#stores-list-<?= $unique_id ?>');
 
     let retailers = [];
     var page = 1;
     var defaultLimit = 100;
-    const categories = new Set([]);
+    let categories = new Set([]);
     const otherCategory = {
       name: 'Others'
     };
@@ -54,7 +65,6 @@ $unique_id = uniqid();
             if( settings.fetch_all === 'yes' && response.count > retailers.length ) {
               fetchMore = true;
             }
-            console.log('angrej123 fetchMore', fetchMore);
             if( fetchMore ) {
               page++;
               fetch_retailers();
@@ -67,6 +77,8 @@ $unique_id = uniqid();
     }
 
     function setup_categories() {
+      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+
       retailers.forEach(retailer => {
         if (retailer.categories.length === 0) {
           retailer.categories.push(otherCategory);
@@ -77,33 +89,34 @@ $unique_id = uniqid();
         });
       });
 
-      categories.forEach(category => {
-        categoryFilter.append($('<option>', {
-          value: category.toLowerCase(),
-          text: category
-        }));
-      });
+      const categoriesArray = Array.from(categories);
+      categoriesArray.sort();
+      categories = new Set(categoriesArray);
 
-      console.log('angrej123 categoryFilter', categoryFilter);
+      <?php if( $settings['show_categories'] === 'yes' ) : ?>
+      categories.forEach(category => {
+        categoryList.append(`
+          <li data-value="${category.toLowerCase()}">${category}</li>
+        `);
+      });
+      <?php endif; ?>
 
       renderRetailers('all', '');
     }
 
-    // Function to render the retailers list based on category and search
     function renderRetailers(category, search) {
       retailersList.empty();
-
-      console.log('angrej123 retailers', retailers);
 
       retailers.forEach(retailer => {
         if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
           if (search === '' || retailer.name.toLowerCase().includes(search)) {
             const retailerItem = $(`
-              <div class="eyeon-store">
-                <div class="eyeon-store-image">
+              <a class="store">
+                <div class="image">
                   <img src="${retailer.media.url}" alt="${retailer.name}" />
                 </div>
-              </li>
+                <!--<h3 class="store-name">${retailer.name}</h3>-->
+              </a>
             `);
             retailersList.append(retailerItem);
           }
@@ -112,14 +125,16 @@ $unique_id = uniqid();
     }
 
     // Event listeners for filter and search
-    categoryFilter.on('change', function() {
-      const selectedCategory = $(this).val();
+    categoryList.on('click', 'li', function() {
+      categoryList.find('li.active').removeClass('active');
+      $(this).addClass('active');
+      const selectedCategory = $(this).attr('data-value');
       const search = searchInput.val().toLowerCase();
       renderRetailers(selectedCategory, search);
     });
 
     searchInput.on('input', function() {
-      const selectedCategory = categoryFilter.val();
+      const selectedCategory = categoryList.find('ul li.active:first').attr('data-value');
       const search = $(this).val().toLowerCase();
       renderRetailers(selectedCategory, search);
     });
