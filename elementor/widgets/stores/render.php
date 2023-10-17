@@ -1,4 +1,5 @@
 <?php
+$settings = $this->get_settings_for_display();
 //eyeon_debug($settings, false);
 $unique_id = uniqid();
 ?>

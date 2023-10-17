@@ -126,6 +126,83 @@
   opacity: 1;
 }
 
+.eyeon-events .eyeon-wrapper .events-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
+.eyeon-events .eyeon-wrapper .events-list .event {
+  opacity: 1;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .image {
+  position: relative;
+  padding-top: 56.25%;
+  overflow: hidden;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .image img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .event-title {
+  margin: 10px 0 0;
+  font-size: 17px;
+  line-height: 23px;
+  font-weight: 600;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .event-excerpt {
+  color: #666;
+  font-size: 15px;
+  line-height: 21px;
+  margin: 4px 0 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .metadata {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  font-size: 15px;
+  line-height: 21px;
+  gap: 4px;
+  margin: 8px 0 0;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .metadata i.far {
+  font-size: 16px;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .metadata span {
+  color: #666;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .metadata .date {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+}
+.eyeon-events .eyeon-wrapper .events-list .event .metadata .time {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+}
+
 .deals {
   opacity: 1;
 }/*# sourceMappingURL=elementor.css.map */

@@ -1,4 +1,5 @@
 <?php
+$settings = $this->get_settings_for_display();
 $unique_id = uniqid();
 ?>
 
@@ -12,6 +13,7 @@ $unique_id = uniqid();
 <script type="text/javascript">
   jQuery(document).ready(function($) {
     const settings = <?= json_encode($settings) ?>;
+
     const eyeonEvents = $('#eyeon-events-<?= $unique_id ?>');
     const eventsList = $('#events-list-<?= $unique_id ?>');
 
@@ -42,7 +44,7 @@ $unique_id = uniqid();
             if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
               fetchMore = true;
             }
-            if( settings.fetch_all === 'yes' && response.count > retailers.length ) {
+            if( settings.fetch_all === 'yes' && response.count > events.length ) {
               fetchMore = true;
             }
             if( fetchMore ) {
@@ -57,19 +59,33 @@ $unique_id = uniqid();
     }
 
     function renderEvents() {
-      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
 
       eventsList.empty();
       events.forEach(event => {
         console.log('angrej123 event:', event);
-        // const eventItem = $(`
-        //   <a href="<?= mcd_single_page_url('mycenterevent') ?>${event.slug}" class="event">
-        //     <div class="image">
-        //       <img src="${event.media.url}" alt="${event.name}" />
-        //     </div>
-        //   </a>
-        // `);
-        // eventsList.append(eventItem);
+        const eventItem = $(`
+          <a href="<?= mcd_single_page_url('mycenterevent') ?>${event.slug}" class="event">
+            <div class="image">
+              <img src="${event.media.url}" alt="${event.title}" />
+            </div>
+            ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
+            ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
+            ${ settings.event_metadata ? `
+              <div class="metadata">
+                <div class="date">
+                  <i class="far fa-calendar"></i>
+                  <span>${event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date)}</span>
+                </div>
+                <div class="time">
+                  <i class="far fa-clock"></i>
+                  <span>${eyeonConvertTo12HourFormat(event.start_time)} - ${eyeonConvertTo12HourFormat(event.end_time)}</span>
+                </div>
+              </div>
+            `: '' }
+          </a>
+        `);
+        eventsList.append(eventItem);
       });
     }
   });

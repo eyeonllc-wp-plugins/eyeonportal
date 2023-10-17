@@ -19,7 +19,6 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
 
   protected function render() {
     global $mcd_settings;
-    $settings = $this->get_settings_for_display();
     include dirname(__FILE__) . '/render.php';
   }
 
@@ -54,7 +53,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'min' => 1,
         'max' => 100,
         'step' => 1,
-        'default' => 20,
+        'default' => 8,
         'condition' => [
           'fetch_all' => '',
         ],
@@ -69,17 +68,148 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'min' => 1,
         'max' => 10,
         'step' => 1,
-        'default' => 6,
-        'tablet_default' => 4,
-        'mobile_default' => 2,
+        'default' => 4,
         'render_type' => 'ui',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+          '{{WRAPPER}} .eyeon-events .events-list' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'event_title',
+      [
+        'label' => esc_html__( 'Title', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
+      ]
+    );
+
+    $this->add_control(
+      'event_excerpt',
+      [
+        'label' => esc_html__( 'Excerpt', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => '',
+      ]
+    );
+
+    $this->add_control(
+      'event_metadata',
+      [
+        'label' => esc_html__( 'Date & Time', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    $this->start_controls_section(
+      'grid_style_settings',
+      [
+        'label' => esc_html__( 'Grid', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+      ]
+    );
+
+    $this->add_responsive_control(
+      'grid_gap',
+      [
+        'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 60,
+            'step' => 1,
+          ],
+        ],
+        'size_units' => ['px'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 20,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-events .events-list' => 'grid-gap: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
 
     $this->end_controls_section();
+
+    $this->start_controls_section(
+      'event_title_style_settings',
+      [
+        'label' => esc_html__( 'Title', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'event_title' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'event_title_typography',
+        'selector' => '{{WRAPPER}} .eyeon-events .events-list .event .event-title',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    $this->start_controls_section(
+      'event_excerpt_style_settings',
+      [
+        'label' => esc_html__( 'Excerpt', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'event_excerpt' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'event_excerpt_typography',
+        'selector' => '{{WRAPPER}} .eyeon-events .events-list .event .event-excerpt',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    $this->start_controls_section(
+      'event_metadata_style_settings',
+      [
+        'label' => esc_html__( 'Date & Time', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'event_metadata' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'event_metadata_typography',
+        'selector' => '{{WRAPPER}} .eyeon-events .events-list .event .metadata',
+      ]
+    );
+
+    $this->end_controls_section();
+
   }
 
 }

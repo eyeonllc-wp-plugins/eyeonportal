@@ -19,7 +19,6 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
 
   protected function render() {
     global $mcd_settings;
-    $settings = $this->get_settings_for_display();
     include dirname(__FILE__) . '/render.php';
   }
 
@@ -54,7 +53,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'min' => 1,
         'max' => 100,
         'step' => 1,
-        'default' => 20,
+        'default' => 18,
         'condition' => [
           'fetch_all' => '',
         ],
@@ -262,15 +261,15 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
 			'text_align',
 			[
-				'label' => esc_html__( 'Alignment', 'textdomain' ),
+				'label' => esc_html__( 'Alignment', EYEON_NAMESPACE ),
 				'type' => \Elementor\Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Left', 'textdomain' ),
+						'title' => esc_html__( 'Left', EYEON_NAMESPACE ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'textdomain' ),
+						'title' => esc_html__( 'Right', EYEON_NAMESPACE ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
