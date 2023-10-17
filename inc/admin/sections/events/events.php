@@ -28,6 +28,12 @@ Redux::set_section(
 				'default' => isset($mcd_settings['events_listing_grid_items']) ? $mcd_settings['events_listing_grid_items'] : 10,
 			),
 			array(
+				'id' => 'events_listing_grid_title',
+				'type' => 'switch',
+				'title' => __( 'Grid View Event Title', 'redux-framework-demo' ),
+				'default' => isset($mcd_settings['events_listing_grid_title']) ? $mcd_settings['events_listing_grid_title'] : false,
+			),
+			array(
 				'id' => 'events_listing_events_per_row',
 				'type' => 'button_set',
 				'title' => __( 'Events in a Row', 'redux-framework-demo' ),

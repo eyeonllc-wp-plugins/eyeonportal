@@ -61,8 +61,8 @@
 }
 .eyeon-stores .eyeon-wrapper .content-cols .stores-categories {
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 200px;
-          flex: 0 0 200px;
+      -ms-flex: 0 0 220px;
+          flex: 0 0 220px;
   border-right: 2px solid #E8E8E8;
 }
 .eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul {
@@ -73,9 +73,7 @@
 .eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul li {
   cursor: pointer;
   margin-right: -2px;
-}
-.eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul li:not(:last-child) {
-  margin-bottom: 8px;
+  padding: 3px 0px;
 }
 .eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul li.active {
   border-right: 2px solid #444;
@@ -104,6 +102,17 @@
   top: 0;
   left: 0;
   background-color: rgba(0, 0, 0, 0.06);
+}
+.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores .store .image .deal-flag {
+  position: absolute;
+  right: 0;
+  top: 8px;
+  background-color: #6ec1e4;
+  color: white;
+  padding: 0px 10px;
+  text-transform: uppercase;
+  font-size: 12px;
+  z-index: 2;
 }
 .eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores.grayscale .store .image img {
   -webkit-filter: grayscale(1);

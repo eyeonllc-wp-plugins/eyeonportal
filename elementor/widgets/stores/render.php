@@ -8,7 +8,7 @@ $unique_id = uniqid();
     <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
 
     <div class="content-cols">
-      <?php if( $settings['show_categories'] === 'yes' ) : ?>
+      <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       <div class="stores-categories">
         <ul id="stores-categories-<?= $unique_id ?>">
           <li data-value="all" class="active">All Stores</li>
@@ -93,7 +93,7 @@ $unique_id = uniqid();
       categoriesArray.sort();
       categories = new Set(categoriesArray);
 
-      <?php if( $settings['show_categories'] === 'yes' ) : ?>
+      <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       categories.forEach(category => {
         categoryList.append(`
           <li data-value="${category.toLowerCase()}">${category}</li>
@@ -111,9 +111,10 @@ $unique_id = uniqid();
         if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
           if (search === '' || retailer.name.toLowerCase().includes(search)) {
             const retailerItem = $(`
-              <a class="store">
+              <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store">
                 <div class="image">
                   <img src="${retailer.media.url}" alt="${retailer.name}" />
+                  ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
                 </div>
                 <!--<h3 class="store-name">${retailer.name}</h3>-->
               </a>
