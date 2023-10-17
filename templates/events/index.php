@@ -17,15 +17,6 @@ if( isset($shortcode_atts['type']) ) {
 
 <div ng-app="MyCenterPortalApp" ng-controller="EventsCtrl" data-url="<?= MCD_API_EVENTS.'?limit=100&page=1' ?>" data-center-id="<?= $mcd_center_id ?>" data-event-url="<?= mcd_single_page_url('mycenterevent') ?>">
 	<div class="mycenterdeals-wrapper mycenterevents" ng-class="{loading: busy}">
-		<?php if( empty($type) ) : ?>
-		<div id="mcd-filters" ng-hide="busy || data.error" ng-cloak>
-			<div id="mcd-filters-order" class="clearfix">
-				<a class="mcd-filter-order" ng-click="selectType('grid')" ng-class="{ active: selectedType=='grid' }">All Events</a>
-				<a class="mcd-filter-order" ng-click="selectType('calendar')" ng-class="{ active: selectedType=='calendar' }">Calendar</a>
-			</div>
-		</div>
-		<?php endif; ?>
-	
 		<div id="mcd-error-msg" ng-show="data.error" ng-cloak>
 			<div class="mcd-alert">{{ data.error }}</div>
 		</div>
@@ -45,6 +36,20 @@ if( isset($shortcode_atts['type']) ) {
 				<?php if( $this->mcd_settings['events_listing_grid_title'] ) : ?>
 					<div class="mcd-event-title">{{ event.title }}</div>
 				<?php endif; ?>
+        <div class="metadata">
+          <div class="date" ng-if="event.start_date!==event.end_date">
+            <i class="far fa-calendar"></i>
+            <span>{{ event.start_date }} - {{ event.end_date }}</span>
+          </div>
+          <div class="date" ng-if="event.start_date===event.end_date">
+            <i class="far fa-calendar"></i>
+            <span>{{ event.start_date }}</span>
+          </div>
+          <div class="time">
+            <i class="far fa-clock"></i>
+            <span>{{ event.start_time }} - {{ event.end_time }}</span>
+          </div>
+        </div>
 			</a>
 		</div>
 		<?php endif; ?>

@@ -259,6 +259,29 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+			'text_align',
+			[
+				'label' => esc_html__( 'Alignment', 'textdomain' ),
+				'type' => \Elementor\Controls_Manager::CHOOSE,
+				'options' => [
+					'left' => [
+						'title' => esc_html__( 'Left', 'textdomain' ),
+						'icon' => 'eicon-text-align-left',
+					],
+					'right' => [
+						'title' => esc_html__( 'Right', 'textdomain' ),
+						'icon' => 'eicon-text-align-right',
+					],
+				],
+				'default' => 'right',
+				'toggle' => true,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .content-cols .stores-categories li' => 'text-align: {{VALUE}};',
+				],
+			]
+		);
+
     $this->add_group_control(
       \Elementor\Group_Control_Typography::get_type(),
       [

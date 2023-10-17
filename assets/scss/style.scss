@@ -1130,7 +1130,7 @@ select#mcd-filter-order {
     .mcd-event-image {
       display: block;
       position: relative;
-      margin-bottom: 6px;
+      margin-bottom: 12px;
 
       &:before {
         content: '';
@@ -1153,7 +1153,29 @@ select#mcd-filter-order {
     .mcd-event-title {
       font-size: 18px;
       line-height: 23px;
-      margin-bottom: 15px;
+      margin-bottom: 4px;
+      font-weight: 600;
+      color: var(--mcdAccentColor);
+    }
+
+    .metadata {
+      color: #444;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .date {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .time {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
     }
   }
 }

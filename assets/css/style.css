@@ -1158,7 +1158,7 @@ select#mcd-filter-order {
 #mcd-events-grid .mcd-event-item .mcd-event-image {
   display: block;
   position: relative;
-  margin-bottom: 6px;
+  margin-bottom: 12px;
 }
 #mcd-events-grid .mcd-event-item .mcd-event-image:before {
   content: "";
@@ -1179,7 +1179,38 @@ select#mcd-filter-order {
 #mcd-events-grid .mcd-event-item .mcd-event-title {
   font-size: 18px;
   line-height: 23px;
-  margin-bottom: 15px;
+  margin-bottom: 4px;
+  font-weight: 600;
+  color: var(--mcdAccentColor);
+}
+#mcd-events-grid .mcd-event-item .metadata {
+  color: #444;
+  font-size: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 16px;
+}
+#mcd-events-grid .mcd-event-item .metadata .date {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+}
+#mcd-events-grid .mcd-event-item .metadata .time {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
 }
 
 .mcd-event-item .mcd-event-details,
