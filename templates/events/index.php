@@ -47,7 +47,7 @@ if( isset($shortcode_atts['type']) ) {
           </div>
           <div class="time">
             <i class="far fa-clock"></i>
-            <span>{{ event.start_time }} - {{ event.end_time }}</span>
+            <span>{{ event.start_time_formatted }} - {{ event.end_time_formatted }}</span>
           </div>
         </div>
 			</a>

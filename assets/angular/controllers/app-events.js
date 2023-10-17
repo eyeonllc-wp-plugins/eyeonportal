@@ -4,6 +4,22 @@
   var center_id = jQuery('[ng-controller="EventsCtrl"]').data("center-id");
   var mcd_event_url = jQuery('[ng-controller="EventsCtrl"]').data('event-url');
 
+  function convertTo12HourFormat(timeString) {
+    // Split the input time string into hours, minutes, and seconds
+    const [hours, minutes] = timeString.split(':');
+
+    // Determine whether it's AM or PM
+    const ampm = hours >= 12 ? 'pm' : 'am';
+
+    // Convert to 12-hour format
+    const formattedHours = (hours % 12) || 12; // If it's 0, set it to 12
+
+    // Create the formatted time string
+    const formattedTime = `${formattedHours}:${minutes}${ampm}`;
+
+    return formattedTime;
+  }
+
   app.controller('EventsCtrl', function ($scope, $http, $compile, RecordsFactory) {
     $scope.busy = true;
 
@@ -32,6 +48,8 @@
 
           jQuery.each(result.data.items, function (index, event) {
             $scope.data.items[index].event_url = (event.event_url == '' ? mcd_event_url + event.slug : event.event_url);
+            $scope.data.items[index].start_time_formatted = convertTo12HourFormat(event.start_time);
+            $scope.data.items[index].end_time_formatted = convertTo12HourFormat(event.end_time);
           });
 
           jQuery.each(result.data.items, function (index, event) {
