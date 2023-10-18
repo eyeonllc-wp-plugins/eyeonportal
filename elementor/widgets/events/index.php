@@ -77,6 +77,13 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
+			'hr_1',
+			[
+				'type' => \Elementor\Controls_Manager::DIVIDER,
+			]
+		);
+
+    $this->add_control(
       'event_title',
       [
         'label' => esc_html__( 'Title', EYEON_NAMESPACE ),
@@ -109,6 +116,25 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
         'return_value' => 'show',
         'default' => 'show',
+      ]
+    );
+
+    $this->add_control(
+			'hr_2',
+			[
+				'type' => \Elementor\Controls_Manager::DIVIDER,
+			]
+		);
+
+    $this->add_control(
+      'external_event_new_tab',
+      [
+        'label' => esc_html__( 'External Events in New Tab', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
+        'return_value' => 'yes',
+        'default' => '',
       ]
     );
 
@@ -166,6 +192,36 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+			'event_title_text_color',
+			[
+				'label' => esc_html__( 'Text Color', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-events .events-list .event .event-title' => 'color: {{VALUE}}',
+				],
+			]
+		);
+
+    $this->add_responsive_control(
+      'event_title_spacing',
+      [
+        'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 20,
+            'step' => 1,
+          ],
+        ],
+        'size_units' => ['px'],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-events .events-list .event .event-title' => 'margin-top: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
     $this->end_controls_section();
 
     $this->start_controls_section(
@@ -187,6 +243,25 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_responsive_control(
+      'event_excerpt_spacing',
+      [
+        'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 20,
+            'step' => 1,
+          ],
+        ],
+        'size_units' => ['px'],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-events .events-list .event .event-excerpt' => 'margin-top: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
     $this->end_controls_section();
 
     $this->start_controls_section(
@@ -205,6 +280,55 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
       [
         'name' => 'event_metadata_typography',
         'selector' => '{{WRAPPER}} .eyeon-events .events-list .event .metadata',
+      ]
+    );
+
+    $this->add_control(
+			'event_metadata_icon_text_color',
+			[
+				'label' => esc_html__( 'Icon Color', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-events .events-list .event .metadata i.far' => 'color: {{VALUE}}',
+				],
+			]
+		);
+
+    $this->add_responsive_control(
+      'event_metadata_icon_size',
+      [
+        'label' => esc_html__( 'Icon Size', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 32,
+            'step' => 1,
+          ],
+        ],
+        'size_units' => ['px'],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-events .events-list .event .metadata i.far' => 'font-size: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'event_metadata_spacing',
+      [
+        'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 20,
+            'step' => 1,
+          ],
+        ],
+        'size_units' => ['px'],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-events .events-list .event .metadata' => 'margin-top: {{SIZE}}{{UNIT}};',
+        ],
       ]
     );
 
