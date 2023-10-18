@@ -102,10 +102,10 @@ $unique_id = uniqid();
       });
       <?php endif; ?>
 
-      renderRetailers('all', '');
+      render('all', '');
     }
 
-    function renderRetailers(category, search) {
+    function render(category, search) {
       retailersList.empty();
 
       retailers.forEach(retailer => {
@@ -132,13 +132,13 @@ $unique_id = uniqid();
       $(this).addClass('active');
       const selectedCategory = $(this).attr('data-value');
       const search = searchInput.val().toLowerCase();
-      renderRetailers(selectedCategory, search);
+      render(selectedCategory, search);
     });
 
     searchInput.on('input', function() {
       const selectedCategory = categoryList.find('ul li.active:first').attr('data-value');
       const search = $(this).val().toLowerCase();
-      renderRetailers(selectedCategory, search);
+      render(selectedCategory, search);
     });
 
   });

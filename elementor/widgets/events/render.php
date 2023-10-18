@@ -51,19 +51,18 @@ $unique_id = uniqid();
               page++;
               fetch_events();
             } else {
-              renderEvents();
+              render();
             }
           }
         }
       });
     }
 
-    function renderEvents() {
+    function render() {
       eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
 
       eventsList.empty();
       events.forEach(event => {
-        console.log('angrej123 event:', event);
         const eventItem = $(`
           <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
             <div class="image">

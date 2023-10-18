@@ -35,7 +35,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'fetch_all',
       [
-        'label' => esc_html__( 'Fetch All Retailers', EYEON_NAMESPACE ),
+        'label' => esc_html__( 'Fetch All', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
         'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
         'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
@@ -148,7 +148,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'store_bg_color',
       [
-        'label' => esc_html__( 'Imgae Background Color', EYEON_NAMESPACE ),
+        'label' => esc_html__( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img' => 'background-color: {{VALUE}}',

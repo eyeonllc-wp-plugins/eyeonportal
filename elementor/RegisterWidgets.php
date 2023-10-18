@@ -26,6 +26,9 @@ function register_eyeon_widgets() {
 
   require_once plugin_dir_path( __FILE__).'widgets/events/index.php';
   \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new EyeOn_Events_Widget());
+
+  require_once plugin_dir_path( __FILE__).'widgets/deals/index.php';
+  \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new EyeOn_Deals_Widget());
 }  
 add_action('elementor/widgets/widgets_registered', 'register_eyeon_widgets');
 

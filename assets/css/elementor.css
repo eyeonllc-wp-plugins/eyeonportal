@@ -131,9 +131,6 @@
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;
 }
-.eyeon-events .eyeon-wrapper .events-list .event {
-  opacity: 1;
-}
 .eyeon-events .eyeon-wrapper .events-list .event .image {
   position: relative;
   padding-top: 56.25%;
@@ -203,6 +200,47 @@
   gap: 8px;
 }
 
-.deals {
-  opacity: 1;
+.eyeon-deals .deals-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 20px;
+}
+.eyeon-deals .deals-list .deal .image {
+  position: relative;
+  padding-top: 56.25%;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.eyeon-deals .deals-list .deal .image img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.eyeon-deals .deals-list .deal .deal-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+}
+.eyeon-deals .deals-list .deal .deal-content .retailer-logo {
+  width: 80px;
+  height: 80px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.eyeon-deals .deals-list .deal .deal-content .details .deal-title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  line-height: 23px;
+  font-weight: 600;
+}
+.eyeon-deals .deals-list .deal .deal-content .details .deal-expiry {
+  font-size: 14px;
+  line-height: 17px;
+  color: #666;
 }/*# sourceMappingURL=elementor.css.map */

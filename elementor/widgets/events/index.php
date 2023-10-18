@@ -35,7 +35,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'fetch_all',
       [
-        'label' => esc_html__( 'Fetch All Events', EYEON_NAMESPACE ),
+        'label' => esc_html__( 'Fetch All', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
         'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
         'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
@@ -134,7 +134,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
         'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
         'return_value' => 'yes',
-        'default' => '',
+        'default' => 'yes',
       ]
     );
 
