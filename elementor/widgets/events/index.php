@@ -314,7 +314,49 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_responsive_control(
-      'event_metadata_spacing',
+      'event_metadata_margin_top',
+      [
+        'label' => esc_html__( 'Margin Top', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 20,
+            'step' => 1,
+          ],
+        ],
+        'size_units' => ['px'],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-events .events-list .event .metadata' => 'margin-top: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+			'event_metadata_direction',
+			[
+				'label' => esc_html__( 'Direction', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::CHOOSE,
+				'options' => [
+					'row' => [
+						'title' => esc_html__( 'Row - horizontal', EYEON_NAMESPACE ),
+						'icon' => 'eicon-arrow-right',
+					],
+					'column' => [
+						'title' => esc_html__( 'Column - vertical', EYEON_NAMESPACE ),
+						'icon' => 'eicon-arrow-down',
+					],
+				],
+				'default' => 'row',
+				'toggle' => true,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-events .events-list .event .metadata' => 'flex-direction: {{VALUE}};',
+				],
+			]
+		);
+
+    $this->add_responsive_control(
+      'event_metadata_flex_spacing',
       [
         'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
@@ -327,7 +369,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         ],
         'size_units' => ['px'],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-events .events-list .event .metadata' => 'margin-top: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-events .events-list .event .metadata' => 'gap: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
