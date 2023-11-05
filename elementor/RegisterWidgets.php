@@ -1,5 +1,8 @@
 <?php
 
+/*
+Elementor Categories Group
+*/
 function register_eyeon_elementor_categories( $elements_manager ) {
   $elements_manager->add_category(
     'eyeon',
@@ -11,6 +14,9 @@ function register_eyeon_elementor_categories( $elements_manager ) {
 }
 add_action( 'elementor/elements/categories_registered', 'register_eyeon_elementor_categories' );
 
+/*
+Include Scripts & Styles
+*/
 function eyeon_elementor_scripts() {
   // mcd_include_css('fontawesome', 'assets/plugins/fontawesome/css/fontawesome-all.min.css');
   mcd_include_css('eyeon-elementor-style', 'assets/css/elementor.min.css');
@@ -20,15 +26,44 @@ function eyeon_elementor_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'eyeon_elementor_scripts' );
 
-function register_eyeon_widgets() {
+/*
+Scripts & Styles for Elementor widget editor
+*/
+function enqueue_custom_script() {
+  global $mcd_settings;
+
+  // Categories Select2
+  wp_register_script( 'eyeon-retailers-categories-script', mcd_version_url( 'elementor/controls/retailer-categories.js' ) );
+  $categoriesCustomData = array(
+    'center_id' => $mcd_settings['center_id'],
+    'api_endpoint' => MCD_API_STORES.'/categories'
+  );
+  wp_localize_script('eyeon-retailers-categories-script', 'categoriesCustomData', $categoriesCustomData);
+  wp_enqueue_script( 'eyeon-retailers-categories-script' );
+
+  // Tags Select2
+  wp_register_script( 'eyeon-retailers-tags-script', mcd_version_url( 'elementor/controls/retailer-tags.js' ) );
+  $tagsCustomData = array(
+    'center_id' => $mcd_settings['center_id'],
+    'api_endpoint' => MCD_API_STORES.'/tags',
+  );
+  wp_localize_script('eyeon-retailers-tags-script', 'tagsCustomData', $tagsCustomData);
+  wp_enqueue_script( 'eyeon-retailers-tags-script' );
+}
+add_action('elementor/editor/after_enqueue_scripts', 'enqueue_custom_script');
+
+/*
+Register Elementor Widgets
+*/
+function register_eyeon_widgets( $widgets_manager ) {
   require_once plugin_dir_path( __FILE__).'widgets/stores/index.php';
-  \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new EyeOn_Stores_Widget());
+  $widgets_manager->register( new \EyeOn_Stores_Widget() );
 
   require_once plugin_dir_path( __FILE__).'widgets/events/index.php';
-  \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new EyeOn_Events_Widget());
+  $widgets_manager->register( new \EyeOn_Events_Widget() );
 
   require_once plugin_dir_path( __FILE__).'widgets/deals/index.php';
-  \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new EyeOn_Deals_Widget());
+  $widgets_manager->register( new \EyeOn_Deals_Widget() );
 }  
-add_action('elementor/widgets/widgets_registered', 'register_eyeon_widgets');
+add_action('elementor/widgets/register', 'register_eyeon_widgets');
 

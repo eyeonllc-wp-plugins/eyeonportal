@@ -38,15 +38,14 @@ function mcd_get_version($url) {
 }
 
 // return a url with url_version
-function mcd_version_url($url, $return = false) {
+function mcd_version_url($url) {
 	$version_url = MCD_PLUGIN_URL.$url.'?v='.mcd_get_version($url);
-	if( $return ) return $version_url;
-	echo $version_url;
+	return $version_url;
 }
 
 function mcd_image_url($url = '') {
 	if( is_file(MCD_PLUGIN_PATH.$url) ) {
-		return mcd_version_url($url, true);
+		return mcd_version_url($url);
 	}
 	return MCD_PLUGIN_URL.'assets/img/blank.gif';
 }
@@ -133,7 +132,7 @@ function mcd_likes_number_format($number) {
 
 function mcd_include_js($name, $url, $in_footer = false) {
 	wp_enqueue_script(
-		'mcd-'.$name,
+		'eyeon-'.$name,
 		MCD_PLUGIN_URL.$url,
 		array('jquery'),
 		filemtime( MCD_PLUGIN_PATH.$url ),
@@ -143,7 +142,7 @@ function mcd_include_js($name, $url, $in_footer = false) {
 
 function mcd_include_css($name, $url, $in_footer = false) {
 	wp_enqueue_style(
-		'mcd-'.$name,
+		'eyeon-'.$name,
 		MCD_PLUGIN_URL.$url,
 		array(),
 		filemtime( MCD_PLUGIN_PATH.$url )

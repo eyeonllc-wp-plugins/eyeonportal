@@ -25,9 +25,9 @@ function mcp_retailers_categories() {
 
 	global $mcd_settings;
 
-	$api_url = MCD_API_CATEGORIES . '?center='.$mcd_settings['center_id'];
-	$categories = mcd_api_data($api_url);
-	return $categories ?: array();
+	$api_url = MCD_API_STORES . '/categories?limit=100&page=1';
+	$response = mcd_api_data($api_url);
+	return $response['items'] ?: array();
 }
 
 function mcd_page_widths() {

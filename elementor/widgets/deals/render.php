@@ -1,5 +1,9 @@
 <?php
 $settings = $this->get_settings_for_display();
+$filtered_settings = array_intersect_key($settings, array_flip([
+  'fetch_all',
+  'fetch_limit',
+]));
 $unique_id = uniqid();
 ?>
 
@@ -12,7 +16,7 @@ $unique_id = uniqid();
 
 <script type="text/javascript">
   jQuery(document).ready(function($) {
-    const settings = <?= json_encode($settings) ?>;
+    const settings = <?= json_encode($filtered_settings) ?>;
 
     const eyeonDeals = $('#eyeon-deals-<?= $unique_id ?>');
     const dealsList = $('#deals-list-<?= $unique_id ?>');

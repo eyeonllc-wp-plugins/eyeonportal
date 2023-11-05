@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal. (new)
-Version: 0.0.6
+Version: 0.0.7
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -54,8 +54,6 @@ defined('MCD_API_DEALS')			  OR define( 'MCD_API_DEALS', API_BASE_URL . 'deals' 
 defined('MCD_API_EVENTS')			  OR define( 'MCD_API_EVENTS', API_BASE_URL . 'events' );
 defined('MCD_API_CAREERS')		  OR define( 'MCD_API_CAREERS', API_BASE_URL . 'careers' );
 defined('MCD_API_BLOG_POSTS')	  OR define( 'MCD_API_BLOG_POSTS', API_BASE_URL . 'blogs' );
-
-defined('MCD_API_CATEGORIES')	  OR define( 'MCD_API_CATEGORIES', API_BASE_URL . 'api/retailers/categories' );
 
 defined('MCD_API_MAP_CONFIG')	  OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 'api/mapit2/config' );
 

@@ -1,5 +1,13 @@
 <?php
 $settings = $this->get_settings_for_display();
+$filtered_settings = array_intersect_key($settings, array_flip([
+  'fetch_all',
+  'fetch_limit',
+  'external_event_new_tab',
+  'event_title',
+  'event_excerpt',
+  'event_metadata',
+]));
 $unique_id = uniqid();
 ?>
 
@@ -12,7 +20,7 @@ $unique_id = uniqid();
 
 <script type="text/javascript">
   jQuery(document).ready(function($) {
-    const settings = <?= json_encode($settings) ?>;
+    const settings = <?= json_encode($filtered_settings) ?>;
 
     const eyeonEvents = $('#eyeon-events-<?= $unique_id ?>');
     const eventsList = $('#events-list-<?= $unique_id ?>');

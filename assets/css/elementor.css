@@ -53,6 +53,10 @@
   margin-left: -18px;
 }
 
+.no-items-found {
+  opacity: 1;
+}
+
 .eyeon-stores .eyeon-wrapper .content-cols {
   display: -webkit-box;
   display: -ms-flexbox;

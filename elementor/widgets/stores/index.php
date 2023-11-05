@@ -27,7 +27,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'content_settings',
       [
-        'label' => esc_html__( 'Settings', EYEON_NAMESPACE ),
+        'label' => __( 'Settings', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
       ]
     );
@@ -35,10 +35,10 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'fetch_all',
       [
-        'label' => esc_html__( 'Fetch All', EYEON_NAMESPACE ),
+        'label' => __( 'Fetch All', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
+        'label_on' => __( 'Yes', EYEON_NAMESPACE ),
+        'label_off' => __( 'No', EYEON_NAMESPACE ),
         'return_value' => 'yes',
         'default' => 'yes',
       ]
@@ -48,7 +48,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       'fetch_limit',
       [
         'type' => \Elementor\Controls_Manager::NUMBER,
-        'label' => esc_html__( 'Custom Limit', EYEON_NAMESPACE ),
+        'label' => __( 'Custom Limit', EYEON_NAMESPACE ),
         'placeholder' => '0',
         'min' => 1,
         'max' => 100,
@@ -64,7 +64,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       'items_per_row',
       [
         'type' => \Elementor\Controls_Manager::NUMBER,
-        'label' => esc_html__( 'Items per Row', EYEON_NAMESPACE ),
+        'label' => __( 'Items per Row', EYEON_NAMESPACE ),
         'min' => 1,
         'max' => 10,
         'step' => 1,
@@ -81,10 +81,10 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'categories_sidebar',
       [
-        'label' => esc_html__( 'Categories Sidebar', EYEON_NAMESPACE ),
+        'label' => __( 'Categories Sidebar', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'label_on' => __( 'Show', EYEON_NAMESPACE ),
+        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
         'return_value' => 'show',
         'default' => '',
       ]
@@ -93,12 +93,43 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'deal_flag',
       [
-        'label' => esc_html__( 'Deal Flag', EYEON_NAMESPACE ),
+        'label' => __( 'Deal Flag', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'label_on' => __( 'Show', EYEON_NAMESPACE ),
+        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
         'return_value' => 'show',
         'default' => 'show',
+      ]
+    );
+
+    $this->add_control(
+			'hr_1',
+			[
+				'type' => \Elementor\Controls_Manager::DIVIDER,
+			]
+		);
+
+    $this->add_control(
+      'retailer_categories',
+      [
+        'label' => __( 'Categories', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT2,
+        'options' => [],
+        'default' => [],
+        'multiple' => true,
+        'label_block' => true
+      ]
+    );
+
+    $this->add_control(
+      'retailer_tags',
+      [
+        'label' => __( 'Tags', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT2,
+        'options' => [],
+        'default' => [],
+        'multiple' => true,
+        'label_block' => true
       ]
     );
 
@@ -107,7 +138,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'grid_style_settings',
       [
-        'label' => esc_html__( 'Grid', EYEON_NAMESPACE ),
+        'label' => __( 'Grid', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
       ]
     );
@@ -115,7 +146,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'grid_gap',
       [
-        'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
+        'label' => __( 'Spacing', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -140,7 +171,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'grid_item_style_settings',
       [
-        'label' => esc_html__( 'Grid Item', EYEON_NAMESPACE ),
+        'label' => __( 'Grid Item', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
       ]
     );
@@ -148,7 +179,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'store_bg_color',
       [
-        'label' => esc_html__( 'Background Color', EYEON_NAMESPACE ),
+        'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img' => 'background-color: {{VALUE}}',
@@ -159,7 +190,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'store_padding',
       [
-        'label' => esc_html__( 'Padding', EYEON_NAMESPACE ),
+        'label' => __( 'Padding', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -178,12 +209,12 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'hover_style',
       [
-        'label' => esc_html__( 'Hover Style', EYEON_NAMESPACE ),
+        'label' => __( 'Hover Style', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => '',
         'options' => [
-          '' => esc_html__( 'None', EYEON_NAMESPACE ),
-          'grayscale' => esc_html__( 'Grayscale', EYEON_NAMESPACE ),
+          '' => __( 'None', EYEON_NAMESPACE ),
+          'grayscale' => __( 'Grayscale', EYEON_NAMESPACE ),
         ],
       ]
     );
@@ -193,7 +224,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'categories_style_settings',
       [
-        'label' => esc_html__( 'Categories', EYEON_NAMESPACE ),
+        'label' => __( 'Categories', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         'condition' => [
           'categories_sidebar' => 'show',
@@ -204,7 +235,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'categories_width',
       [
-        'label' => esc_html__( 'Width', EYEON_NAMESPACE ),
+        'label' => __( 'Width', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -223,7 +254,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'categories_item_padding',
       [
-        'label' => esc_html__( 'Padding', EYEON_NAMESPACE ),
+        'label' => __( 'Padding', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -242,7 +273,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'categories_stores_gap',
       [
-        'label' => esc_html__( 'Categories & Stores Gap', EYEON_NAMESPACE ),
+        'label' => __( 'Categories & Stores Gap', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -261,15 +292,15 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
 			'text_align',
 			[
-				'label' => esc_html__( 'Alignment', EYEON_NAMESPACE ),
+				'label' => __( 'Alignment', EYEON_NAMESPACE ),
 				'type' => \Elementor\Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Left', EYEON_NAMESPACE ),
+						'title' => __( 'Left', EYEON_NAMESPACE ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', EYEON_NAMESPACE ),
+						'title' => __( 'Right', EYEON_NAMESPACE ),
 						'icon' => 'eicon-text-align-right',
 					],
 				],
@@ -294,7 +325,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'deal_flag_style_settings',
       [
-        'label' => esc_html__( 'Deal Flag', EYEON_NAMESPACE ),
+        'label' => __( 'Deal Flag', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         'condition' => [
           'deal_flag' => 'show',
@@ -305,7 +336,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'deal_flag_top',
       [
-        'label' => esc_html__( 'Top Position', EYEON_NAMESPACE ),
+        'label' => __( 'Top Position', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -324,7 +355,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
 			'deal_flag_padding',
 			[
-				'label' => esc_html__( 'Padding', EYEON_NAMESPACE ),
+				'label' => __( 'Padding', EYEON_NAMESPACE ),
 				'type' => \Elementor\Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', '%' ],
 				'selectors' => [
@@ -336,7 +367,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
 			'deal_flag_bg_color',
 			[
-				'label' => esc_html__( 'Background Color', EYEON_NAMESPACE ),
+				'label' => __( 'Background Color', EYEON_NAMESPACE ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .deal-flag' => 'background-color: {{VALUE}}',

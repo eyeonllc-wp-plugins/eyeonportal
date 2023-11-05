@@ -1,6 +1,13 @@
 <?php
 $settings = $this->get_settings_for_display();
-//eyeon_debug($settings, false);
+
+$filtered_settings = array_intersect_key($settings, array_flip([
+  'fetch_all',
+  'fetch_limit',
+  'deal_flag',
+  'retailer_categories',
+  'retailer_tags',
+]));
 $unique_id = uniqid();
 ?>
 
@@ -26,7 +33,8 @@ $unique_id = uniqid();
 
 <script type="text/javascript">
   jQuery(document).ready(function($) {
-    const settings = <?= json_encode($settings) ?>;
+    const settings = <?= json_encode($filtered_settings) ?>;
+
     const eyeonStores = $('#eyeon-stores-<?= $unique_id ?>');
     const categoryList = $('#stores-categories-<?= $unique_id ?>');
     const searchInput = $('#stores-search-<?= $unique_id ?>');
@@ -48,9 +56,24 @@ $unique_id = uniqid();
         var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
         limit = Math.min(remainingLimit, defaultLimit);
       }
+      const ajaxData = {
+        limit,
+        page,
+        category_ids: [],
+        tag_ids: [],
+      };
+      $.each(settings.retailer_categories, function(index, category) {
+        const parseCategory = JSON.parse(category);
+        ajaxData.category_ids.push(parseCategory.id);
+      });
+      $.each(settings.retailer_tags, function(index, tag) {
+        const parseTag = JSON.parse(tag);
+        ajaxData.tag_ids.push(parseTag.id);
+      });
+
       $.ajax({
         url: "<?= MCD_API_STORES ?>",
-        data: { limit, page },
+        data: ajaxData,
         method: 'GET',
         dataType: 'json',
         headers: {
@@ -108,22 +131,28 @@ $unique_id = uniqid();
     function render(category, search) {
       retailersList.empty();
 
-      retailers.forEach(retailer => {
-        if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
-          if (search === '' || retailer.name.toLowerCase().includes(search)) {
-            const retailerItem = $(`
-              <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store">
-                <div class="image">
-                  <img src="${retailer.media.url}" alt="${retailer.name}" />
-                  ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
-                </div>
-                <!--<h3 class="store-name">${retailer.name}</h3>-->
-              </a>
-            `);
-            retailersList.append(retailerItem);
+      if( retailers.length > 0 ) {
+        retailers.forEach(retailer => {
+          if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
+            if (search === '' || retailer.name.toLowerCase().includes(search)) {
+              const retailerItem = $(`
+                <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store">
+                  <div class="image">
+                    <img src="${retailer.media.url}" alt="${retailer.name}" />
+                    ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
+                  </div>
+                  <!--<h3 class="store-name">${retailer.name}</h3>-->
+                </a>
+              `);
+              retailersList.append(retailerItem);
+            }
           }
-        }
-      });
+        });
+      } else {
+        eyeonStores.find('.eyeon-wrapper').html(`
+          <div class="no-items-found">No items found.</div>
+        `);
+      }
     }
 
     // Event listeners for filter and search
