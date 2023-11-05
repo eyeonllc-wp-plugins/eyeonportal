@@ -1,7 +1,9 @@
 <?php
-date_default_timezone_set(get_option('timezone_string'));
-
 $mycenterevent = $this->mcd_settings['mycenterevent'];
+$mycenterevent['start_date'] = date("M d, Y", strtotime($mycenterevent['start_date']));
+$mycenterevent['end_date'] = date("M d, Y", strtotime($mycenterevent['end_date']));
+$mycenterevent['start_time'] = date("H:ia", strtotime($mycenterevent['start_time']));
+$mycenterevent['end_time'] = date("H:ia", strtotime($mycenterevent['end_time']));
 
 $rdate = '';
 if( isset($mycenterevent['rrdate']) ) {
@@ -30,19 +32,11 @@ if( isset($mycenterevent['next']) ) {
 
 <?php if( is_array($mycenterevent) ) : ?>
 
-<div class="mycenterdeals-wrapper mycenterevent">
+<div id="eyeonevent-single">
 	<?php if( isset( $mycenterevent['error'] ) ) : ?>
 		<div class="mcd-alert"><?= $mycenterevent['error'] ?></div>
 	<?php else: ?>
-		<div id="mcd-event" class="clearfix">
-			<div class="mcd-prev-next-nav">
-				<?php if( !empty($this->mcd_settings['events_listing_page']) ) : ?>
-					<a href="<?= get_permalink($this->mcd_settings['events_listing_page']) ?>" class="item back">Back to Events</a>
-				<?php endif; ?>
-				<a <?= (!empty($prev_url)?'href="'.$prev_url.'"':'') ?> class="item prev hide <?= (empty($prev_url)?'disabled':'') ?>"><i class="fas fa-chevron-left"></i><span>Prev</span></a>
-				<a <?= (!empty($next_url)?'href="'.$next_url.'"':'') ?> class="item next hide <?= (empty($next_url)?'disabled':'') ?>"><span>Next</span><i class="fas fa-chevron-right"></i></a>
-			</div>
-
+		<div class="eyeon-event-content clearfix">
 			<div class="mcd-event-cols">
 				<div class="mcd-event-image-col">
 					<div class="mcd-event-image">
@@ -50,7 +44,7 @@ if( isset($mycenterevent['next']) ) {
 					</div>
 				</div>
 
-				<div class="mcd-event-details">
+				<div class="mcd-event-details-col">
 					<div class="mcd-event-name"><?= $mycenterevent['title'] ?></div>
 					<div class="mcd-event-date-time">
 						<div class="mcd-event-dates">

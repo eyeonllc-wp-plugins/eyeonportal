@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal. (new)
-Version: 0.0.7
+Version: 0.0.8
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -20,7 +20,6 @@ $myUpdateChecker->setBranch('master');
 
 
 defined('MCD_REDUX_OPT_NAME')		OR define( 'MCD_REDUX_OPT_NAME', 'mcd_settings' );
-// date_default_timezone_set(wp_timezone_string());
 
 if( !defined('ABSPATH') ) die();
 $mcd_settings = get_option(MCD_REDUX_OPT_NAME);

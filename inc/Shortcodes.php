@@ -349,8 +349,6 @@ if( !class_exists('MCDShortcodes') ) {
 				mcd_include_js('add-to-calendar', 'assets/plugins/add-to-calendar.min.js', true);
 				$req_url = MCD_API_EVENTS.'/'.get_query_var('mycenterevent', 0);
         $eventData = mcd_api_data($req_url);
-        $eventData['start_date'] = date("M d, Y", strtotime($eventData['start_date']));
-        $eventData['end_date'] = date("M d, Y", strtotime($eventData['end_date']));
 				$this->mcd_settings['mycenterevent'] = $eventData;
 				if( $this->mcd_settings['events_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['events_single_page_custom_title'];
