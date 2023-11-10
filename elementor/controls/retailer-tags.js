@@ -2,7 +2,7 @@ jQuery(function ($) {
   elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
     const widgetName = model.attributes.widgetType;
 
-    if (widgetName === 'eyeon_stores_widget') {
+    if (widgetName === 'eyeon_stores_widget' || widgetName === 'eyeon_carousel_widget') {
       const tagsSelect2 = $('.elementor-control-retailer_tags select');
       const uniqueTagIDs = new Set();
       const selectedOptions = [];

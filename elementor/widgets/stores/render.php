@@ -7,15 +7,29 @@ $filtered_settings = array_intersect_key($settings, array_flip([
   'deal_flag',
   'retailer_categories',
   'retailer_tags',
+  'view_mode',
+  'carousel_items',
+  'carousel_items_tablet',
+  'carousel_items_mobile',
+  'carousel_dots',
+  'carousel_navigation',
+  'carousel_autoplay',
+  'carousel_autoplay_speed',
+  'carousel_slideby',
+  'carousel_slideby_tablet',
+  'carousel_slideby_mobile',
+  'carousel_margin',
+  'carousel_margin_tablet',
+  'carousel_margin_mobile',
 ]));
 $unique_id = uniqid();
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
   <div class="eyeon-wrapper eyeon-hide">
-    <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
+    <!-- <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." /> -->
 
-    <div class="content-cols">
+    <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
       <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       <div class="stores-categories">
         <ul id="stores-categories-<?= $unique_id ?>">
@@ -23,9 +37,23 @@ $unique_id = uniqid();
         </ul>
       </div>
       <?php endif; ?>
-        
+      
+      <?php
+      $classes = $settings['hover_style'];
+      if ($settings['view_mode']==='carousel' ) {
+        $classes .= ' owl-carousel owl-carousel-'.$unique_id.' owl-theme';
+        if($settings['carousel_navigation']==='show') {
+          $classes .= ' owl-nav-show';
+        }
+        if($settings['carousel_dots']==='show') {
+          $classes .= ' owl-dots-show';
+        }
+      } else {
+        $classes .= ' grid-view';
+      }
+      ?>
       <div class="stores-list">
-        <div id="stores-list-<?= $unique_id ?>" class="stores <?= $settings['hover_style'] ?>"></div>
+        <div id="stores-list-<?= $unique_id ?>" class="stores <?= $classes ?>"></div>
       </div>
     </div>
   </div>
@@ -34,6 +62,7 @@ $unique_id = uniqid();
 <script type="text/javascript">
   jQuery(document).ready(function($) {
     const settings = <?= json_encode($filtered_settings) ?>;
+    const breakpoints = window.getResponsiveBreakpoints();
 
     const eyeonStores = $('#eyeon-stores-<?= $unique_id ?>');
     const categoryList = $('#stores-categories-<?= $unique_id ?>');
@@ -148,6 +177,8 @@ $unique_id = uniqid();
             }
           }
         });
+        
+        <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
       } else {
         eyeonStores.find('.eyeon-wrapper').html(`
           <div class="no-items-found">No items found.</div>
@@ -169,6 +200,5 @@ $unique_id = uniqid();
       const search = $(this).val().toLowerCase();
       render(selectedCategory, search);
     });
-
   });
 </script>

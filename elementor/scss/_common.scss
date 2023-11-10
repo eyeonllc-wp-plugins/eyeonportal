@@ -43,3 +43,69 @@
 .no-items-found {
   opacity: 1;
 }
+
+.owl-carousel {
+  &.owl-nav-show {
+    padding: 0 30px;
+
+    .owl-nav {
+      margin: 0;
+
+      button {
+        width: 20px;
+        height: 20px;
+        border: 3px solid #888;
+        border-radius: 3px;
+        transform: rotate(45deg);
+        position: absolute;
+        top: 50%;
+        margin-top: -8px;
+        opacity: 0.7;
+        background-color: transparent !important;
+        outline: none;
+
+        &.owl-prev {
+          border-right-color: transparent;
+          border-top-color: transparent;
+          left: 4px;
+        }
+
+        &.owl-next {
+          border-left-color: transparent;
+          border-bottom-color: transparent;
+          right: 4px;
+        }
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &.owl-dots-show {
+    margin-bottom: 40px;
+
+    .owl-dots {
+      position: absolute;
+      width: 100%;
+      bottom: -40px;
+      left: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .owl-dot {
+        outline: none;
+
+        &.active {
+          opacity: 1;
+        }
+
+        span {
+          margin: 5px;
+        }
+      }
+    }
+  }
+}

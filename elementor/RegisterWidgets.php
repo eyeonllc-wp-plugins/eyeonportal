@@ -19,17 +19,21 @@ Include Scripts & Styles
 */
 function eyeon_elementor_scripts() {
   // mcd_include_css('fontawesome', 'assets/plugins/fontawesome/css/fontawesome-all.min.css');
-  mcd_include_css('eyeon-elementor-style', 'assets/css/elementor.min.css');
+  wp_register_style( 'eyeon-elementor-style', mcd_version_url( 'assets/css/elementor.min.css' ) );
 
-  mcd_include_js('moment', 'assets/plugins/calendar/moment.min.js', true);
-  mcd_include_js('eyeon-elementor-utils', 'elementor/js/utils.js');
+  wp_register_script( 'eyeon-moment', mcd_version_url( 'assets/plugins/calendar/moment.min.js' ) );
+  wp_register_script( 'eyeon-elementor-utils', mcd_version_url( 'elementor/js/utils.js' ) );
+
+  wp_register_script( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/owl.carousel.min.js' ) );
+  wp_register_style( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/assets/owl.carousel.min.css' ) );
+  wp_register_style( 'eyeon-owl-carousel-theme', mcd_version_url( 'assets/plugins/owl/assets/owl.theme.default.min.css' ) );
 }
 add_action( 'wp_enqueue_scripts', 'eyeon_elementor_scripts' );
 
 /*
 Scripts & Styles for Elementor widget editor
 */
-function enqueue_custom_script() {
+function eyeon_elementor_editor_scripts() {
   global $mcd_settings;
 
   // Categories Select2
@@ -50,7 +54,7 @@ function enqueue_custom_script() {
   wp_localize_script('eyeon-retailers-tags-script', 'tagsCustomData', $tagsCustomData);
   wp_enqueue_script( 'eyeon-retailers-tags-script' );
 }
-add_action('elementor/editor/after_enqueue_scripts', 'enqueue_custom_script');
+add_action('elementor/editor/after_enqueue_scripts', 'eyeon_elementor_editor_scripts');
 
 /*
 Register Elementor Widgets

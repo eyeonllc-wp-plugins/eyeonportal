@@ -57,48 +57,109 @@
   opacity: 1;
 }
 
+.owl-carousel.owl-nav-show {
+  padding: 0 30px;
+}
+.owl-carousel.owl-nav-show .owl-nav {
+  margin: 0;
+}
+.owl-carousel.owl-nav-show .owl-nav button {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #888;
+  border-radius: 3px;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+  position: absolute;
+  top: 50%;
+  margin-top: -8px;
+  opacity: 0.7;
+  background-color: transparent !important;
+  outline: none;
+}
+.owl-carousel.owl-nav-show .owl-nav button.owl-prev {
+  border-right-color: transparent;
+  border-top-color: transparent;
+  left: 4px;
+}
+.owl-carousel.owl-nav-show .owl-nav button.owl-next {
+  border-left-color: transparent;
+  border-bottom-color: transparent;
+  right: 4px;
+}
+.owl-carousel.owl-nav-show .owl-nav button:hover {
+  opacity: 1;
+}
+.owl-carousel.owl-dots-show {
+  margin-bottom: 40px;
+}
+.owl-carousel.owl-dots-show .owl-dots {
+  position: absolute;
+  width: 100%;
+  bottom: -40px;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.owl-carousel.owl-dots-show .owl-dots .owl-dot {
+  outline: none;
+}
+.owl-carousel.owl-dots-show .owl-dots .owl-dot.active {
+  opacity: 1;
+}
+.owl-carousel.owl-dots-show .owl-dots .owl-dot span {
+  margin: 5px;
+}
+
 .eyeon-stores .eyeon-wrapper .content-cols {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   gap: 20px;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-categories {
+.eyeon-stores .eyeon-wrapper .stores-categories {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 220px;
           flex: 0 0 220px;
   border-right: 2px solid #E8E8E8;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul {
+.eyeon-stores .eyeon-wrapper .stores-categories ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul li {
+.eyeon-stores .eyeon-wrapper .stores-categories ul li {
   cursor: pointer;
   margin-right: -2px;
   padding: 3px 0px;
   padding-right: 20px !important;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-categories ul li.active {
+.eyeon-stores .eyeon-wrapper .stores-categories ul li.active {
   border-right: 2px solid #444;
   font-weight: 600;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list {
+.eyeon-stores .eyeon-wrapper .stores-list {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores {
+.eyeon-stores .eyeon-wrapper .stores-list .stores.grid-view {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 15px;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores .store .image {
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image {
   position: relative;
   padding-top: 100%;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores .store .image img {
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image img {
   width: 100%;
   height: 100%;
   -o-object-fit: contain;
@@ -108,7 +169,7 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.06);
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores .store .image .deal-flag {
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image .deal-flag {
   position: absolute;
   right: 0;
   top: 8px;
@@ -119,12 +180,12 @@
   font-size: 12px;
   z-index: 2;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores.grayscale .store .image img {
+.eyeon-stores .eyeon-wrapper .stores-list .stores.grayscale .store .image img {
   -webkit-filter: grayscale(1);
           filter: grayscale(1);
   opacity: 0.7;
 }
-.eyeon-stores .eyeon-wrapper .content-cols .stores-list .stores.grayscale .store:hover .image img {
+.eyeon-stores .eyeon-wrapper .stores-list .stores.grayscale .store:hover .image img {
   -webkit-filter: grayscale(0);
           filter: grayscale(0);
   opacity: 1;

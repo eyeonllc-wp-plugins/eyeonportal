@@ -1,9 +1,8 @@
 jQuery(function ($) {
   elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
     const widgetName = model.attributes.widgetType;
-    console.log('angrej123', categoriesCustomData);
 
-    if (widgetName === 'eyeon_stores_widget') {
+    if (widgetName === 'eyeon_stores_widget' || widgetName === 'eyeon_carousel_widget') {
       const categoriesSelect2 = $('.elementor-control-retailer_categories select');
       const uniqueCategoryIDs = new Set();
 

@@ -17,6 +17,19 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
       return ['eyeon'];
   }
 
+  public function get_script_depends() {
+		return [
+      'eyeon-moment',
+      'eyeon-elementor-utils'
+    ];
+	}
+  
+	public function get_style_depends() {
+    return [
+      'eyeon-elementor-style'
+    ];
+	}
+
   protected function render() {
     global $mcd_settings;
     include dirname(__FILE__) . '/render.php';

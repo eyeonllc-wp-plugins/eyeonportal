@@ -1040,6 +1040,8 @@ select#mcd-filter-order {
   height: 100%;
   padding: 10px;
   z-index: 1;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 #mcd-retailer .mcd-retailer-details {

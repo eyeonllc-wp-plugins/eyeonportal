@@ -17,6 +17,21 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       return ['eyeon'];
   }
 
+  public function get_script_depends() {
+		return [
+      'eyeon-elementor-utils',
+      'eyeon-owl-carousel'
+    ];
+	}
+  
+	public function get_style_depends() {
+    return [
+      'eyeon-owl-carousel',
+      'eyeon-owl-carousel-theme',
+      'eyeon-elementor-style'
+    ];
+	}
+
   protected function render() {
     global $mcd_settings;
     include dirname(__FILE__) . '/render.php';
@@ -29,6 +44,19 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       [
         'label' => __( 'Settings', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+      ]
+    );
+
+    $this->add_control(
+      'view_mode',
+      [
+        'label' => __( 'View Mode', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'default' => 'grid',
+        'options' => [
+          'grid' => __( 'Grid', EYEON_NAMESPACE ),
+          'carousel' => __( 'Carousel', EYEON_NAMESPACE ),
+        ],
       ]
     );
 
@@ -48,7 +76,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       'fetch_limit',
       [
         'type' => \Elementor\Controls_Manager::NUMBER,
-        'label' => __( 'Custom Limit', EYEON_NAMESPACE ),
+        'label' => __( 'Limit', EYEON_NAMESPACE ),
         'placeholder' => '0',
         'min' => 1,
         'max' => 100,
@@ -75,6 +103,9 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
         ],
+        'condition' => [
+          'view_mode' => 'grid',
+        ],
       ]
     );
 
@@ -87,6 +118,9 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'label_off' => __( 'Hide', EYEON_NAMESPACE ),
         'return_value' => 'show',
         'default' => '',
+        'condition' => [
+          'view_mode' => 'grid',
+        ],
       ]
     );
 
@@ -135,11 +169,16 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
 
     $this->end_controls_section();
 
+    include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
+
     $this->start_controls_section(
       'grid_style_settings',
       [
-        'label' => __( 'Grid', EYEON_NAMESPACE ),
+        'label' => __( 'Grid Settings', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'view_mode' => 'grid',
+        ],
       ]
     );
 
@@ -171,7 +210,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'grid_item_style_settings',
       [
-        'label' => __( 'Grid Item', EYEON_NAMESPACE ),
+        'label' => __( 'Single Item', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
       ]
     );
@@ -190,7 +229,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_responsive_control(
       'store_padding',
       [
-        'label' => __( 'Padding', EYEON_NAMESPACE ),
+        'label' => __( 'Image Padding', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -227,6 +266,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'label' => __( 'Categories', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         'condition' => [
+          'view_mode' => 'grid',
           'categories_sidebar' => 'show',
         ],
       ]
@@ -352,7 +392,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       ]
     );
 
-    $this->add_control(
+    $this->add_responsive_control(
 			'deal_flag_padding',
 			[
 				'label' => __( 'Padding', EYEON_NAMESPACE ),

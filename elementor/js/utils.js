@@ -9,3 +9,12 @@ function eyeonConvertTo12HourFormat(timeString) {
 function eyeonFormatDate(dateString) {
   return moment(dateString).format('MMM D, YYYY');
 }
+
+function getResponsiveBreakpoints() {
+  var breakpoints = [];
+  console.log('angrej123 window.elementorFrontend.config', window.elementorFrontend.config);
+  if (window.elementorFrontend && window.elementorFrontend.config && window.elementorFrontend.config.breakpoints) {
+    breakpoints = window.elementorFrontend.config.breakpoints;
+  }
+  return breakpoints;
+}
