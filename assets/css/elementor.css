@@ -191,7 +191,7 @@
   opacity: 1;
 }
 
-.eyeon-events .eyeon-wrapper .events-list {
+.eyeon-events .eyeon-wrapper .events-list.grid-view {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 20px;

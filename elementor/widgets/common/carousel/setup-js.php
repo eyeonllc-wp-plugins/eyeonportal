@@ -1,10 +1,12 @@
 <?php if ($settings['view_mode'] === 'carousel') : ?>
+const breakpoints = window.getResponsiveBreakpoints();
+
 var owl_options = {
   nav: settings.carousel_navigation === 'show',
   navText: ['', ''],
   dots: settings.carousel_dots === 'show',
   dotsEach: false,
-  loop: true,
+  loop: settings.carousel_loop === 'yes',
   items: settings.carousel_items,
   autoplay: settings.carousel_autoplay === 'yes',
   autoplayTimeout: settings.carousel_autoplay_speed || 5000,

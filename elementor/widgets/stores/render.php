@@ -21,6 +21,7 @@ $filtered_settings = array_intersect_key($settings, array_flip([
   'carousel_margin',
   'carousel_margin_tablet',
   'carousel_margin_mobile',
+  'carousel_loop'
 ]));
 $unique_id = uniqid();
 ?>
@@ -62,7 +63,6 @@ $unique_id = uniqid();
 <script type="text/javascript">
   jQuery(document).ready(function($) {
     const settings = <?= json_encode($filtered_settings) ?>;
-    const breakpoints = window.getResponsiveBreakpoints();
 
     const eyeonStores = $('#eyeon-stores-<?= $unique_id ?>');
     const categoryList = $('#stores-categories-<?= $unique_id ?>');

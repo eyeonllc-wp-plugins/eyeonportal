@@ -7,13 +7,42 @@ $filtered_settings = array_intersect_key($settings, array_flip([
   'event_title',
   'event_excerpt',
   'event_metadata',
+  'view_mode',
+  'carousel_items',
+  'carousel_items_tablet',
+  'carousel_items_mobile',
+  'carousel_dots',
+  'carousel_navigation',
+  'carousel_autoplay',
+  'carousel_autoplay_speed',
+  'carousel_slideby',
+  'carousel_slideby_tablet',
+  'carousel_slideby_mobile',
+  'carousel_margin',
+  'carousel_margin_tablet',
+  'carousel_margin_mobile',
+  'carousel_loop'
 ]));
 $unique_id = uniqid();
 ?>
 
 <div id="eyeon-events-<?= $unique_id ?>" class="eyeon-events eyeon-loader">
   <div class="eyeon-wrapper eyeon-hide">
-      <div id="events-list-<?= $unique_id ?>" class="events-list"></div>
+      <?php
+      $classes = '';
+      if ($settings['view_mode']==='carousel' ) {
+        $classes .= ' owl-carousel owl-carousel-'.$unique_id.' owl-theme';
+        if($settings['carousel_navigation']==='show') {
+          $classes .= ' owl-nav-show';
+        }
+        if($settings['carousel_dots']==='show') {
+          $classes .= ' owl-dots-show';
+        }
+      } else {
+        $classes .= ' grid-view';
+      }
+      ?>
+      <div id="events-list-<?= $unique_id ?>" class="events-list <?= $classes ?>"></div>
     </div>
   </div>
 </div>
@@ -94,6 +123,8 @@ $unique_id = uniqid();
         `);
         eventsList.append(eventItem);
       });
+
+      <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
     }
   });
 </script>

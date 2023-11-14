@@ -32,7 +32,7 @@ if( isset($mycenterevent['next']) ) {
 
 <?php if( is_array($mycenterevent) ) : ?>
 
-<div id="eyeonevent-single">
+<div id="eyeonevent-single" class="mycenterdeals-wrapper">
 	<?php if( isset( $mycenterevent['error'] ) ) : ?>
 		<div class="mcd-alert"><?= $mycenterevent['error'] ?></div>
 	<?php else: ?>

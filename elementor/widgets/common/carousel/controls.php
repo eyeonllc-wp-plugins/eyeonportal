@@ -104,6 +104,18 @@ $this->add_control(
     ],
   ]
 );
+  
+$this->add_control(
+  'carousel_loop',
+  [
+    'label' => __( 'Loop', EYEON_NAMESPACE ),
+    'type' => \Elementor\Controls_Manager::SWITCHER,
+    'label_on' => __( 'Yes', EYEON_NAMESPACE ),
+    'label_off' => __( 'No', EYEON_NAMESPACE ),
+    'return_value' => 'yes',
+    'default' => 'no',
+  ]
+);
 
 $this->end_controls_section();
 

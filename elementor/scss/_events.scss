@@ -1,9 +1,11 @@
 .eyeon-events {
   .eyeon-wrapper {
     .events-list {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      grid-gap: 20px;
+      &.grid-view {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px;
+      }
 
       .event {
         .image {

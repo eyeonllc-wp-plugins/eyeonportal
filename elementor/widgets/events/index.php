@@ -46,6 +46,19 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
+      'view_mode',
+      [
+        'label' => __( 'View Mode', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'default' => 'grid',
+        'options' => [
+          'grid' => __( 'Grid', EYEON_NAMESPACE ),
+          'carousel' => __( 'Carousel', EYEON_NAMESPACE ),
+        ],
+      ]
+    );
+
+    $this->add_control(
       'fetch_all',
       [
         'label' => esc_html__( 'Fetch All', EYEON_NAMESPACE ),
@@ -153,11 +166,16 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
 
     $this->end_controls_section();
 
+    include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
+
     $this->start_controls_section(
       'grid_style_settings',
       [
         'label' => esc_html__( 'Grid', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'view_mode' => 'grid',
+        ],
       ]
     );
 
