@@ -53,6 +53,20 @@
               background-color: rgba(0, 0, 0, 0.06);
             }
 
+            &.show-featured-image {
+              padding-top: 50%;
+
+              img {
+                width: 50%;
+
+                &.featured-image {
+                  left: auto;
+                  right: 0;
+                  object-fit: cover;
+                }
+              }
+            }
+
             .deal-flag {
               position: absolute;
               right: 0;

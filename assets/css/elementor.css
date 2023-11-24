@@ -169,6 +169,18 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.06);
 }
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image.show-featured-image {
+  padding-top: 50%;
+}
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image.show-featured-image img {
+  width: 50%;
+}
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image.show-featured-image img.featured-image {
+  left: auto;
+  right: 0;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
 .eyeon-stores .eyeon-wrapper .stores-list .stores .store .image .deal-flag {
   position: absolute;
   right: 0;

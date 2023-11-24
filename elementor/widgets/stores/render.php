@@ -7,6 +7,7 @@ $filtered_settings = array_intersect_key($settings, array_flip([
   'deal_flag',
   'retailer_categories',
   'retailer_tags',
+  'featured_image',
   'view_mode',
   'carousel_items',
   'carousel_items_tablet',
@@ -28,13 +29,13 @@ $unique_id = uniqid();
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
   <div class="eyeon-wrapper eyeon-hide">
-    <!-- <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." /> -->
+    <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
 
     <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
       <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       <div class="stores-categories">
         <ul id="stores-categories-<?= $unique_id ?>">
-          <li data-value="all" class="active">All Stores</li>
+          <li data-value="all" class="active"><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></li>
         </ul>
       </div>
       <?php endif; ?>
@@ -63,6 +64,9 @@ $unique_id = uniqid();
 <script type="text/javascript">
   jQuery(document).ready(function($) {
     const settings = <?= json_encode($filtered_settings) ?>;
+    settings.retailer_categories = settings.retailer_categories.map(function (item) {
+      return parseInt(item);
+    });
 
     const eyeonStores = $('#eyeon-stores-<?= $unique_id ?>');
     const categoryList = $('#stores-categories-<?= $unique_id ?>');
@@ -72,12 +76,12 @@ $unique_id = uniqid();
     let retailers = [];
     var page = 1;
     var defaultLimit = 100;
-    let categories = new Set([]);
-    const otherCategory = {
-      name: 'Others'
-    };
+    let categories = [];
+    let retailersFetched = false;
+    let categoriesFetched = false;
 
     fetch_retailers();
+    fetch_categories();
 
     function fetch_retailers() {
       var limit = defaultLimit;
@@ -92,8 +96,7 @@ $unique_id = uniqid();
         tag_ids: [],
       };
       $.each(settings.retailer_categories, function(index, category) {
-        const parseCategory = JSON.parse(category);
-        ajaxData.category_ids.push(parseCategory.id);
+        ajaxData.category_ids.push(category);
       });
       $.each(settings.retailer_tags, function(index, tag) {
         const parseTag = JSON.parse(tag);
@@ -110,6 +113,7 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
+            retailersFetched = true;
             retailers = retailers.concat(response.items);
             var fetchMore = false;
             if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
@@ -129,32 +133,73 @@ $unique_id = uniqid();
       });
     }
 
+    function fetch_categories() {
+      $.ajax({
+        url: "<?= MCD_API_STORES.'/categories' ?>",
+        data: {
+          limit: 100,
+          page: 1,
+          group: true
+        },
+        method: 'GET',
+        dataType: 'json',
+        headers: {
+          center_id: '<?= $mcd_settings['center_id'] ?>'
+        },
+        success: function (response) {
+          if (response.items) {
+            categoriesFetched = true;
+            responseCategories = response.items;
+            <?php if( in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories']) ) : ?>
+              $.each(response.items, function(index, category) {
+                if (category.id === <?= RESTAURANTS_CATEGORY_ID ?>) {
+                  responseCategories = category.children;
+                }
+              });
+            <?php endif; ?>
+            $.each(responseCategories, function (index, item) {
+              categories.push({
+                id: item.id,
+                name: item.name,
+                display: false,
+              });
+            });
+            setup_categories();
+          }
+        }
+      });
+    }
+
     function setup_categories() {
+      if( !retailersFetched || !categoriesFetched ) return false;
+
       eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
 
       retailers.forEach(retailer => {
-        if (retailer.categories.length === 0) {
-          retailer.categories.push(otherCategory);
-        }
-
         retailer.categories.forEach(category => {
-          categories.add(category.name);
+          updateCategoryDisplay(category.id);
         });
       });
 
-      const categoriesArray = Array.from(categories);
-      categoriesArray.sort();
-      categories = new Set(categoriesArray);
-
       <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       categories.forEach(category => {
-        categoryList.append(`
-          <li data-value="${category.toLowerCase()}">${category}</li>
-        `);
+        if( category.display ) {
+          categoryList.append(`
+            <li data-value="${category.name.toLowerCase()}">${category.name}</li>
+          `);
+        }
       });
       <?php endif; ?>
 
       render('all', '');
+    }
+
+    function updateCategoryDisplay(categoryId) {
+      $.each(categories, function(index, category) {
+        if (category.id === categoryId) {
+          category.display = true;
+        }
+      });
     }
 
     function render(category, search) {
@@ -166,9 +211,10 @@ $unique_id = uniqid();
             if (search === '' || retailer.name.toLowerCase().includes(search)) {
               const retailerItem = $(`
                 <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store">
-                  <div class="image">
-                    <img src="${retailer.media.url}" alt="${retailer.name}" />
+                  <div class="image ${(settings.featured_image === 'show')?'show-featured-image':''}">
+                    <img class="retailer-logo" src="${retailer.media.url}" alt="${retailer.name}" />
                     ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
+                    ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
                   </div>
                   <!--<h3 class="store-name">${retailer.name}</h3>-->
                 </a>

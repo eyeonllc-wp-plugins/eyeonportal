@@ -3,9 +3,9 @@
 // print array and variables for debugging 
 function eyeon_debug($item = array(), $die = true, $display = true) {
 	if( is_array($item) || is_object($item) ) {
-		echo '<pre style="padding-left:180px;'.($display?'':'display:none').'">'; print_r($item); echo '</pre>';
+		echo '<pre class="eyeon-debug" style="padding-left:180px;'.($display?'':'display:none').'">'; print_r($item); echo '</pre>';
 	} else {
-		echo '<div style="padding-left:180px;'.($display?'':'display:none').'">'.$item.'</div>';
+		echo '<div class="eyeon-debug" style="padding-left:180px;'.($display?'':'display:none').'">'.$item.'</div>';
 	}
 	
 	if( $die ) {

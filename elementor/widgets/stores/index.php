@@ -167,6 +167,32 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+      'featured_image',
+      [
+        'label' => __( 'Featured Image', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => __( 'Show', EYEON_NAMESPACE ),
+        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => '',
+        'conditions' => [
+          'terms' => [
+            [
+              'name' => 'view_mode',
+              'operator' => '===',
+              'value' => 'grid',
+            ],
+            [
+              'name' => 'retailer_categories',
+              'operator' => 'contains',
+              'value' => RESTAURANTS_CATEGORY_ID,
+            ],
+          ]
+        ],
+      ]
+    );
+
     $this->end_controls_section();
 
     include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
@@ -210,7 +236,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'grid_item_style_settings',
       [
-        'label' => __( 'Single Item', EYEON_NAMESPACE ),
+        'label' => __( 'Retailer Logo', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
       ]
     );
@@ -221,7 +247,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img' => 'background-color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img.retailer-logo' => 'background-color: {{VALUE}}',
         ],
       ]
     );
@@ -240,7 +266,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         ],
         'size_units' => ['px'],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img' => 'padding: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image img.retailer-logo' => 'padding: {{SIZE}}{{UNIT}};',
         ],
       ]
     );

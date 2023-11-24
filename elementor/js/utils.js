@@ -12,7 +12,6 @@ function eyeonFormatDate(dateString) {
 
 function getResponsiveBreakpoints() {
   var breakpoints = [];
-  console.log('angrej123 window.elementorFrontend.config', window.elementorFrontend.config);
   if (window.elementorFrontend && window.elementorFrontend.config && window.elementorFrontend.config.breakpoints) {
     breakpoints = window.elementorFrontend.config.breakpoints;
   }
