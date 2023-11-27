@@ -28,22 +28,21 @@ $unique_id = uniqid();
 
 <div id="eyeon-events-<?= $unique_id ?>" class="eyeon-events eyeon-loader">
   <div class="eyeon-wrapper eyeon-hide">
-      <?php
-      $classes = '';
-      if ($settings['view_mode']==='carousel' ) {
-        $classes .= ' owl-carousel owl-carousel-'.$unique_id.' owl-theme';
-        if($settings['carousel_navigation']==='show') {
-          $classes .= ' owl-nav-show';
-        }
-        if($settings['carousel_dots']==='show') {
-          $classes .= ' owl-dots-show';
-        }
-      } else {
-        $classes .= ' grid-view';
+    <?php
+    $classes = '';
+    if ($settings['view_mode']==='carousel' ) {
+      $classes .= ' owl-carousel owl-carousel-'.$unique_id.' owl-theme';
+      if($settings['carousel_navigation']==='show') {
+        $classes .= ' owl-nav-show';
       }
-      ?>
-      <div id="events-list-<?= $unique_id ?>" class="events-list <?= $classes ?>"></div>
-    </div>
+      if($settings['carousel_dots']==='show') {
+        $classes .= ' owl-dots-show';
+      }
+    } else {
+      $classes .= ' grid-view';
+    }
+    ?>
+    <div id="events-list-<?= $unique_id ?>" class="events-list <?= $classes ?>"></div>
   </div>
 </div>
 
