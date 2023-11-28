@@ -57,6 +57,7 @@ function mcd_api_data($url) {
 		'sslverify' => false,
     'headers' => array(
       'center_id' => $mcd_settings['center_id'],
+      'Origin' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
     ),
 	);
 	$req = wp_remote_get( $url, $args );
