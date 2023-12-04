@@ -214,3 +214,15 @@ function mcp_page_title($title) {
 	return $title.' - '.get_bloginfo('name');
 }
 
+function weekdays() {
+  $days = array(
+    'sun' => 'Sunday',
+    'mon' => 'Monday',
+    'tue' => 'Tuesday',
+    'wed' => 'Wednesday',
+    'thu' => 'Thursday',
+    'fri' => 'Friday',
+    'sat' => 'Saturday',
+  );
+  return $days;
+}

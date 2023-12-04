@@ -504,7 +504,6 @@ if( !class_exists('MCDShortcodes') ) {
 				
 				mcd_include_js('main', 'assets/js/main.js');
 				mcd_include_css('style', 'assets/css/style.min.css');
-				mcd_include_css('responsive', 'assets/css/responsive.min.css');
         wp_enqueue_style( 'eyeon-elementor-style' );
 			}
 		}

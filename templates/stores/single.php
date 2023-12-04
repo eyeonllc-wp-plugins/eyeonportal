@@ -76,6 +76,22 @@ if( isset($mycenterstore['next']) ) {
 						<a href="<?= $map_url ?>" <?= ($new_tab?'target="blank"':'') ?> class="mcd_mapit_link">Find IT</a>
 					<?php endif; ?>
 				</div>
+
+        <?php if( $mycenterstore['opening_hours'] ) : ?>
+        <div class="mcd-retailer-opening-hours">
+          <h4>Opening Hours:</h4>
+          <div class="hours-sets">
+            <?php foreach( weekdays() as $key=>$day ) : ?>
+            <div class="hours-set">
+              <div class="day"><?= $day ?></div>
+              <div class="time">
+                <?= $mycenterstore['opening_hours'][$key]['startTime'] ?> - <?= $mycenterstore['opening_hours'][$key]['endTime'] ?>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+        <?php endif; ?>
 			</div>
 		</div>
 
