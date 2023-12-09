@@ -40,7 +40,9 @@ if( isset($mycenterstore['next']) ) {
 
 				<div class="mcd-retailer-details">
 					<div class="mcd-retailer-name"><?= $mycenterstore['name'] ?></div>
-					<div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $mycenterstore['location'] ?></div>
+          <?php if( !empty(trim($mycenterstore['location'])) && trim($mycenterstore['location']) !== '-' ) : ?>
+            <div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $mycenterstore['location'] ?></div>
+          <?php endif; ?>
 					<?php if( !empty($mycenterstore['retailer_phone']) ) : ?>
 						<div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= $mycenterstore['retailer_phone'] ?></div>
 					<?php endif; ?>
