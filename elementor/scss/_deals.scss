@@ -1,4 +1,11 @@
 .eyeon-deals {
+  h3.title {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    font-size: 26px;
+    border-bottom: 2px solid #DDD;
+  }
+
   .deals-list {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -46,6 +53,28 @@
             color: #666;
           }
         }
+      }
+    }
+  }
+}
+
+#eyeonstore-single {
+  .eyeon-deals {
+    .deals-list {
+      &.grid3 {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      &.grid4 {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      &.grid5 {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      &.grid6 {
+        grid-template-columns: repeat(6, 1fr);
       }
     }
   }

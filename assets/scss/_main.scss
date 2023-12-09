@@ -1134,36 +1134,6 @@ select#mcd-filter-order {
   overflow: hidden;
 }
 
-/* RETAILER DEALS */
-#mcd-retailer-deals h3 {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  font-size: 26px;
-  border-bottom: 2px solid #DDD;
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper {
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid4 {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid5 {
-  grid-template-columns: repeat(5, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid6 {
-  grid-template-columns: repeat(6, 1fr);
-}
-
 .mcd_shadow_img {
   position: relative;
 }

@@ -203,80 +203,59 @@
   opacity: 1;
 }
 
-#mcd-retailer {
+#eyeonstore-single .eyeon-store {
   margin-bottom: 60px;
 }
-#mcd-retailer .mcd-store-cols {
+#eyeonstore-single .eyeon-store .mcd-store-cols {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-image-col {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-image-col {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 300px;
           flex: 0 0 300px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-image-col .mcd-retailer-image {
-  position: relative;
-}
-#mcd-retailer .mcd-store-cols .mcd-retailer-image-col .mcd-retailer-image:before {
-  content: "";
-  padding-top: 100%;
-  display: block;
-  position: relative;
-  background-color: rgba(0, 0, 0, 0.02);
-  -webkit-box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1) inset;
-  box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1) inset;
-  pointer-events: none;
-  z-index: 2;
-}
-#mcd-retailer .mcd-store-cols .mcd-retailer-image-col .mcd-retailer-image img {
-  position: absolute;
-  top: 0;
-  left: 0;
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-image-col .mcd-retailer-image img {
   width: 100%;
-  height: 100%;
-  padding: 10px;
-  z-index: 1;
-  -o-object-fit: contain;
-     object-fit: contain;
+  height: auto;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-details {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details {
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
   padding: 0 30px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-details .mcd-retailer-name {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .mcd-retailer-name {
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 20px;
   line-height: 24px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-details .mcd-retailer-description {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .mcd-retailer-description {
   padding-top: 20px;
   margin-bottom: 24px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-details .mcd-vs-link {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .mcd-vs-link {
   margin-bottom: 15px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-details .mcd-vs-link img {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .mcd-vs-link img {
   max-width: 110px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-details .mcd-social-links {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .mcd-social-links {
   margin-bottom: 24px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-opening-hours {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-opening-hours {
   -webkit-box-flex: 0;
       -ms-flex: 0 0 260px;
           flex: 0 0 260px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-opening-hours h4 {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-opening-hours h4 {
   font-size: 17px;
   font-weight: 600;
   margin: 0 0 10px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-opening-hours .hours-sets {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-opening-hours .hours-sets {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -286,7 +265,7 @@
           flex-direction: column;
   gap: 4px;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-opening-hours .hours-sets .hours-set {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-opening-hours .hours-sets .hours-set {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -297,10 +276,10 @@
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-opening-hours .hours-sets .hours-set .day {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-opening-hours .hours-sets .hours-set .day {
   opacity: 1;
 }
-#mcd-retailer .mcd-store-cols .mcd-retailer-opening-hours .hours-sets .hours-set .time {
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-opening-hours .hours-sets .hours-set .time {
   opacity: 1;
 }
 
@@ -458,6 +437,12 @@
   display: none;
 }
 
+.eyeon-deals h3.title {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  font-size: 26px;
+  border-bottom: 2px solid #DDD;
+}
 .eyeon-deals .deals-list {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -501,4 +486,17 @@
   font-size: 14px;
   line-height: 17px;
   color: #666;
+}
+
+#eyeonstore-single .eyeon-deals .deals-list.grid3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+#eyeonstore-single .eyeon-deals .deals-list.grid4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+#eyeonstore-single .eyeon-deals .deals-list.grid5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+#eyeonstore-single .eyeon-deals .deals-list.grid6 {
+  grid-template-columns: repeat(6, 1fr);
 }/*# sourceMappingURL=elementor.css.map */

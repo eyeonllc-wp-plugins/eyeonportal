@@ -1,94 +1,76 @@
-#mcd-retailer {
-  margin-bottom: 60px;
+#eyeonstore-single {
+  .eyeon-store {
+    margin-bottom: 60px;
 
-  .mcd-store-cols {
-    display: flex;
+    .mcd-store-cols {
+      display: flex;
 
-    .mcd-retailer-image-col {
-      flex: 0 0 300px;
+      .mcd-retailer-image-col {
+        flex: 0 0 300px;
 
-      .mcd-retailer-image {
-        position: relative;
-
-        &:before {
-          content: '';
-          padding-top: 100%;
-          display: block;
-          position: relative;
-          background-color: rgba(0, 0, 0, 0.02);
-          -webkit-box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1) inset;
-          box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1) inset;
-          pointer-events: none;
-          z-index: 2
-        }
-
-        img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          padding: 10px;
-          z-index: 1;
-          object-fit: contain;
-        }
-      }
-    }
-
-    .mcd-retailer-details {
-      flex: 1;
-      padding: 0 30px;
-
-      .mcd-retailer-name {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 20px;
-        line-height: 24px;
-      }
-
-      .mcd-retailer-description {
-        padding-top: 20px;
-        margin-bottom: 24px;
-      }
-
-      .mcd-vs-link {
-        margin-bottom: 15px;
-
-        img {
-          max-width: 110px;
-        }
-      }
-
-      .mcd-social-links {
-        margin-bottom: 24px;
-      }
-    }
-
-    .mcd-retailer-opening-hours {
-      flex: 0 0 260px;
-
-      h4 {
-        font-size: 17px;
-        font-weight: 600;
-        margin: 0 0 10px;
-      }
-
-      .hours-sets {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-
-        .hours-set {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .day {
-            opacity: 1;
+        .mcd-retailer-image {
+          img {
+            width: 100%;
+            height: auto;
           }
+        }
+      }
 
-          .time {
-            opacity: 1;
+      .mcd-retailer-details {
+        flex: 1;
+        padding: 0 30px;
+
+        .mcd-retailer-name {
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 20px;
+          line-height: 24px;
+        }
+
+        .mcd-retailer-description {
+          padding-top: 20px;
+          margin-bottom: 24px;
+        }
+
+        .mcd-vs-link {
+          margin-bottom: 15px;
+
+          img {
+            max-width: 110px;
+          }
+        }
+
+        .mcd-social-links {
+          margin-bottom: 24px;
+        }
+      }
+
+      .mcd-retailer-opening-hours {
+        flex: 0 0 260px;
+
+        h4 {
+          font-size: 17px;
+          font-weight: 600;
+          margin: 0 0 10px;
+        }
+
+        .hours-sets {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+
+          .hours-set {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .day {
+              opacity: 1;
+            }
+
+            .time {
+              opacity: 1;
+            }
           }
         }
       }

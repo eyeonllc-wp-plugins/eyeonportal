@@ -18,11 +18,11 @@ if( isset($mycenterstore['next']) ) {
 
 <?php if( is_array($mycenterstore) ) : ?>
 
-<div class="mycenterdeals-wrapper mycenterstore">
+<div id="eyeonstore-single" class="mycenterdeals-wrapper">
 	<?php if( isset( $mycenterstore['error'] ) ) : ?>
 		<div class="mcd-alert"><?= $mycenterstore['error'] ?></div>
 	<?php else: ?>
-		<div id="mcd-retailer" class="clearfix">
+		<div class="eyeon-store clearfix">
 			<div class="mcd-prev-next-nav">
 				<?php if( !empty($this->mcd_settings['stores_listing_page']) ) : ?>
 					<a href="<?= get_permalink($this->mcd_settings['stores_listing_page']) ?>" class="item back">Back to Stores</a>

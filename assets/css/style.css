@@ -1163,36 +1163,6 @@ select#mcd-filter-order {
   overflow: hidden;
 }
 
-/* RETAILER DEALS */
-#mcd-retailer-deals h3 {
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  font-size: 26px;
-  border-bottom: 2px solid #DDD;
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper {
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid3 {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid4 {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid5 {
-  grid-template-columns: repeat(5, 1fr);
-}
-
-#mcd-retailer-deals .mcd-retailer-deals-wrapper.grid6 {
-  grid-template-columns: repeat(6, 1fr);
-}
-
 .mcd_shadow_img {
   position: relative;
 }
@@ -2232,7 +2202,7 @@ body.flatsome-child.mycenterdeals-plugin.code-mycentermap2 #wrapper #main #conte
     padding: 0 10px;
   }
   #mycenterdeals,
-  #mcd-retailer-deals .mcd-retailer-deals-wrapper {
+  #eyeonstore-single .eyeon-deals .deals-list {
     grid-template-columns: repeat(3, 1fr) !important;
   }
   #mycentercareers {
@@ -2287,7 +2257,7 @@ body.flatsome-child.mycenterdeals-plugin.code-mycentermap2 #wrapper #main #conte
     padding: 0 20px;
   }
   #mycenterdeals,
-  #mcd-retailer-deals .mcd-retailer-deals-wrapper {
+  #eyeonstore-single .eyeon-deals .deals-list {
     grid-gap: 15px;
     grid-template-columns: repeat(2, 1fr) !important;
   }
