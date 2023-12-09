@@ -45,8 +45,8 @@ if( isset($mycenterstore['next']) ) {
 						<div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= $mycenterstore['retailer_phone'] ?></div>
 					<?php endif; ?>
 					<div class="mcd-retailer-description editor_output">
-            <?= $mycenterstore['global_retailer']['description'] ?><br><br>
-            <?= $mycenterstore['description'] ?>
+            <?= trim($mycenterstore['global_retailer']['description']) ?>
+            <?= !empty(trim($mycenterstore['description']))?'<br><br>'.trim($mycenterstore['description']):'' ?>
           </div>
 					
 					<?php if( $this->mcd_settings['stores_single_social_links'] ) : ?>
