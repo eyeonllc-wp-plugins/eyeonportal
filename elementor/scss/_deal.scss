@@ -1,0 +1,94 @@
+#mcd-deal {
+  .mcd-deal-cols {
+    display: flex;
+  }
+
+  .mcd-deal-image-col {
+    width: 100%;
+    max-width: 320px;
+
+    .mcd-deal-image {
+      position: relative;
+      padding-top: 56.25%;
+      background: url('../img/placeholder.jpg') no-repeat;
+      background-size: cover;
+      margin-bottom: 12px;
+
+      img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        border: none;
+        cursor: pointer;
+        object-fit: cover;
+      }
+    }
+
+    .mcd-retailer-details {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+
+      .mcd-retailer-logo {
+        object-fit: contain;
+        width: 90px;
+        max-height: 90px;
+      }
+    }
+  }
+
+  .mcd-deal-details {
+    font-size: 16px;
+    line-height: 20px;
+    padding-left: 30px;
+
+    .mcd-deal-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      line-height: 24px;
+    }
+
+    .mcd-deal-until {
+      margin-bottom: 20px;
+    }
+
+    .mcd-deal-message {
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+
+    .mcd-deal-share {
+      margin: 25px 0 !important;
+
+      .mcd-share-title {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+    }
+
+    .mcd-retailer-phone {
+      margin-bottom: 20px;
+    }
+  }
+
+  .mcd-deal-center-image {
+    float: right;
+    width: 30%;
+    max-width: 350px;
+
+    img {
+      vertical-align: bottom;
+    }
+  }
+
+}
+
+#mcd-deal-popup.mcd-popup {
+  .mcd-popup-content {
+    padding: 6px;
+  }
+}

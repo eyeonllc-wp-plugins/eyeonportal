@@ -58,10 +58,10 @@ if( isset($mycenterevent['next']) ) {
 							</div>
 						<?php endif; ?>
 					</div>
-					<div class="mcd-event-description editor_output"><?= $mycenterevent['description'] ?></div>
+					<div class="mcd-event-description editor_output"><?= get_editor_output($mycenterevent['description']) ?></div>
 
 					<?php if( $this->mcd_settings['events_single_qrcode'] ) : ?>
-						<div class="mcd-event-qrcode d-none">
+						<div class="mcd-event-qrcode eyeon-hide">
 							<div class="scan_qrcode_text">Scan This Event To Your Phone</div>
 							<div class="img">
 								<img src="<?= $mycenterevent['qrcode'] ?>" />

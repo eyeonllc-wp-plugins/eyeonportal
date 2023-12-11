@@ -59,7 +59,7 @@ if( isset($mycenterblogpost['next']) ) {
 
 				<div class="mcd-post-details-col">
 					<div class="mcd-post-title hide-on-mob"><?= $mycenterblogpost['title'] ?></div>
-					<div class="mcd-post-content editor_output"><?= $mycenterblogpost['post_content'] ?></div>
+					<div class="mcd-post-content editor_output"><?= get_editor_output($mycenterblogpost['post_content']) ?></div>
 				</div>
 
 				<div class="mcd-post-sidebar-col">

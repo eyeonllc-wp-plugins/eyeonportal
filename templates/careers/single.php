@@ -33,12 +33,12 @@ if( isset($mycentercareer['next']) ) {
 					<div class="mcd-retailer-image">
 						<img src="<?= $mycentercareer['retailer']['media']['url'] ?>" />
 					</div>
-					<div class="mcd-retailer-name mcd-hide"><?= $mycentercareer['retailer']['name'] ?></div>
+					<div class="mcd-retailer-name eyeon-hide"><?= $mycentercareer['retailer']['name'] ?></div>
 				</div>
 
 				<div class="mcd-career-details">
 					<div class="mcd-career-title"><?= $mycentercareer['title'] ?></div>
-					<div class="mcd-career-description editor_output"><?= $mycentercareer['description'] ?></div>
+					<div class="mcd-career-description editor_output"><?= get_editor_output($mycentercareer['description']) ?></div>
 
 					<?php if( !empty($mycentercareer['apply_link']) ) : ?>
 					<div class="mcd-apply-link"><a href="<?= $mycentercareer['apply_link'] ?>" class="mcp_btn rounded" target="_blank">Apply Now</a></div>

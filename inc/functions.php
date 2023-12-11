@@ -226,3 +226,11 @@ function weekdays() {
   );
   return $days;
 }
+
+function get_editor_output($content) {
+  $content = trim($content);
+  $content = preg_replace('/^(<br>)+|(<br>)+$/', '', $content);
+  $content = str_replace('<p><br></p>', '', $content);
+  return $content;
+}
+

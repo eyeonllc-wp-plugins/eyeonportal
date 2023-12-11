@@ -32,23 +32,22 @@ if( isset($mycenterdeal['next']) ) {
 				<div class="mcd-deal-image-col">
 					<div class="mcd-deal-image">
 						<img src="<?= $mycenterdeal['media']['url'] ?>" />
-						<div class="mcd-retailer-logo">
-							<img src="<?= $mycenterdeal['retailer']['media']['url'] ?>" />
-						</div>
 					</div>
-					<div class="mcd-retailer-details">
-						<div class="mcd-retailer-name"><?= $mycenterdeal['retailer']['name'] ?></div>
-					</div>
+          <div class="mcd-retailer-details">
+            <img class="mcd-retailer-logo" src="<?= $mycenterdeal['retailer']['media']['url'] ?>" />
+          </div>
 				</div>
 
 				<div class="mcd-deal-details">
 					<div class="mcd-deal-title"><?= $mycenterdeal['title'] ?></div>
 					<div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= $mycenterdeal['end_date'] ?></div>
-					<div class="mcd-deal-message"><?= $mycenterdeal['description'] ?></div>
+					<div class="mcd-deal-message"><?= get_editor_output($mycenterdeal['description']) ?></div>
           <?php if( isset($mycenterdeal['retailer']['phone']) ) : ?>
             <div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= $mycenterdeal['retailer']['phone'] ?></div>
           <?php endif; ?>
-					<div class="mcd-deal-center-location"><span class="mcd-label">Retailer Location:</span> <?= $mycenterdeal['retailer']['location'] ?></div>
+          <?php if( !empty(trim($mycenterdeal['retailer']['location'])) && trim($mycenterdeal['retailer']['location']) !== '-' ) : ?>
+            <div class="mcd-deal-center-location"><span class="mcd-label">Retailer Location:</span> <?= $mycenterdeal['retailer']['location'] ?></div>
+          <?php endif; ?>
 					
 					<?php if( $this->mcd_settings['deals_single_social_share'] ) : ?>
 					<div class="mcd-deal-share clearfix">
