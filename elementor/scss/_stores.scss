@@ -9,6 +9,8 @@
       flex: 0 0 220px;
       border-right: 2px solid #E8E8E8;
 
+      select {}
+
       ul {
         list-style: none;
         margin: 0;
@@ -99,6 +101,18 @@
               }
             }
           }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 599px) {
+    .eyeon-wrapper {
+      .content-cols {
+        flex-direction: column;
+
+        .stores-categories {
+          flex: auto !important;
         }
       }
     }

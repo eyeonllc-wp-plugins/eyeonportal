@@ -53,8 +53,23 @@
   margin-left: -18px;
 }
 
+.eyeon-wrapper select,
+.eyeon-wrapper input,
+.eyeon-wrapper button,
+.eyeon-wrapper textarea {
+  outline: none;
+}
+
 .no-items-found {
-  opacity: 1;
+  border: 1px solid #61baaf;
+  background-color: rgba(121, 213, 202, 0.1098039216);
+  color: #50b3a7;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem;
+  text-align: center;
+  border-radius: 4px;
+  margin: 0 auto;
+  max-width: 580px;
 }
 
 .owl-carousel.owl-nav-show {
@@ -118,6 +133,16 @@
   margin: 5px;
 }
 
+@media screen and (min-width: 600px) {
+  .show-on-mob {
+    display: none !important;
+  }
+}
+@media screen and (max-width: 599px) {
+  .hide-on-mob {
+    display: none !important;
+  }
+}
 .eyeon-stores .eyeon-wrapper .content-cols {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -201,6 +226,19 @@
   -webkit-filter: grayscale(0);
           filter: grayscale(0);
   opacity: 1;
+}
+@media screen and (max-width: 599px) {
+  .eyeon-stores .eyeon-wrapper .content-cols {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  .eyeon-stores .eyeon-wrapper .content-cols .stores-categories {
+    -webkit-box-flex: 1 !important;
+        -ms-flex: auto !important;
+            flex: auto !important;
+  }
 }
 
 #eyeonstore-single .eyeon-store {
@@ -471,7 +509,7 @@
 }
 .eyeon-deals .deals-list .deal .deal-content .retailer-logo {
   width: 80px;
-  height: 80px;
+  height: auto;
   -o-object-fit: contain;
      object-fit: contain;
   background-color: rgba(0, 0, 0, 0.05);
@@ -508,7 +546,7 @@
 }
 #mcd-deal .mcd-deal-image-col {
   width: 100%;
-  max-width: 320px;
+  max-width: 440px;
 }
 #mcd-deal .mcd-deal-image-col .mcd-deal-image {
   position: relative;

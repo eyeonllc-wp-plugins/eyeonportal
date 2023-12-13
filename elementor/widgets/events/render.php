@@ -98,30 +98,37 @@ $unique_id = uniqid();
       eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
 
       eventsList.empty();
-      events.forEach(event => {
-        const eventItem = $(`
-          <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
-            <div class="image">
-              <img src="${event.media.url}" alt="${event.title}" />
-            </div>
-            ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
-            ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
-            ${ settings.event_metadata ? `
-              <div class="metadata">
-                <div class="date">
-                  <i class="far fa-calendar"></i>
-                  <span>${event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date)}</span>
-                </div>
-                <div class="time">
-                  <i class="far fa-clock"></i>
-                  <span>${eyeonConvertTo12HourFormat(event.start_time)} - ${eyeonConvertTo12HourFormat(event.end_time)}</span>
-                </div>
+
+      if( events.length > 0 ) {
+        events.forEach(event => {
+          const eventItem = $(`
+            <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
+              <div class="image">
+                <img src="${event.media.url}" alt="${event.title}" />
               </div>
-            `: '' }
-          </a>
+              ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
+              ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
+              ${ settings.event_metadata ? `
+                <div class="metadata">
+                  <div class="date">
+                    <i class="far fa-calendar"></i>
+                    <span>${event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date)}</span>
+                  </div>
+                  <div class="time">
+                    <i class="far fa-clock"></i>
+                    <span>${eyeonConvertTo12HourFormat(event.start_time)} - ${eyeonConvertTo12HourFormat(event.end_time)}</span>
+                  </div>
+                </div>
+              `: '' }
+            </a>
+          `);
+          eventsList.append(eventItem);
+        });
+      } else {
+        eyeonEvents.find('.eyeon-wrapper').html(`
+          <div class="no-items-found">More Events Coming Soon.</div>
         `);
-        eventsList.append(eventItem);
-      });
+      }
 
       <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
     }

@@ -66,23 +66,30 @@ $unique_id = uniqid();
       eyeonDeals.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
 
       dealsList.empty();
-      deals.forEach(deal => {
-        const dealItem = $(`
-          <a href="<?= mcd_single_page_url('mycenterdeal') ?>${deal.slug}" class="deal">
-            <div class="image">
-              <img src="${deal.media.url}" alt="${deal.title}" />
-            </div>
-            <div class="deal-content">
-              <img class="retailer-logo" src="${deal.retailer.media.url}" alt="${deal.retailer.name}" />
-              <div class="details">
-                <h3 class="deal-title">${deal.title}</h3>
-                <div class="deal-expiry">Valid until ${eyeonFormatDate(deal.end_date)}</div>
+
+      if( deals.length > 0 ) {
+        deals.forEach(deal => {
+          const dealItem = $(`
+            <a href="<?= mcd_single_page_url('mycenterdeal') ?>${deal.slug}" class="deal">
+              <div class="image">
+                <img src="${deal.media.url}" alt="${deal.title}" />
               </div>
-            </div>
-          </a>
+              <div class="deal-content">
+                <img class="retailer-logo" src="${deal.retailer.media.url}" alt="${deal.retailer.name}" />
+                <div class="details">
+                  <h3 class="deal-title">${deal.title}</h3>
+                  <div class="deal-expiry">Valid until ${eyeonFormatDate(deal.end_date)}</div>
+                </div>
+              </div>
+            </a>
+          `);
+          dealsList.append(dealItem);
+        });
+      } else {
+        eyeonDeals.find('.eyeon-wrapper').html(`
+          <div class="no-items-found">More Deals Coming Soon.</div>
         `);
-        dealsList.append(dealItem);
-      });
+      }
     }
   });
 </script>

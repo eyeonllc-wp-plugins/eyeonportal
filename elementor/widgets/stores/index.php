@@ -112,7 +112,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'categories_sidebar',
       [
-        'label' => __( 'Categories Sidebar', EYEON_NAMESPACE ),
+        'label' => __( 'Categories', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
         'label_on' => __( 'Show', EYEON_NAMESPACE ),
         'label_off' => __( 'Hide', EYEON_NAMESPACE ),
@@ -350,7 +350,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         ],
         'size_units' => ['px', '%'],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .content-cols' => 'grid-gap: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-stores .content-cols' => 'gap: {{SIZE}}{{UNIT}};',
         ],
       ]
     );

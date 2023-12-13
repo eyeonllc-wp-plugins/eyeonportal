@@ -16,7 +16,6 @@ if( $this->mcd_settings['stores_single_deals'] ) {
           <img src="<?= $deal['media']['url'] ?>" alt="<?= $deal['title'] ?>" />
         </div>
         <div class="deal-content">
-          <img class="retailer-logo" src="<?= $deal['retailer']['media']['url'] ?>" alt="<?= $deal['retailer']['name'] ?>" />
           <div class="details">
             <h3 class="deal-title"><?= $deal['title'] ?></h3>
             <div class="deal-expiry">Valid until <?= date("M d, Y", strtotime($deal['end_date'])) ?></div>

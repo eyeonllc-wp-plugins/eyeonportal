@@ -176,9 +176,9 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_responsive_control(
-      'deal_retailer_logo_size',
+      'deal_retailer_logo_width',
       [
-        'label' => esc_html__( 'Size', EYEON_NAMESPACE ),
+        'label' => esc_html__( 'Logo Width', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SLIDER,
         'range' => [
           'px' => [
@@ -188,8 +188,35 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
           ],
         ],
         'size_units' => ['px'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 80,
+        ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-deals .deals-list .deal .deal-content .retailer-logo' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-deals .deals-list .deal .deal-content .retailer-logo' => 'width: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'deal_retailer_logo_height',
+      [
+        'label' => esc_html__( 'Logo Height', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 200,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 80,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-deals .deals-list .deal .deal-content .retailer-logo' => 'height: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
@@ -231,6 +258,33 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
         ],
       ]
     );
+
+    $this->add_responsive_control(
+			'deal_retailer_logo_self_align',
+			[
+				'label' => esc_html__( 'Self Align', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::CHOOSE,
+				'options' => [
+					'flex-start' => [
+						'title' => esc_html__( 'Flex Start', EYEON_NAMESPACE ),
+						'icon' => 'eicon-align-start-v',
+					],
+					'center' => [
+						'title' => esc_html__( 'Center', EYEON_NAMESPACE ),
+						'icon' => 'eicon-align-center-v',
+					],
+					'flex-end' => [
+						'title' => esc_html__( 'Flex End', EYEON_NAMESPACE ),
+						'icon' => 'eicon-align-end-v',
+					],
+				],
+				'default' => 'center',
+				'toggle' => true,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-deals .deals-list .deal .deal-content .retailer-logo' => 'align-self: {{VALUE}};',
+				],
+			]
+		);
 
     $this->end_controls_section();
 

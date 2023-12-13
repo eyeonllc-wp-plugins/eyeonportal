@@ -2067,16 +2067,6 @@ body.flatsome-child.mycenterdeals-plugin.code-mycentermap2 #wrapper #main #conte
 }
 
 /* MAPIT2 Fullscreen ends here */
-@media screen and (min-width: 600px) {
-  .show-on-mob {
-    display: none !important;
-  }
-}
-@media screen and (max-width: 599px) {
-  .hide-on-mob {
-    display: none !important;
-  }
-}
 @media screen and (max-width: 1023px) {
   .mycenterdeals-wrapper {
     max-width: 768px;

@@ -231,6 +231,7 @@ function get_editor_output($content) {
   $content = trim($content);
   $content = preg_replace('/^(<br>)+|(<br>)+$/', '', $content);
   $content = str_replace('<p><br></p>', '', $content);
+  $content = str_replace('<div><br></div>', '', $content);
   return $content;
 }
 

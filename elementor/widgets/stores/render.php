@@ -28,13 +28,16 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
-  <div class="eyeon-wrapper eyeon-hide">
+  <div class="eyeon-wrapper eyeon-hide" style="display:none;">
     <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
 
     <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
       <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       <div class="stores-categories">
-        <ul id="stores-categories-<?= $unique_id ?>">
+        <select id="stores-categories-dropdown-<?= $unique_id ?>" class="show-on-mob">
+          <option value="all" selected><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></option>
+        </select>
+        <ul id="stores-categories-<?= $unique_id ?>" class="hide-on-mob">
           <li data-value="all" class="active"><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></li>
         </ul>
       </div>
@@ -70,6 +73,7 @@ $unique_id = uniqid();
 
     const eyeonStores = $('#eyeon-stores-<?= $unique_id ?>');
     const categoryList = $('#stores-categories-<?= $unique_id ?>');
+    const categoryDropdownList = $('#stores-categories-dropdown-<?= $unique_id ?>');
     const searchInput = $('#stores-search-<?= $unique_id ?>');
     const retailersList = $('#stores-list-<?= $unique_id ?>');
 
@@ -173,7 +177,7 @@ $unique_id = uniqid();
     function setup_categories() {
       if( !retailersFetched || !categoriesFetched ) return false;
 
-      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide').removeAttr('style');
 
       retailers.forEach(retailer => {
         retailer.categories.forEach(category => {
@@ -184,6 +188,9 @@ $unique_id = uniqid();
       <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
       categories.forEach(category => {
         if( category.display ) {
+          categoryDropdownList.append(`
+            <option value="${category.name.toLowerCase()}">${category.name}</option>
+          `);
           categoryList.append(`
             <li data-value="${category.name.toLowerCase()}">${category.name}</li>
           `);
@@ -227,7 +234,7 @@ $unique_id = uniqid();
         <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
       } else {
         eyeonStores.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">No items found.</div>
+          <div class="no-items-found">No retailers found.</div>
         `);
       }
     }
@@ -238,6 +245,20 @@ $unique_id = uniqid();
       $(this).addClass('active');
       const selectedCategory = $(this).attr('data-value');
       const search = searchInput.val().toLowerCase();
+
+      categoryDropdownList.val(selectedCategory);
+
+      render(selectedCategory, search);
+    });
+
+    categoryDropdownList.on('change', function() {
+      const selectedCategory = $(this).val();
+      const search = searchInput.val().toLowerCase();
+
+      // change categories list selection
+      categoryList.find('li.active').removeClass('active');
+      categoryList.find('li[data-value="'+selectedCategory+'"]').addClass('active');
+
       render(selectedCategory, search);
     });
 
