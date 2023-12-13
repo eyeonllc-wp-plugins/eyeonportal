@@ -86,9 +86,6 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
         'selectors' => [
           '{{WRAPPER}} .eyeon-deals .deals-list' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
         ],
-        'condition' => [
-          'view_mode' => 'grid',
-        ],
       ]
     );
 
