@@ -9,7 +9,7 @@
 
 	<?php if( $this->mcd_settings['slider_shortcode_atts']['metadata'] == "true" ) : ?>
 	<span class="mcd-deal-content">
-		<span class="mcd-deal-details">
+		<span class="eyeon-deal-details">
 			<span class="mcd-retailer-name"><?= $slider_item['retailer']['name'] ?></span>
 			<span class="mcd-sep"></span>
 			<span class="mcd-deal-title"><?= $slider_item['title'] ?></span>

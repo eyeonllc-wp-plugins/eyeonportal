@@ -235,3 +235,9 @@ function get_editor_output($content) {
   return $content;
 }
 
+function get_retailer_location($location) {
+  if( !empty(trim($location)) && trim($location) !== '-' ) {
+    return trim($location);
+  }
+  return '';
+}

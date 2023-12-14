@@ -26,7 +26,7 @@ $mcd_center_id = isset( $this->mcd_settings['center_id'] ) ? $this->mcd_settings
 						</span>
 					</span>
 					<span class="mcd-deal-content">
-						<span class="mcd-deal-details">
+						<span class="eyeon-deal-details">
 							<span class="mcd-retailer-name">{{ deal.retailer.name }}</span>
 							<span class="mcd-sep"></span>
 							<span class="mcd-deal-title">{{ deal.title }}</span>

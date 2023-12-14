@@ -1,0 +1,14 @@
+$breakpoints: (
+  mobile: 479px,
+  mobile-large: 599px,
+  tablet-portrait: 767px,
+  tablet-landscape: 1023px,
+);
+
+@mixin media-query($breakpoint) {
+  $point: map-get($breakpoints, $breakpoint);
+
+  @media (max-width: $point) {
+    @content;
+  }
+}

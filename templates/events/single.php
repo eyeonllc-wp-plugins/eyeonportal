@@ -36,7 +36,7 @@ if( isset($mycenterevent['next']) ) {
 	<?php if( isset( $mycenterevent['error'] ) ) : ?>
 		<div class="mcd-alert"><?= $mycenterevent['error'] ?></div>
 	<?php else: ?>
-		<div class="eyeon-event-content clearfix">
+		<div class="eyeon-event clearfix">
 			<div class="mcd-event-cols">
 				<div class="mcd-event-image-col">
 					<div class="mcd-event-image">
@@ -60,15 +60,6 @@ if( isset($mycenterevent['next']) ) {
 					</div>
 					<div class="mcd-event-description editor_output"><?= get_editor_output($mycenterevent['description']) ?></div>
 
-					<?php if( $this->mcd_settings['events_single_qrcode'] ) : ?>
-						<div class="mcd-event-qrcode eyeon-hide">
-							<div class="scan_qrcode_text">Scan This Event To Your Phone</div>
-							<div class="img">
-								<img src="<?= $mycenterevent['qrcode'] ?>" />
-							</div>
-						</div>
-					<?php endif; ?>
-
 					<?php if( $this->mcd_settings['events_single_add_to_calendar'] ) : ?>
 					<div class="mcd-event-add-to-calendar">
 						<div title="Add to Calendar" class="addeventatc">
@@ -88,10 +79,10 @@ if( isset($mycenterevent['next']) ) {
 
 					<?php if( $this->mcd_settings['events_single_social_share'] ) : ?>
 					<div class="mcd-event-share clearfix">
+            <span class="mcd-share-title mcd-label">Share</span>
 						<ul class="mcd-social-icons">
 							<li class="twitter"><a href="http://twitter.com/share?text=<?= urlencode($mycenterevent['title']) ?>&url=<?= get_current_url() ?>" target="_blank">Twitter</a></li>
 							<li class="facebook"><a href="http://www.facebook.com/sharer.php?u=<?= get_current_url() ?>&quote=<?= urlencode($mycenterevent['title']) ?>" target="_blank">Facebook</a></li>
-							<!-- <li class="pinterest"><a href="http://pinterest.com/pin/create/button/?url=<?= get_current_url() ?>&media=<?= $mycenterevent['media']['url'] ?>&description=<?= $mycenterevent['title'] ?>" target="_blank">Pinterest</a></li> -->
 							<li class="email"><a href="mailto:?subject=<?= $mycenterevent['title'] ?>&body=Hi,%0D%0A%0D%0AEvent Details - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterevent['title'] ?>%0D%0A%0D%0A<?= urlencode($mycenterevent['description']) ?>%0D%0A%0D%0A<?= $mycenterevent['start_date'] ?> - <?= $mycenterevent['end_date'] ?>%0D%0A<?= $mycenterevent['start_time'] ?> - <?= $mycenterevent['end_time'] ?>%0D%0A%0D%0ACenter Location: <?= $mycenterevent['center']['name'] ?>%0D%0A%0D%0A">Email</a></li>
 						</ul>
 					</div>

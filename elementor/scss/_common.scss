@@ -40,6 +40,72 @@
   }
 }
 
+.mycenterdeals-wrapper {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  color: #444;
+
+  *,
+  *:after,
+  *:before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  img {
+    vertical-align: bottom;
+  }
+
+  a {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+  }
+
+  .hide {
+    display: none !important;
+  }
+
+  .editor_output {
+    a {
+      color: var(--mcdAccentColor);
+
+      &:hover {
+        text-decoration: underline !important;
+      }
+    }
+
+    h3 {
+      line-height: 1.35em;
+      font-size: 1.25em;
+    }
+
+    p {
+      font-size: 1.05em;
+      line-height: 1.25em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul {
+      list-style: inherit !important;
+      margin-left: 24px !important;
+      margin-bottom: 15px !important;
+      padding-left: 0 !important;
+
+      li {
+        list-style: inherit !important;
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+}
+
 .eyeon-wrapper {
 
   select,
@@ -134,8 +200,13 @@
   }
 }
 
-@media screen and (max-width: 599px) {
+@include media-query(mobile-large) {
   .hide-on-mob {
     display: none !important;
+  }
+
+  .mycenterdeals-wrapper {
+    padding-top: 30px;
+    padding-bottom: 30px;
   }
 }

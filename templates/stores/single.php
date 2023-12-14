@@ -40,65 +40,71 @@ if( isset($mycenterstore['next']) ) {
 
 				<div class="mcd-retailer-details">
 					<div class="mcd-retailer-name"><?= $mycenterstore['name'] ?></div>
-          <?php if( !empty(trim($mycenterstore['location'])) && trim($mycenterstore['location']) !== '-' ) : ?>
-            <div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $mycenterstore['location'] ?></div>
+          <?php
+          $retailer_location = get_retailer_location($mycenterstore['location']);
+          if( !empty($retailer_location) ) : ?>
+            <div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $retailer_location ?></div>
           <?php endif; ?>
 					<?php if( !empty($mycenterstore['retailer_phone']) ) : ?>
 						<div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= $mycenterstore['retailer_phone'] ?></div>
 					<?php endif; ?>
-					<div class="mcd-retailer-description editor_output">
-            <?= get_editor_output($mycenterstore['global_retailer']['description']) ?>
-            <?php
-            $local_description = get_editor_output($mycenterstore['description']);
-            if( !empty($local_description) ) {
-              echo '<br><br>'.$local_description;
-            }
-            ?>
-          </div>
-					
-					<?php if( $this->mcd_settings['stores_single_social_links'] ) : ?>
-						<?php
-						$social_links_html = '';
-							foreach ($social_links as $link) {
-								if( !empty($mycenterstore['global_retailer']['links'][$link]) ) {
-									$social_links_html .= '<li class="'.$link.'"><a href="'.$mycenterstore['global_retailer']['links'][$link].'" target="_blank">'.$link.'</a></li>';
-								}
-							}
-						?>
-						<?php if( !empty($social_links_html) ) : ?>
-						<div class="mcd-social-links">
-							<ul class="mcd-social-icons"><?= $social_links_html ?></ul>
-						</div>
-						<?php endif; ?>
-					<?php endif; ?>
+          <div class="eyeon-retailer-details-cols">
+            <div class="eyeon-retailer-content">
+              <div class="mcd-retailer-description editor_output">
+                <?= get_editor_output($mycenterstore['global_retailer']['description']) ?>
+                <?php
+                $local_description = get_editor_output($mycenterstore['description']);
+                if( !empty($local_description) ) {
+                  echo '<br><br>'.$local_description;
+                }
+                ?>
+              </div>
+              
+              <?php if( $this->mcd_settings['stores_single_social_links'] ) : ?>
+                <?php
+                $social_links_html = '';
+                  foreach ($social_links as $link) {
+                    if( !empty($mycenterstore['global_retailer']['links'][$link]) ) {
+                      $social_links_html .= '<li class="'.$link.'"><a href="'.$mycenterstore['global_retailer']['links'][$link].'" target="_blank">'.$link.'</a></li>';
+                    }
+                  }
+                ?>
+                <?php if( !empty($social_links_html) ) : ?>
+                <div class="mcd-social-links">
+                  <ul class="mcd-social-icons"><?= $social_links_html ?></ul>
+                </div>
+                <?php endif; ?>
+              <?php endif; ?>
 
-					<?php if( !empty($this->mcd_settings['map_page']) || !empty($map_config['map_url']) ) :
-						$new_tab = false;
-						$map_url = get_permalink($this->mcd_settings['map_page']).$mycenterstore['slug'];
-						if( !empty($map_config['map_url']) ) {
-							$new_tab = true;
-							$map_url = $map_config['map_url'];
-						}
-						?>
-						<a href="<?= $map_url ?>" <?= ($new_tab?'target="blank"':'') ?> class="mcd_mapit_link">Find IT</a>
-					<?php endif; ?>
-				</div>
+              <?php if( !empty($this->mcd_settings['map_page']) || !empty($map_config['map_url']) ) :
+                $new_tab = false;
+                $map_url = get_permalink($this->mcd_settings['map_page']).$mycenterstore['slug'];
+                if( !empty($map_config['map_url']) ) {
+                  $new_tab = true;
+                  $map_url = $map_config['map_url'];
+                }
+                ?>
+                <a href="<?= $map_url ?>" <?= ($new_tab?'target="blank"':'') ?> class="mcd_mapit_link">Find IT</a>
+              <?php endif; ?>
+            </div>
 
-        <?php if( $mycenterstore['opening_hours'] ) : ?>
-        <div class="mcd-retailer-opening-hours">
-          <h4>Opening Hours:</h4>
-          <div class="hours-sets">
-            <?php foreach( weekdays() as $key=>$day ) : ?>
-            <div class="hours-set">
-              <div class="day"><?= $day ?></div>
-              <div class="time">
-                <?= $mycenterstore['opening_hours'][$key]['startTime'] ?> - <?= $mycenterstore['opening_hours'][$key]['endTime'] ?>
+            <?php if( $mycenterstore['opening_hours'] ) : ?>
+            <div class="mcd-retailer-opening-hours">
+              <h4>Opening Hours:</h4>
+              <div class="hours-sets">
+                <?php foreach( weekdays() as $key=>$day ) : ?>
+                <div class="hours-set">
+                  <div class="day"><?= $day ?></div>
+                  <div class="time">
+                    <?= $mycenterstore['opening_hours'][$key]['startTime'] ?> - <?= $mycenterstore['opening_hours'][$key]['endTime'] ?>
+                  </div>
+                </div>
+                <?php endforeach; ?>
               </div>
             </div>
-            <?php endforeach; ?>
+            <?php endif; ?>
           </div>
         </div>
-        <?php endif; ?>
 			</div>
 		</div>
 

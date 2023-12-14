@@ -1,5 +1,6 @@
 <?php if ($settings['view_mode'] === 'carousel') : ?>
 const breakpoints = window.getResponsiveBreakpoints();
+console.log('breakpoints', breakpoints);
 
 var owl_options = {
   nav: settings.carousel_navigation === 'show',

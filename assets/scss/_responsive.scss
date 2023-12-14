@@ -1,11 +1,11 @@
 @media screen and (max-width: 1023px) {
   .mycenterdeals-wrapper {
     max-width: 768px;
-    padding: 0 10px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
-  #mycenterdeals,
-  #eyeonstore-single .eyeon-deals .deals-list {
+  #mycenterdeals {
     grid-template-columns: repeat(3, 1fr) !important;
   }
 
@@ -72,8 +72,7 @@
     padding: 0 20px;
   }
 
-  #mycenterdeals,
-  #eyeonstore-single .eyeon-deals .deals-list {
+  #mycenterdeals {
     grid-gap: 15px;
     grid-template-columns: repeat(2, 1fr) !important;
   }
@@ -97,14 +96,6 @@
     max-width: 30%;
   }
 
-  #mcd-deal .mcd-deal-image-col {
-    width: 40%;
-  }
-
-  #mcd-deal .mcd-deal-details .mcd-deal-title,
-  #mcd-deal .mcd-deal-details .mcd-deal-until,
-  #mcd-deal .mcd-deal-details .mcd-deal-message,
-  #mcd-deal .mcd-deal-details .mcd-retailer-phone,
   #mcd-retailer .mcd-retailer-details .mcd-retailer-name,
   #mcd-event .mcd-event-details .mcd-event-name,
   #mcd-event .mcd-event-details .mcd-event-date-time,
@@ -128,7 +119,6 @@
 
 @media screen and (max-width: 599px) {
 
-  #mcd-deal,
   #mcd-retailer,
   #mcd-event,
   #mcd-career,
@@ -136,7 +126,6 @@
     font-size: 14px;
   }
 
-  #mcd-deal .mcd-deal-image-col,
   #mcd-retailer .mcd-retailer-image-col,
   #mcd-event .mcd-event-image-col,
   #mcd-career .mcd-career-image-col {
@@ -144,17 +133,11 @@
     padding-right: 15px;
   }
 
-  #mcd-deal .mcd-deal-image-col .mcd-retailer-details .mcd-retailer-name {
-    font-size: 18px;
-  }
-
-  #mcd-deal .mcd-deal-details .mcd-deal-title,
   #mcd-retailer .mcd-retailer-details .mcd-retailer-name {
     font-size: 18px;
     line-height: 22px;
   }
 
-  #mcd-deal .mcd-deal-details,
   #mcd-retailer .mcd-retailer-details,
   #mcd-event .mcd-event-details,
   #mcd-career .mcd-career-details {
@@ -277,17 +260,6 @@
     width: 50%;
   }
 
-  #mcd-deal .mcd-deal-image-col .mcd-retailer-details .mcd-retailer-logo {
-    width: 60px;
-    height: 60px;
-    top: -30px;
-    margin-left: -30px;
-  }
-
-  #mcd-deal .mcd-deal-image-col .mcd-retailer-details .mcd-retailer-logo img {
-    border-width: 3px;
-  }
-
   /* STORES */
   #mycenterstores {
     flex-direction: column;
@@ -321,14 +293,12 @@
     grid-template-columns: repeat(2, 1fr) !important;
   }
 
-  #mcd-deal .mcd-deal-cols,
   #mcd-retailer .mcd-store-cols,
   #mcd-event .mcd-event-cols,
   #mcd-career .mcd-career-cols {
     flex-direction: column;
   }
 
-  #mcd-deal .mcd-deal-image-col,
   #mcd-retailer .mcd-retailer-image-col,
   #mcd-event .mcd-event-image-col,
   #mcd-career .mcd-career-image-col {
@@ -336,14 +306,6 @@
     margin-bottom: 15px;
     max-width: none;
     width: 100%;
-  }
-
-  #mcd-deal .mcd-deal-image-col .mcd-retailer-details {
-    padding-top: 12%;
-  }
-
-  #mcd-deal .mcd-deal-image-col .mcd-retailer-details .mcd-retailer-name {
-    display: none;
   }
 
   .mcd-career-item .mcd-career-details {

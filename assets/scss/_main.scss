@@ -74,35 +74,6 @@ body.mycenterdeals-plugin {
   }
 }
 
-.mycenterdeals-wrapper {
-  max-width: 1200px;
-  width: 100%;
-  margin: 0 auto 30px;
-  color: #444;
-
-  .hide {
-    display: none !important;
-  }
-
-  img {
-    vertical-align: bottom;
-  }
-
-  a {
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    text-decoration: none !important;
-  }
-
-  *,
-  *:after,
-  *:before {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
-}
-
-
 #mycenterdeals-wrapper {
   margin-bottom: 20px;
 
@@ -263,7 +234,7 @@ body.mycenterdeals-plugin {
   background-color: #FFF;
 }
 
-.mcd-deal-item .mcd-deal-details {
+.mcd-deal-item .eyeon-deal-details {
   text-align: center;
   padding: 4% 2%;
   padding-top: 12%;
@@ -272,18 +243,18 @@ body.mycenterdeals-plugin {
   display: block;
 }
 
-.mcd-deal-item .mcd-deal-details .mcd-retailer-name {
+.mcd-deal-item .eyeon-deal-details .mcd-retailer-name {
   font-size: 14px;
   font-weight: 600;
   display: block;
 }
 
-.mcd-deal-item .mcd-deal-details .mcd-deal-title {
+.mcd-deal-item .eyeon-deal-details .mcd-deal-title {
   margin-bottom: 10px;
   display: block;
 }
 
-.mcd-deal-item .mcd-deal-details .mcd-deal-end-date {
+.mcd-deal-item .eyeon-deal-details .mcd-deal-end-date {
   display: block;
 }
 
@@ -1673,36 +1644,6 @@ select#mcd-filter-order {
 }
 
 /* BLOG ends */
-
-.mycenterdeals-wrapper .editor_output a {
-  color: var(--mcdAccentColor);
-}
-
-.mycenterdeals-wrapper .editor_output a:hover {
-  text-decoration: underline !important;
-}
-
-.mycenterdeals-wrapper .editor_output h3 {
-  line-height: 1.35em;
-  font-size: 1.25em;
-}
-
-.mycenterdeals-wrapper .editor_output p {
-  font-size: 1.05em;
-  line-height: 1.25em;
-}
-
-.mycenterdeals-wrapper .editor_output ul {
-  list-style: inherit !important;
-  margin-left: 24px !important;
-  margin-bottom: 15px !important;
-  padding-left: 0 !important;
-}
-
-.mycenterdeals-wrapper .editor_output ul li {
-  list-style: inherit !important;
-  margin-bottom: 0 !important;
-}
 
 /* OWL CAROUSEL SLIDER starts */
 .mcd_slider {

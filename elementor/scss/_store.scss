@@ -4,6 +4,7 @@
 
     .mcd-store-cols {
       display: flex;
+      gap: 30px;
 
       .mcd-retailer-image-col {
         flex: 0 0 300px;
@@ -18,7 +19,6 @@
 
       .mcd-retailer-details {
         flex: 1;
-        padding: 0 30px;
 
         .mcd-retailer-name {
           font-size: 20px;
@@ -27,53 +27,115 @@
           line-height: 24px;
         }
 
-        .mcd-retailer-description {
-          padding-top: 20px;
-          margin-bottom: 24px;
-        }
-
-        .mcd-vs-link {
-          margin-bottom: 15px;
-
-          img {
-            max-width: 110px;
-          }
-        }
-
-        .mcd-social-links {
-          margin-bottom: 24px;
-        }
-      }
-
-      .mcd-retailer-opening-hours {
-        flex: 0 0 260px;
-
-        h4 {
-          font-size: 17px;
-          font-weight: 600;
-          margin: 0 0 10px;
-        }
-
-        .hours-sets {
+        .eyeon-retailer-details-cols {
           display: flex;
-          flex-direction: column;
-          gap: 4px;
+          gap: 30px;
 
-          .hours-set {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+          .eyeon-retailer-content {
+            flex: 1;
 
-            .day {
-              opacity: 1;
+            .mcd-retailer-description {
+              padding-top: 20px;
+              margin-bottom: 24px;
             }
 
-            .time {
-              opacity: 1;
+            .mcd-social-links {
+              margin-bottom: 24px;
+            }
+          }
+
+          .mcd-retailer-opening-hours {
+            flex: 0 0 260px;
+
+            h4 {
+              font-size: 17px;
+              font-weight: 600;
+              margin: 0 0 10px;
+            }
+
+            .hours-sets {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .hours-set {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .day {
+                  opacity: 1;
+                }
+
+                .time {
+                  opacity: 1;
+                }
+              }
             }
           }
         }
       }
+    }
+  }
+
+  @include media-query(tablet-landscape) {
+    .eyeon-store {
+      margin-bottom: 30px;
+
+      .mcd-store-cols {
+        .mcd-retailer-image-col {
+          flex: 0 0 30%;
+        }
+
+        .mcd-retailer-details .eyeon-retailer-details-cols {
+          flex-direction: column;
+          gap: 0;
+
+          .mcd-retailer-opening-hours {
+            max-width: 220px;
+            flex: 0 0 auto;
+          }
+        }
+      }
+    }
+
+    .eyeon-deals .deals-list {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+  }
+
+  @include media-query(tablet-portrait) {
+    .eyeon-deals .deals-list {
+      grid-gap: 15px;
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  @include media-query(mobile-large) {
+    .eyeon-store {
+      .mcd-store-cols {
+        flex-direction: column;
+        gap: 20px;
+
+        .mcd-retailer-image-col .mcd-retailer-image img {
+          max-width: 400px;
+        }
+      }
+    }
+
+    .eyeon-deals {
+      h3.title {
+        margin-bottom: 20px;
+        padding-bottom: 14px;
+        font-size: 20px;
+      }
+    }
+  }
+
+  @include media-query(mobile) {
+    .eyeon-deals .deals-list {
+      grid-gap: 15px;
+      grid-template-columns: repeat(1, 1fr) !important;
     }
   }
 }

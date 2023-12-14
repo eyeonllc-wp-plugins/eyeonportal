@@ -14,7 +14,7 @@
 <?php endif; ?>
 
 <?php if( $mcd_settings['deals_single_page_width'] == 'fullwidth' ) : ?>
-.mycenterdeals-wrapper.mycenterdeal { max-width: 100%; }
+#eyeondeal-single.mycenterdeals-wrapper { max-width: 100%; }
 <?php endif; ?>
 
 <?php if( $mcd_settings['stores_listing_page_width'] == 'fullwidth' ) : ?>
@@ -47,9 +47,6 @@
 #mcd-load-more-div.loading {
 	background-image: url(<?= mcd_image_url('assets/img/loader.svg') ?>);
 }
-#mcd-deal .mcd-deal-image-col .mcd-deal-image {
-	background-image: url(<?= mcd_image_url('assets/img/placeholder.jpg') ?>);
-}
 ul.mcd-social-icons li a {
 	background-image: url(<?= mcd_image_url('assets/img/social-icons.png') ?>);
 }
@@ -80,7 +77,8 @@ ul.mcd-social-icons li a {
 /* RESPONSIVENESS */
 @media screen and (max-width: <?= ($mcd_settings['default_page_width']-1) ?>px) {
 	.mycenterdeals-wrapper {
-		padding: 0 10px;
+		padding-left: 10px;
+    padding-right: 10px;
 	}
 }
 </style>
