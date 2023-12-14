@@ -212,6 +212,14 @@
           flex: 0 0 220px;
   border-right: 2px solid #E8E8E8;
 }
+.eyeon-stores .eyeon-wrapper .stores-categories select {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border: 1px solid #AAA;
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.05);
+}
 .eyeon-stores .eyeon-wrapper .stores-categories ul {
   list-style: none;
   margin: 0;
@@ -284,7 +292,7 @@
           filter: grayscale(0);
   opacity: 1;
 }
-@media screen and (max-width: 599px) {
+@media (max-width: 599px) {
   .eyeon-stores .eyeon-wrapper .content-cols {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -295,6 +303,20 @@
     -webkit-box-flex: 1 !important;
         -ms-flex: auto !important;
             flex: auto !important;
+    border-right: none;
+    position: relative;
+  }
+  .eyeon-stores .eyeon-wrapper .content-cols .stores-categories:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 0;
+    top: calc(50% + 3px);
+    right: 12px;
+    -webkit-transform: translateY(-50%);
+            transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-top-color: #888;
   }
 }
 
