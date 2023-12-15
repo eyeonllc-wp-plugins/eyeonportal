@@ -20,12 +20,15 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
   public function get_script_depends() {
 		return [
       'eyeon-moment',
-      'eyeon-elementor-utils'
+      'eyeon-elementor-utils',
+      'eyeon-owl-carousel'
     ];
 	}
   
 	public function get_style_depends() {
     return [
+      'eyeon-owl-carousel',
+      'eyeon-owl-carousel-theme',
       'eyeon-elementor-style'
     ];
 	}

@@ -1,28 +1,13 @@
 <?php
 $settings = $this->get_settings_for_display();
-$filtered_settings = array_intersect_key($settings, array_flip([
+$filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'fetch_all',
   'fetch_limit',
   'external_event_new_tab',
   'event_title',
   'event_excerpt',
   'event_metadata',
-  'view_mode',
-  'carousel_items',
-  'carousel_items_tablet',
-  'carousel_items_mobile',
-  'carousel_dots',
-  'carousel_navigation',
-  'carousel_autoplay',
-  'carousel_autoplay_speed',
-  'carousel_slideby',
-  'carousel_slideby_tablet',
-  'carousel_slideby_mobile',
-  'carousel_margin',
-  'carousel_margin_tablet',
-  'carousel_margin_mobile',
-  'carousel_loop'
-]));
+], get_carousel_fields())));
 $unique_id = uniqid();
 ?>
 

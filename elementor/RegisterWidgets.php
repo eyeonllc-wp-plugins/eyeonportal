@@ -68,6 +68,9 @@ function register_eyeon_widgets( $widgets_manager ) {
 
   require_once plugin_dir_path( __FILE__).'widgets/deals/index.php';
   $widgets_manager->register( new \EyeOn_Deals_Widget() );
+
+  require_once plugin_dir_path( __FILE__).'widgets/careers/index.php';
+  $widgets_manager->register( new \EyeOn_Careers_Widget() );
 }  
 add_action('elementor/widgets/register', 'register_eyeon_widgets');
 

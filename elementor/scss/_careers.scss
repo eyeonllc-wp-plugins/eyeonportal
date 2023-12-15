@@ -1,0 +1,67 @@
+.eyeon-careers {
+  .careers-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+
+    .career {
+      display: flex;
+      flex-direction: column;
+
+      .retailer-logo {
+        background-color: #f5f7fd;
+        position: relative;
+        padding-top: 210px;
+
+        img {
+          vertical-align: bottom;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          left: 0;
+          top: 0;
+          object-fit: contain;
+        }
+      }
+
+      .career-content {
+        background-color: #ddd;
+        padding: 10px 20px;
+        text-align: center;
+        color: #444;
+        flex: 1;
+
+        .career-title {
+          margin: 0;
+          font-size: 17px;
+          line-height: 23px;
+          font-weight: 600;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
+
+        .career-excerpt {
+          font-size: 15px;
+          line-height: 20px;
+          margin-top: 8px;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: normal;
+        }
+
+        .career-expiry {
+          margin-top: 8px;
+          font-size: 15px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
