@@ -13,7 +13,7 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
-  <div class="eyeon-wrapper eyeon-hide" style="display:none;">
+  <div class="eyeon-wrapper" style="display:none;">
     <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
 
     <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
@@ -102,7 +102,6 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
-            retailersFetched = true;
             retailers = retailers.concat(response.items);
             var fetchMore = false;
             if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
@@ -115,6 +114,7 @@ $unique_id = uniqid();
               page++;
               fetch_retailers();
             } else {
+              retailersFetched = true;
               setup_categories();
             }
           }
@@ -146,6 +146,7 @@ $unique_id = uniqid();
                 }
               });
             <?php endif; ?>
+
             $.each(responseCategories, function (index, item) {
               categories.push({
                 id: item.id,
@@ -161,8 +162,6 @@ $unique_id = uniqid();
 
     function setup_categories() {
       if( !retailersFetched || !categoriesFetched ) return false;
-
-      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide').removeAttr('style');
 
       retailers.forEach(retailer => {
         retailer.categories.forEach(category => {
@@ -183,7 +182,8 @@ $unique_id = uniqid();
       });
       <?php endif; ?>
 
-      render('all', '');
+      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
+      renderRetailers();
     }
 
     function updateCategoryDisplay(categoryId) {
@@ -194,27 +194,24 @@ $unique_id = uniqid();
       });
     }
 
-    function render(category, search) {
+    function renderRetailers() {
       retailersList.empty();
 
       if( retailers.length > 0 ) {
         retailers.forEach(retailer => {
-          if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
-            if (search === '' || retailer.name.toLowerCase().includes(search)) {
-              const retailerItem = $(`
-                <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store">
-                  <div class="image ${(settings.featured_image === 'show')?'show-featured-image':''}">
-                    <img class="retailer-logo" src="${retailer.media.url}" alt="${retailer.name}" />
-                    ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
-                    ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
-                  </div>
-                  <!--<h3 class="store-name">${retailer.name}</h3>-->
-                </a>
-              `);
-              retailersList.append(retailerItem);
-            }
-          }
+          const retailerItem = $(`
+            <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store store-${retailer.id}">
+              <div class="image ${(settings.featured_image === 'show')?'show-featured-image':''}">
+                <img class="retailer-logo" src="${retailer.media.url}" alt="${retailer.name}" />
+                ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
+                ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
+              </div>
+              <!--<h3 class="store-name">${retailer.name}</h3>-->
+            </a>
+          `);
+          retailersList.append(retailerItem);
         });
+        filterRetailersByCategoryAndSearch('all', '');
         
         <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
       } else {
@@ -222,6 +219,17 @@ $unique_id = uniqid();
           <div class="no-items-found">No retailers found.</div>
         `);
       }
+    }
+
+    function filterRetailersByCategoryAndSearch(category, search) {
+      retailers.forEach(retailer => {
+        retailersList.find('.store.store-'+retailer.id).addClass('eyeon-hide');
+        if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
+          if (search === '' || retailer.name.toLowerCase().includes(search)) {
+            retailersList.find('.store.store-'+retailer.id).removeClass('eyeon-hide');
+          }
+        }
+      });
     }
 
     // Event listeners for filter and search
@@ -233,7 +241,7 @@ $unique_id = uniqid();
 
       categoryDropdownList.val(selectedCategory);
 
-      render(selectedCategory, search);
+      filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
 
     categoryDropdownList.on('change', function() {
@@ -244,13 +252,13 @@ $unique_id = uniqid();
       categoryList.find('li.active').removeClass('active');
       categoryList.find('li[data-value="'+selectedCategory+'"]').addClass('active');
 
-      render(selectedCategory, search);
+      filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
 
     searchInput.on('input', function() {
       const selectedCategory = categoryList.find('ul li.active:first').attr('data-value');
       const search = $(this).val().toLowerCase();
-      render(selectedCategory, search);
+      filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
   });
 </script>
