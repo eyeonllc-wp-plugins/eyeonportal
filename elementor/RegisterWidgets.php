@@ -27,6 +27,9 @@ function eyeon_elementor_scripts() {
   wp_register_script( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/owl.carousel.min.js' ) );
   wp_register_style( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/assets/owl.carousel.min.css' ) );
   wp_register_style( 'eyeon-owl-carousel-theme', mcd_version_url( 'assets/plugins/owl/assets/owl.theme.default.min.css' ) );
+
+  wp_register_script( 'eyeon-map', mcd_version_url( 'elementor/widgets/map/assets/main.js' ) );
+  wp_register_style( 'eyeon-map', mcd_version_url( 'elementor/widgets/map/assets/main.css' ) );
 }
 add_action( 'wp_enqueue_scripts', 'eyeon_elementor_scripts' );
 
@@ -71,6 +74,9 @@ function register_eyeon_widgets( $widgets_manager ) {
 
   require_once plugin_dir_path( __FILE__).'widgets/careers/index.php';
   $widgets_manager->register( new \EyeOn_Careers_Widget() );
+
+  require_once plugin_dir_path( __FILE__).'widgets/map/index.php';
+  $widgets_manager->register( new \EyeOn_Map_Widget() );
 }  
 add_action('elementor/widgets/register', 'register_eyeon_widgets');
 

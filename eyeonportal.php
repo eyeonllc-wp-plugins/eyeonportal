@@ -36,23 +36,23 @@ $plugin_data = get_file_data(MCD_PLUGIN_PATH.'eyeonportal.php', array("version"=
 define('MCD_PLUGIN_VERSION', $plugin_data['version']);
 
 // API to get data from mycenterdeals portal
-$api_base_url = 'https://web-backend-prod.eyeonportal.com/v1/';
+$api_base_url = 'https://web-backend-prod.eyeonportal.com/';
 if( isset($mcd_settings['mcd_site_mode']) ) {
 	if( $mcd_settings['mcd_site_mode'] == 'staging' ) {
-		$api_base_url = 'https://web-backend-staging.eyeonportal.com/v1/';
+		$api_base_url = 'https://web-backend-staging.eyeonportal.com/';
 	} elseif( $mcd_settings['mcd_site_mode'] == 'development' ) {
 		$api_base_url = 'https://staging.mycenterportal.test/';
 	}
 }
 defined('API_BASE_URL')				  OR define( 'API_BASE_URL', $api_base_url );
 
-defined('MCD_API_CENTERS')		  OR define( 'MCD_API_CENTERS', API_BASE_URL . 'centers?limit=100&page=1');
+defined('MCD_API_CENTERS')		  OR define( 'MCD_API_CENTERS', API_BASE_URL . 'v1/centers?limit=100&page=1');
 
-defined('MCD_API_STORES')			  OR define( 'MCD_API_STORES', API_BASE_URL . 'retailers' );
-defined('MCD_API_DEALS')			  OR define( 'MCD_API_DEALS', API_BASE_URL . 'deals' );
-defined('MCD_API_EVENTS')			  OR define( 'MCD_API_EVENTS', API_BASE_URL . 'events' );
-defined('MCD_API_CAREERS')		  OR define( 'MCD_API_CAREERS', API_BASE_URL . 'careers' );
-defined('MCD_API_BLOG_POSTS')	  OR define( 'MCD_API_BLOG_POSTS', API_BASE_URL . 'blogs' );
+defined('MCD_API_STORES')			  OR define( 'MCD_API_STORES', API_BASE_URL . 'v1/retailers' );
+defined('MCD_API_DEALS')			  OR define( 'MCD_API_DEALS', API_BASE_URL . 'v1/deals' );
+defined('MCD_API_EVENTS')			  OR define( 'MCD_API_EVENTS', API_BASE_URL . 'v1/events' );
+defined('MCD_API_CAREERS')		  OR define( 'MCD_API_CAREERS', API_BASE_URL . 'v1/careers' );
+defined('MCD_API_BLOG_POSTS')	  OR define( 'MCD_API_BLOG_POSTS', API_BASE_URL . 'v1/blogs' );
 
 defined('MCD_API_MAP_CONFIG')	  OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 'api/mapit2/config' );
 
