@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal. (new)
-Version: 0.0.27
+Version: 0.0.28
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
