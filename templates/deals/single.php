@@ -42,7 +42,7 @@ if( isset($mycenterdeal['next']) ) {
             <div class="mcd-deal-message editor_output"><?= get_editor_output($mycenterdeal['description']) ?></div>
 
             <?php
-            $retailer_phone = $mycenterdeal['retailer']['phone'];
+            $retailer_phone = @$mycenterdeal['retailer']['phone'];
             $retailer_location = get_retailer_location($mycenterdeal['retailer']['location']);
             ?>
 
