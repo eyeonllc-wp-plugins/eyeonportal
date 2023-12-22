@@ -38,6 +38,7 @@ if( isset($mycenterdeal['next']) ) {
 				<div class="eyeon-deal-details">
           <div class="eyeon-deal-content">
             <div class="mcd-deal-title"><?= $mycenterdeal['title'] ?></div>
+            <div class="mcd-retailer-name"><?= $mycenterdeal['retailer']['name'] ?></div>
             <div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= $mycenterdeal['end_date'] ?></div>
             <div class="mcd-deal-message editor_output"><?= get_editor_output($mycenterdeal['description']) ?></div>
 
@@ -69,7 +70,9 @@ if( isset($mycenterdeal['next']) ) {
             <?php endif; ?>
           </div>
           <div class="mcd-retailer-details">
-            <img class="mcd-retailer-logo" src="<?= $mycenterdeal['retailer']['media']['url'] ?>" />
+            <div class="mcd-retailer-logo">
+              <img src="<?= $mycenterdeal['retailer']['media']['url'] ?>" />
+            </div>
           </div>
 				</div>
 			</div>
