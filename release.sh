@@ -14,8 +14,8 @@ if [ -n "$stable_tag" ]; then
   git push origin master
 
   # Tag and push the stable tag
-  git tag "$stable_tag"
-  git push origin "$stable_tag"
+  git tag $stable_tag
+  git push origin $stable_tag
 
   echo "Version Released: $stable_tag"
 else
