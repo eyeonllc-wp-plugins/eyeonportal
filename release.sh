@@ -2,6 +2,7 @@
 
 # Read the stable tag from readme.txt
 stable_tag=$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}')
+sleep 1
 echo $stable_tag is released
 echo "git tag $stable_tag"
 
