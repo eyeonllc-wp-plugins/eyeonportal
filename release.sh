@@ -2,7 +2,7 @@
 
 # Read the stable tag from readme.txt
 stable_tag=$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}')
-echo "-$stable_tag-";
+echo "=$stable_tag=";
 echo "git tag $stable_tag"
 
 # Check if the stable tag is not empty
