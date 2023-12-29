@@ -2,9 +2,6 @@
 
 # Read the stable tag from readme.txt
 stable_tag=$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}' | tr -d '\r')
-wait 1
-echo $stable_tag is released
-echo "git tag $stable_tag"
 
 # Check if the stable tag is not empty
 if [ -n "$stable_tag" ]; then
@@ -19,6 +16,9 @@ if [ -n "$stable_tag" ]; then
   # Tag and push the stable tag
   git tag $stable_tag
   git push origin $stable_tag
+
+  # Release version
+  gh release create $stable_tag --notes "$commit_message"
 
   echo "Version Released: $stable_tag"
 else
