@@ -13,5 +13,6 @@
 !eyeonportal.php
 !readme.txt
 !uninstall.php
+!release.sh
 
 .DS_Store

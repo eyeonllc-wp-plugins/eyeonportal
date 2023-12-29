@@ -137,6 +137,18 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
+      'custom_flags',
+      [
+        'label' => __( 'Custom Flags', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => __( 'Show', EYEON_NAMESPACE ),
+        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
+      ]
+    );
+
+    $this->add_control(
 			'hr_1',
 			[
 				'type' => \Elementor\Controls_Manager::DIVIDER,
@@ -446,6 +458,73 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       [
         'name' => 'deal_flag_typography',
         'selector' => '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .deal-flag',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ==============================================================================================
+    // ==============================================================================================
+    // ==============================================================================================
+
+    $this->start_controls_section(
+      'custom_flags_style_settings',
+      [
+        'label' => __( 'Custom Flags', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'custom_flags' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'custom_flags_top',
+      [
+        'label' => __( 'Top Position', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 40,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px'],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .custom-flags' => 'top: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+			'custom_flags_padding',
+			[
+				'label' => __( 'Padding', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::DIMENSIONS,
+				'size_units' => [ 'px', '%' ],
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .custom-flags li' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				],
+			]
+		);
+
+    $this->add_control(
+			'custom_flags_bg_color',
+			[
+				'label' => __( 'Background Color', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::COLOR,
+				'selectors' => [
+					'{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .custom-flags li' => 'background-color: {{VALUE}}',
+				],
+			]
+		);
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'custom_flags_typography',
+        'selector' => '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .custom-flags li',
       ]
     );
 

@@ -5,6 +5,7 @@ $filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'fetch_all',
   'fetch_limit',
   'deal_flag',
+  'custom_flags',
   'retailer_categories',
   'retailer_tags',
   'featured_image',
@@ -204,6 +205,11 @@ $unique_id = uniqid();
               <div class="image ${(settings.featured_image === 'show')?'show-featured-image':''}">
                 <img class="retailer-logo" src="${retailer.media.url}" alt="${retailer.name}" />
                 ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
+                ${(settings.custom_flags === 'show' && retailer.custom_flags && retailer.custom_flags.length > 0) ? `
+                  <ul class="custom-flags">
+                    ${retailer.custom_flags.map(flag => `<li>${flag}</li>`).join('')}
+                  </ul>
+                ` : ''}
                 ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
               </div>
               <!--<h3 class="store-name">${retailer.name}</h3>-->
