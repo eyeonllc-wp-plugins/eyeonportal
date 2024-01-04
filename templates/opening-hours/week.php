@@ -2,7 +2,7 @@
 	<table>
 		<tbody>
 			<?php foreach( $this->mcd_settings['opening_hours_week'] as $day ) :
-				$day_value = mcd_opening_hour_time($day['open_time']).' - '.mcd_opening_hour_time($day['close_time']);
+				$day_value = eyeon_format_time($day['open_time']).' - '.eyeon_format_time($day['close_time']);
 				if( $day['status'] == 'closed' ) {
 					$day_value = $day['title'];
 				} elseif( $day['status'] == 'holiday' ) {

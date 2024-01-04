@@ -376,6 +376,9 @@
   margin-bottom: 20px;
   line-height: 24px;
 }
+#eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .eyeon-location-and-phone {
+  margin-bottom: 20px;
+}
 #eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .eyeon-retailer-details-cols {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -388,11 +391,18 @@
           flex: 1;
 }
 #eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .eyeon-retailer-details-cols .eyeon-retailer-content .mcd-retailer-description {
-  padding-top: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 12px;
 }
 #eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .eyeon-retailer-details-cols .eyeon-retailer-content .mcd-social-links {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 #eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .eyeon-retailer-details-cols .mcd-retailer-opening-hours {
   -webkit-box-flex: 0;

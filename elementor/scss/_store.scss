@@ -27,6 +27,10 @@
           line-height: 24px;
         }
 
+        .eyeon-location-and-phone {
+          margin-bottom: 20px;
+        }
+
         .eyeon-retailer-details-cols {
           display: flex;
           gap: 30px;
@@ -35,12 +39,14 @@
             flex: 1;
 
             .mcd-retailer-description {
-              padding-top: 20px;
-              margin-bottom: 24px;
+              margin-bottom: 20px;
+              display: flex;
+              flex-direction: column;
+              gap: 12px;
             }
 
             .mcd-social-links {
-              margin-bottom: 24px;
+              margin-bottom: 20px;
             }
           }
 

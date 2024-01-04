@@ -187,7 +187,7 @@ function mcd_current_theme_name() {
 	return $theme_name;
 }
 
-function mcd_opening_hour_time($time) {
+function eyeon_format_time($time) {
 	$time = strtoupper(date('g:i a', strtotime($time)));
 	return $time;
 }
@@ -214,15 +214,15 @@ function mcp_page_title($title) {
 	return $title.' - '.get_bloginfo('name');
 }
 
-function weekdays() {
+function eyeon_weekdays() {
   $days = array(
-    'sun' => 'Sunday',
     'mon' => 'Monday',
     'tue' => 'Tuesday',
     'wed' => 'Wednesday',
     'thu' => 'Thursday',
     'fri' => 'Friday',
     'sat' => 'Saturday',
+    'sun' => 'Sunday',
   );
   return $days;
 }
@@ -261,3 +261,25 @@ function get_carousel_fields() {
     'carousel_loop'
   );
 }
+
+function eyeon_format_phone($phoneNumber) {
+  // Extract the last 10 digits from the phone number
+    $last10Digits = substr(preg_replace('/[^0-9]/', '', $phoneNumber), -10);
+
+    // Check if the last 10 digits form a valid US number
+    if (strlen($last10Digits) === 10) {
+        // Format the phone number: +1 (XXX) XXX-XXXX
+        $formattedNumber = sprintf(
+            "+1 (%s) %s-%s",
+            substr($last10Digits, 0, 3),
+            substr($last10Digits, 3, 3),
+            substr($last10Digits, 6)
+        );
+
+        return $formattedNumber;
+    } else {
+        // If not valid, return the original number
+        return $phoneNumber;
+    }
+}
+

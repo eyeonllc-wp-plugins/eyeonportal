@@ -12,7 +12,7 @@ $atts = $this->mcd_settings['opening_hours_today_shortcode_atts'];
 			<div class="mcd_holiday_title"><?= $mcd_today['title'] ?></div>
 		<?php endif; ?>
 		<?php if( isset($mcd_today['open_time']) && isset($mcd_today['close_time']) ) : ?>
-			<div class="mcd_open_timings"><?= mcd_opening_hour_time($mcd_today['open_time']).' - '.mcd_opening_hour_time($mcd_today['close_time']) ?></div>
+			<div class="mcd_open_timings"><?= eyeon_format_time($mcd_today['open_time']).' - '.eyeon_format_time($mcd_today['close_time']) ?></div>
 		<?php endif; ?>
 	<?php endif; ?>
 </div>

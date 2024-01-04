@@ -44,25 +44,25 @@ if( isset($mcd_settings['mcd_site_mode']) ) {
 		$api_base_url = 'https://staging.mycenterportal.test/';
 	}
 }
-defined('API_BASE_URL')				  OR define( 'API_BASE_URL', $api_base_url );
+defined('API_BASE_URL')				      OR define( 'API_BASE_URL', $api_base_url );
 
-defined('MCD_API_CENTERS')		  OR define( 'MCD_API_CENTERS', API_BASE_URL . 'v1/centers?limit=100&page=1');
+defined('MCD_API_CENTERS')		      OR define( 'MCD_API_CENTERS', API_BASE_URL . 'v1/centers?limit=100&page=1');
 
-defined('MCD_API_STORES')			  OR define( 'MCD_API_STORES', API_BASE_URL . 'v1/retailers' );
-defined('MCD_API_DEALS')			  OR define( 'MCD_API_DEALS', API_BASE_URL . 'v1/deals' );
-defined('MCD_API_EVENTS')			  OR define( 'MCD_API_EVENTS', API_BASE_URL . 'v1/events' );
-defined('MCD_API_CAREERS')		  OR define( 'MCD_API_CAREERS', API_BASE_URL . 'v1/careers' );
-defined('MCD_API_BLOG_POSTS')	  OR define( 'MCD_API_BLOG_POSTS', API_BASE_URL . 'v1/blogs' );
+defined('MCD_API_STORES')			      OR define( 'MCD_API_STORES', API_BASE_URL . 'v1/retailers' );
+defined('MCD_API_DEALS')			      OR define( 'MCD_API_DEALS', API_BASE_URL . 'v1/deals' );
+defined('MCD_API_EVENTS')			      OR define( 'MCD_API_EVENTS', API_BASE_URL . 'v1/events' );
+defined('MCD_API_CAREERS')		      OR define( 'MCD_API_CAREERS', API_BASE_URL . 'v1/careers' );
+defined('MCD_API_NEWS')	            OR define( 'MCD_API_NEWS', API_BASE_URL . 'v1/blogs' );
 
-defined('MCD_API_MAP_CONFIG')	  OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 'api/mapit2/config' );
+defined('MCD_API_MAP_CONFIG')	      OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 'api/mapit2/config' );
 
-defined('MCD_API_SEARCH')			  OR define( 'MCD_API_SEARCH', API_BASE_URL . 'api/search' );
+defined('MCD_API_SEARCH')			      OR define( 'MCD_API_SEARCH', API_BASE_URL . 'api/search' );
 
-defined('MCD_OPENING_HOURS_WEEK')	OR define( 'MCD_OPENING_HOURS_WEEK', API_BASE_URL . 'api/opening-hours/week' );
+defined('MCD_OPENING_HOURS_WEEK')   OR define( 'MCD_OPENING_HOURS_WEEK', API_BASE_URL . 'api/opening-hours/week' );
 defined('MCD_OPENING_HOURS_TODAY')	OR define( 'MCD_OPENING_HOURS_TODAY', API_BASE_URL . 'api/opening-hours/today' );
 
-defined('MCP_API_LINKS')			OR define( 'MCP_API_LINKS', API_BASE_URL.'api/links' );
-defined('RESTAURANTS_CATEGORY_ID')			OR define( 'RESTAURANTS_CATEGORY_ID', '4' );
+defined('MCP_API_LINKS')			      OR define( 'MCP_API_LINKS', API_BASE_URL.'api/links' );
+defined('RESTAURANTS_CATEGORY_ID')	OR define( 'RESTAURANTS_CATEGORY_ID', '4' );
 
 add_theme_support( 'title-tag' );
 

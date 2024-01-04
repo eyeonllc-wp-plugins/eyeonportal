@@ -77,6 +77,9 @@ function register_eyeon_widgets( $widgets_manager ) {
 
   require_once plugin_dir_path( __FILE__).'widgets/map/index.php';
   $widgets_manager->register( new \EyeOn_Map_Widget() );
+
+  require_once plugin_dir_path( __FILE__).'widgets/news/index.php';
+  $widgets_manager->register( new \EyeOn_News_Widget() );
 }  
 add_action('elementor/widgets/register', 'register_eyeon_widgets');
 

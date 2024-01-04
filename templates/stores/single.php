@@ -40,25 +40,42 @@ if( isset($mycenterstore['next']) ) {
 
 				<div class="mcd-retailer-details">
 					<div class="mcd-retailer-name"><?= $mycenterstore['name'] ?></div>
-          <?php
-          $retailer_location = get_retailer_location($mycenterstore['location']);
-          if( !empty($retailer_location) ) : ?>
-            <div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $retailer_location ?></div>
-          <?php endif; ?>
-					<?php if( !empty($mycenterstore['retailer_phone']) ) : ?>
-						<div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= $mycenterstore['retailer_phone'] ?></div>
-					<?php endif; ?>
+          
           <div class="eyeon-retailer-details-cols">
             <div class="eyeon-retailer-content">
-              <div class="mcd-retailer-description editor_output">
-                <?= get_editor_output($mycenterstore['global_retailer']['description']) ?>
-                <?php
-                $local_description = get_editor_output($mycenterstore['description']);
-                if( !empty($local_description) ) {
-                  echo '<br><br>'.$local_description;
-                }
-                ?>
-              </div>
+              <?php
+              $retailer_location = get_retailer_location($mycenterstore['location']);
+              $retailer_phone = eyeon_format_phone($mycenterstore['retailer_phone']);
+              ?>
+              <?php if(!empty($retailer_location) || !empty($retailer_phone)) : ?>
+                <div class="eyeon-location-and-phone">
+                  <?php if( !empty($retailer_location) ) : ?>
+                    <div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $retailer_location ?></div>
+                  <?php endif; ?>
+                  <?php if( !empty($retailer_phone) ) : ?>
+                    <div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= $retailer_phone ?></div>
+                  <?php endif; ?>
+                </div>
+              <?php endif; ?>
+          
+              <?php
+              $global_description = get_editor_output($mycenterstore['global_retailer']['description']);
+              $local_description = get_editor_output($mycenterstore['description']);
+              ?>
+              <?php if( !empty($global_description) || !empty($local_description)) : ?>
+                <div class="mcd-retailer-description editor_output">
+                  <?php if( !empty($global_description) ) : ?>
+                    <div class="global-description">
+                      <?= $global_description ?>
+                    </div>
+                  <?php endif; ?>
+                  <?php if( !empty($local_description) ) : ?>
+                    <div class="local-description">
+                      <p><?= $local_description ?></p>
+                    </div>
+                  <?php endif; ?>
+                </div>
+              <?php endif; ?>
               
               <?php if( $this->mcd_settings['stores_single_social_links'] ) : ?>
                 <?php
@@ -92,11 +109,11 @@ if( isset($mycenterstore['next']) ) {
             <div class="mcd-retailer-opening-hours">
               <h4>Opening Hours:</h4>
               <div class="hours-sets">
-                <?php foreach( weekdays() as $key=>$day ) : ?>
+                <?php foreach( eyeon_weekdays() as $key=>$day ) : ?>
                 <div class="hours-set">
                   <div class="day"><?= $day ?></div>
                   <div class="time">
-                    <?= $mycenterstore['opening_hours'][$key]['startTime'] ?> - <?= $mycenterstore['opening_hours'][$key]['endTime'] ?>
+                    <?= eyeon_format_time($mycenterstore['opening_hours'][$key]['startTime']) ?> - <?= eyeon_format_time($mycenterstore['opening_hours'][$key]['endTime']) ?>
                   </div>
                 </div>
                 <?php endforeach; ?>
