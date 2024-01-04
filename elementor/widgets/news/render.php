@@ -113,7 +113,7 @@ $unique_id = uniqid();
 
     function setup_categories() {
       console.log('news', news);
-      retailers.forEach(retailer => {
+      news.forEach(retailer => {
         retailer.categories.forEach(category => {
           updateCategoryDisplay(category.id);
         });
