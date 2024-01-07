@@ -8,6 +8,7 @@ $this->start_controls_section(
     'condition' => [
       'view_mode' => 'carousel',
     ],
+    'frontend_available' => true,
   ]
 );
 
@@ -22,6 +23,7 @@ $this->add_responsive_control(
     'default' => 6,
     'tablet_default' => 4,
     'mobile_default' => 2,
+    'frontend_available' => true,
   ]
 );
 
@@ -36,6 +38,7 @@ $this->add_responsive_control(
     'default' => 1,
     'tablet_default' => 1,
     'mobile_default' => 1,
+    'frontend_available' => true,
   ]
 );
 
@@ -50,6 +53,7 @@ $this->add_responsive_control(
     'default' => 15,
     'tablet_default' => 15,
     'mobile_default' => 15,
+    'frontend_available' => true,
   ]
 );
 
@@ -62,6 +66,7 @@ $this->add_control(
     'label_off' => __( 'Hide', EYEON_NAMESPACE ),
     'return_value' => 'show',
     'default' => 'show',
+    'frontend_available' => true,
   ]
 );
 
@@ -74,6 +79,7 @@ $this->add_control(
     'label_off' => __( 'Hide', EYEON_NAMESPACE ),
     'return_value' => 'show',
     'default' => '',
+    'frontend_available' => true,
   ]
 );
 
@@ -86,6 +92,7 @@ $this->add_control(
     'label_off' => __( 'No', EYEON_NAMESPACE ),
     'return_value' => 'yes',
     'default' => 'no',
+    'frontend_available' => true,
   ]
 );
 
@@ -102,6 +109,7 @@ $this->add_control(
     'condition' => [
       'carousel_autoplay' => 'yes',
     ],
+    'frontend_available' => true,
   ]
 );
   
@@ -114,6 +122,7 @@ $this->add_control(
     'label_off' => __( 'No', EYEON_NAMESPACE ),
     'return_value' => 'yes',
     'default' => 'no',
+    'frontend_available' => true,
   ]
 );
 

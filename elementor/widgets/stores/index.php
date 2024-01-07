@@ -163,7 +163,8 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'options' => [],
         'default' => [],
         'multiple' => true,
-        'label_block' => true
+        'label_block' => true,
+        'frontend_available' => true,
       ]
     );
 

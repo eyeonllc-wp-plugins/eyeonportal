@@ -11,6 +11,8 @@ $filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'featured_image',
 ], get_carousel_fields())));
 $unique_id = uniqid();
+
+// eyeon_debug($filtered_settings, false);
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
