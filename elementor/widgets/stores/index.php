@@ -101,7 +101,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'mobile_default' => 2,
         'render_type' => 'ui',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr));',
         ],
         'condition' => [
           'view_mode' => 'grid',

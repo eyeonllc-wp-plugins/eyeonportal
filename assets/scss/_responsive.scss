@@ -13,16 +13,6 @@
     grid-template-columns: repeat(3, 1fr) !important;
   }
 
-  #mycenterblog {
-    grid-template-columns: repeat(3, 1fr) !important;
-    grid-gap: 30px 20px;
-  }
-
-  #mycenterblog.isotope .mcd-blog-post-item {
-    width: 33.33% !important;
-    padding: 10px;
-  }
-
   #mcd-blog-post .mcd-post-cols {
     flex-wrap: wrap;
   }
@@ -85,11 +75,6 @@
   #mycenterblog {
     grid-template-columns: repeat(2, 1fr) !important;
     grid-gap: 30px 15px;
-  }
-
-  #mycenterblog.isotope .mcd-blog-post-item {
-    width: 50% !important;
-    padding: 8px;
   }
 
   #mcd-blog-post .mcd-post-cols .mcd-post-image-col {
@@ -180,17 +165,6 @@
 
   .mcd-popup .mcd-popup-wrapper {
     padding-top: 60px;
-  }
-
-  .mcd-blog-post-item .mcd-blog-post-title {
-    font-size: 13px;
-    line-height: 17px;
-  }
-
-  .mcd-blog-post-item .mcd-learn-more {
-    border-width: 1px;
-    padding: 2px 6px;
-    font-size: 12px;
   }
 
   #mcd-blog-post .mcd-post-cols .mcd-post-image-col {

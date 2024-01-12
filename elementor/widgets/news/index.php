@@ -19,6 +19,7 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
 
   public function get_script_depends() {
 		return [
+      'eyeon-moment',
       'eyeon-elementor-utils',
       'eyeon-owl-carousel'
     ];
@@ -96,12 +97,12 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
         'min' => 1,
         'max' => 10,
         'step' => 1,
-        'default' => 6,
-        'tablet_default' => 4,
+        'default' => 5,
+        'tablet_default' => 3,
         'mobile_default' => 2,
         'render_type' => 'ui',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+          '{{WRAPPER}} .eyeon-news .news-list .news.grid-view' => 'grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr));',
         ],
         'condition' => [
           'view_mode' => 'grid',
@@ -110,14 +111,14 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'categories_sidebar',
+      'categories_filters',
       [
-        'label' => __( 'Categories', EYEON_NAMESPACE ),
+        'label' => __( 'Categories Filters', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
         'label_on' => __( 'Show', EYEON_NAMESPACE ),
         'label_off' => __( 'Hide', EYEON_NAMESPACE ),
         'return_value' => 'show',
-        'default' => '',
+        'default' => 'show',
         'condition' => [
           'view_mode' => 'grid',
         ],
@@ -161,10 +162,10 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
         'size_units' => ['px'],
         'default' => [
           'unit' => 'px',
-          'size' => 15,
+          'size' => 20,
         ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-list .stores' => 'grid-gap: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-news .news-list .news.grid-view' => 'grid-gap: {{SIZE}}{{UNIT}};',
         ],
       ]
     );

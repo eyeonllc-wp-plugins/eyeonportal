@@ -1,0 +1,104 @@
+.mcd-post-featured-image {
+  position: relative;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mcd-post-featured-image .mcd-post-date {
+  position: absolute;
+  left: -8px;
+  top: 14px;
+  border: 2px solid #63ABC2;
+  color: #63ABC2;
+  background-color: #FFF;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 50px;
+  line-height: 14px;
+  padding: 5px 0 7px;
+  z-index: 3;
+}
+
+.mcd-post-featured-image .mcd-post-date .mcd-day {
+  font-size: 14px;
+}
+
+.mcd-post-featured-image .mcd-post-date .mcd-month {
+  font-size: 18px;
+}
+
+#mcd-blog-post .mcd-prev-next-nav {
+  justify-content: flex-start;
+  margin-bottom: 30px;
+}
+
+#mcd-blog-post .mcd-post-cols {
+  display: flex;
+  font-size: 16px;
+}
+
+#mcd-blog-post .mcd-post-cols .mcd-post-image-col {
+  width: 100%;
+  max-width: 360px;
+}
+
+#mcd-blog-post .mcd-post-cols .mcd-post-details-col {
+  padding-left: 20px;
+  line-height: 23px;
+  flex: 1;
+}
+
+#mcd-blog-post .mcd-post-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-bottom: 10px;
+}
+
+#mcd-blog-post .mcd-post-image-col .mcd-post-metadata {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#mcd-blog-post .mcd-post-cols .mcd-post-sidebar-col {
+  width: 100%;
+  max-width: 280px;
+  margin-left: 20px;
+  padding-left: 15px;
+  border-left: 2px solid var(--mcdLightGreyColor);
+}
+
+#mcd-blog-post .mcd-post-share {
+  margin-bottom: 30px;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post {
+  display: flex;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post .mcd-image {
+  width: 60px;
+  margin-right: 10px;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post .mcd-title {
+  flex: 1;
+  color: var(--mcdDefaultColor);
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post .mcd-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post:not(:last-child) {
+  margin-bottom: 15px;
+}

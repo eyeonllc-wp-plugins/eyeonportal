@@ -242,7 +242,7 @@
 }
 .eyeon-stores .eyeon-wrapper .stores-list .stores.grid-view {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-gap: 15px;
 }
 .eyeon-stores .eyeon-wrapper .stores-list .stores .store .image {
@@ -464,13 +464,13 @@
             flex: 0 0 auto;
   }
   #eyeonstore-single .eyeon-deals .deals-list {
-    grid-template-columns: repeat(3, 1fr) !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 @media (max-width: 767px) {
   #eyeonstore-single .eyeon-deals .deals-list {
     grid-gap: 15px;
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 @media (max-width: 599px) {
@@ -493,13 +493,13 @@
 @media (max-width: 479px) {
   #eyeonstore-single .eyeon-deals .deals-list {
     grid-gap: 15px;
-    grid-template-columns: repeat(1, 1fr) !important;
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
   }
 }
 
 .eyeon-events .eyeon-wrapper .events-list.grid-view {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 20px;
 }
 .eyeon-events .eyeon-wrapper .events-list .event .image {
@@ -683,7 +683,7 @@
 }
 .eyeon-deals .deals-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 20px;
 }
 .eyeon-deals .deals-list .deal .image {
@@ -727,16 +727,16 @@
 }
 
 #eyeonstore-single .eyeon-deals .deals-list.grid3 {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 #eyeonstore-single .eyeon-deals .deals-list.grid4 {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 #eyeonstore-single .eyeon-deals .deals-list.grid5 {
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 #eyeonstore-single .eyeon-deals .deals-list.grid6 {
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 }
 
 #eyeondeal-single .eyeon-deal .mcd-deal-cols {
@@ -890,7 +890,7 @@
 
 .eyeon-careers .careers-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 20px;
 }
 .eyeon-careers .careers-list .career {
@@ -953,4 +953,238 @@
   margin-top: 8px;
   font-size: 15px;
   font-weight: 500;
+}
+
+.eyeon-news .eyeon-wrapper .news-categories {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+.eyeon-news .eyeon-wrapper .news-categories ul {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px;
+  gap: 24px;
+  border-bottom: 1px solid #DDD;
+}
+.eyeon-news .eyeon-wrapper .news-categories ul li {
+  cursor: pointer;
+  padding: 0 4px 10px;
+  line-height: 21px;
+  -webkit-transform: translateY(1px);
+          transform: translateY(1px);
+}
+.eyeon-news .eyeon-wrapper .news-categories ul li.active {
+  border-bottom: 1px solid #888;
+  font-weight: 600;
+}
+.eyeon-news .eyeon-wrapper .news-list .news.grid-view {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-gap: 24px;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item {
+  width: 100%;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .image {
+  position: relative;
+  padding-top: 56.25%;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .image img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .news-details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #444;
+  background-color: #f5f7fd;
+  padding: 12px 16px;
+  text-align: center;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .news-details .news-post-date {
+  margin-bottom: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 14px;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .news-details .news-post-date i {
+  opacity: 1;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .news-details .news-post-date span {
+  opacity: 1;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .news-details .news-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  white-space: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 21px;
+  margin-bottom: 8px;
+}
+.eyeon-news .eyeon-wrapper .news-list .news .news-item .news-details .news-excerpt {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  line-height: 19px;
+}
+
+.mcd-post-featured-image {
+  position: relative;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mcd-post-featured-image .mcd-post-date {
+  position: absolute;
+  left: -8px;
+  top: 14px;
+  border: 2px solid #63ABC2;
+  color: #63ABC2;
+  background-color: #FFF;
+  font-weight: 600;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 50px;
+  line-height: 14px;
+  padding: 5px 0 7px;
+  z-index: 3;
+}
+
+.mcd-post-featured-image .mcd-post-date .mcd-day {
+  font-size: 14px;
+}
+
+.mcd-post-featured-image .mcd-post-date .mcd-month {
+  font-size: 18px;
+}
+
+#mcd-blog-post .mcd-prev-next-nav {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  margin-bottom: 30px;
+}
+
+#mcd-blog-post .mcd-post-cols {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 16px;
+}
+
+#mcd-blog-post .mcd-post-cols .mcd-post-image-col {
+  width: 100%;
+  max-width: 360px;
+}
+
+#mcd-blog-post .mcd-post-cols .mcd-post-details-col {
+  padding-left: 20px;
+  line-height: 23px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+
+#mcd-blog-post .mcd-post-title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-bottom: 10px;
+}
+
+#mcd-blog-post .mcd-post-image-col .mcd-post-metadata {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#mcd-blog-post .mcd-post-cols .mcd-post-sidebar-col {
+  width: 100%;
+  max-width: 280px;
+  margin-left: 20px;
+  padding-left: 15px;
+  border-left: 2px solid var(--mcdLightGreyColor);
+}
+
+#mcd-blog-post .mcd-post-share {
+  margin-bottom: 30px;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post .mcd-image {
+  width: 60px;
+  margin-right: 10px;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post .mcd-title {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  color: var(--mcdDefaultColor);
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post .mcd-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+#mcd-blog-post .mcd-latest-posts .mcd-posts .mcd-post:not(:last-child) {
+  margin-bottom: 15px;
 }/*# sourceMappingURL=elementor.css.map */

@@ -87,7 +87,7 @@ class EyeOn_Careers_Widget extends \Elementor\Widget_Base {
         'default' => 4,
         'render_type' => 'ui',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-careers .careers-list' => 'grid-template-columns: repeat({{VALUE}}, 1fr);',
+          '{{WRAPPER}} .eyeon-careers .careers-list' => 'grid-template-columns: repeat({{VALUE}}, minmax(0, 1fr));',
         ],
       ]
     );

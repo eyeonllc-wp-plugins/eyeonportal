@@ -106,14 +106,14 @@
     }
 
     .eyeon-deals .deals-list {
-      grid-template-columns: repeat(3, 1fr) !important;
+      grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     }
   }
 
   @include media-query(tablet-portrait) {
     .eyeon-deals .deals-list {
       grid-gap: 15px;
-      grid-template-columns: repeat(2, 1fr) !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
   }
 
@@ -141,7 +141,7 @@
   @include media-query(mobile) {
     .eyeon-deals .deals-list {
       grid-gap: 15px;
-      grid-template-columns: repeat(1, 1fr) !important;
+      grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
     }
   }
 }

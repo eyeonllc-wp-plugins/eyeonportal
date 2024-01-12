@@ -62,9 +62,6 @@ ul.mcd-social-icons li a {
 #mycenterblog {
 	grid-template-columns: repeat(<?= $mcd_settings['blog_listing_posts_per_row'] ?>, 1fr);
 }
-#mycenterblog.isotope .mcd-blog-post-item {
-	width: <?= round(100/$mcd_settings['blog_listing_posts_per_row'], 2) ?>%;
-}
 
 /* Retailers List */
 <?php if( isset($mcd_settings['stores_listing_store_background']) ) : ?>
