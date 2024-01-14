@@ -4,6 +4,8 @@ $settings = $this->get_settings_for_display();
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'fetch_all',
   'fetch_limit',
+  'show_post_date',
+  'show_excerpt',
 ], get_carousel_fields())));
 $unique_id = uniqid();
 ?>
@@ -144,12 +146,22 @@ $unique_id = uniqid();
                 <img src="${item.media.url}" alt="${item.title}" />
               </div>
               <div class="news-details">
-                <div class="news-post-date">
-                  <i class="far fa-calendar"></i>
-                  <span>${eyeonFormatDate(item.post_date)}</span>
+                <div class="news-content">
+                  ${ settings.show_post_date === 'show' ? `
+                    <div class="news-post-date">
+                      <i class="far fa-calendar"></i>
+                      <span>${eyeonFormatDate(item.post_date)}</span>
+                    </div>
+                  `: '' }
+                  <div class="news-title">${item.title}</div>
+                  ${ settings.show_excerpt === 'show' ? `
+                    <div class="news-excerpt">${item.short_description}</div>
+                  `: '' }
                 </div>
-                <div class="news-title">${item.title}</div>
-                <div class="news-excerpt">${item.short_description}</div>
+                <div class="readmore">
+                  <span>Read More</span>
+                  <i class="fas fa-arrow-right"></i>
+                </div>
               </div>
             </a>
           `);
