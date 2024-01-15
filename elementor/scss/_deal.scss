@@ -6,13 +6,14 @@
       align-items: flex-start;
 
       .mcd-deal-image-col {
-        flex: 0 0 27%;
+        flex: 1;
 
         .mcd-deal-image {
           position: relative;
           padding-top: 56.25%;
           background-color: rgba(0, 0, 0, 0.15);
           background-size: cover;
+          margin-bottom: 15px;
 
           img {
             position: absolute;
@@ -21,71 +22,50 @@
             top: 0;
             left: 0;
             border: none;
-            cursor: pointer;
             object-fit: cover;
+          }
+        }
+
+        .mcd-retailer-logo {
+          text-align: center;
+
+          img {
+            width: 160px;
+            max-height: 120px;
+            background-color: rgba(0, 0, 0, .05);
+            padding: 5px;
           }
         }
       }
 
       .eyeon-deal-details {
+        font-size: 16px;
+        line-height: 20px;
         flex: 1;
         display: flex;
-        gap: 30px;
+        gap: 20px;
         align-items: flex-start;
+        flex-direction: column;
 
-        .eyeon-deal-content {
-          font-size: 16px;
-          line-height: 20px;
-          flex: 1;
-          display: flex;
-          gap: 20px;
-          align-items: flex-start;
-          flex-direction: column;
-
-          .mcd-deal-title {
-            font-size: 20px;
-            font-weight: 600;
-            line-height: 24px;
-          }
-
-          .mcd-retailer-name {
-            font-weight: 600;
-          }
-
-          .mcd-deal-message {
-            white-space: pre-wrap;
-          }
-
-          .mcd-deal-share {
-            .mcd-share-title {
-              display: inline-block;
-              vertical-align: middle;
-              margin-right: 8px;
-            }
-          }
+        .mcd-deal-title {
+          font-size: 20px;
+          font-weight: 600;
+          line-height: 24px;
         }
 
-        .mcd-retailer-details {
-          flex: 0 0 22%;
-          display: flex;
-          gap: 10px;
-          justify-content: center;
+        .mcd-retailer-name {
+          font-weight: 600;
+        }
 
-          .mcd-retailer-logo {
-            position: relative;
-            padding-top: 100%;
-            width: 100%;
+        .mcd-deal-message {
+          white-space: pre-wrap;
+        }
 
-            img {
-              position: absolute;
-              left: 0;
-              top: 0;
-              width: 100%;
-              height: 100%;
-              object-fit: contain;
-              background-color: rgba(0, 0, 0, 0.05);
-              padding: 5px;
-            }
+        .mcd-deal-share {
+          .mcd-share-title {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
           }
         }
       }
@@ -95,22 +75,10 @@
   @include media-query(tablet-landscape) {
     .eyeon-deal {
       .mcd-deal-cols {
-        .mcd-deal-image-col {
-          flex: 0 0 35%;
-        }
+        gap: 20px;
 
         .eyeon-deal-details {
-          flex-direction: column-reverse;
-          gap: 20px;
-
-          .mcd-retailer-details {
-            flex: 0 0 auto;
-
-            .mcd-retailer-logo {
-              max-height: 220px;
-              max-width: 220px;
-            }
-          }
+          flex: 2;
         }
       }
     }
@@ -119,14 +87,8 @@
   @include media-query(tablet-portrait) {
     .eyeon-deal {
       .mcd-deal-cols {
-        .eyeon-deal-details {
-          .mcd-retailer-details {
-            .mcd-retailer-logo {
-              max-height: 140px;
-              max-width: 140px;
-            }
-          }
-        }
+        align-items: normal;
+        flex-direction: column;
       }
     }
   }
@@ -134,10 +96,7 @@
   @include media-query(mobile-large) {
     .eyeon-deal {
       .mcd-deal-cols {
-        align-items: normal;
-        flex-direction: column;
-
-        .eyeon-deal-details .eyeon-deal-content {
+        .eyeon-deal-details {
           gap: 15px;
         }
       }

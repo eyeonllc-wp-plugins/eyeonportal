@@ -33,47 +33,43 @@ if( isset($mycenterdeal['next']) ) {
 					<div class="mcd-deal-image">
 						<img src="<?= $mycenterdeal['media']['url'] ?>" />
 					</div>
+          <div class="mcd-retailer-logo">
+            <img src="<?= $mycenterdeal['retailer']['media']['url'] ?>" />
+          </div>
 				</div>
 
 				<div class="eyeon-deal-details">
-          <div class="eyeon-deal-content">
-            <div class="mcd-deal-title"><?= $mycenterdeal['title'] ?></div>
-            <div class="mcd-retailer-name"><?= $mycenterdeal['retailer']['name'] ?></div>
-            <div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= $mycenterdeal['end_date'] ?></div>
-            <div class="mcd-deal-message editor_output"><?= get_editor_output($mycenterdeal['description']) ?></div>
+          <div class="mcd-deal-title"><?= $mycenterdeal['title'] ?></div>
+          <div class="mcd-retailer-name"><?= $mycenterdeal['retailer']['name'] ?></div>
+          <div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= $mycenterdeal['end_date'] ?></div>
+          <div class="mcd-deal-message editor_output"><?= get_editor_output($mycenterdeal['description']) ?></div>
 
-            <?php
-            $retailer_phone = @$mycenterdeal['retailer']['phone'];
-            $retailer_location = get_retailer_location($mycenterdeal['retailer']['location']);
-            ?>
+          <?php
+          $retailer_phone = @$mycenterdeal['retailer']['phone'];
+          $retailer_location = get_retailer_location($mycenterdeal['retailer']['location']);
+          ?>
 
-            <?php if( !empty($retailer_phone) || !empty($retailer_location) ) : ?>
-              <div class="eyeon-retailer-phone-location">
-                <?php if( !empty($retailer_phone) ) : ?>
-                  <div class="mcd-retailer-phone"><span class="mcd-label">Retailer Phone:</span> <?= $retailer_phone ?></div>
-                <?php endif; ?>
-                <?php if( !empty($retailer_location) ) : ?>
-                  <div class="mcd-retailer-location"><span class="mcd-label">Retailer Location:</span> <?= $retailer_location ?></div>
-                <?php endif; ?>
-              </div>
-            <?php endif; ?>
-            
-            <?php if( $this->mcd_settings['deals_single_social_share'] ) : ?>
-            <div class="mcd-deal-share clearfix">
-              <span class="mcd-share-title mcd-label">Share</span>
-              <ul class="mcd-social-icons">
-                <li class="twitter"><a href="http://twitter.com/share?text=<?= urlencode($mycenterdeal['title']) ?>&url=<?= get_current_url() ?>" target="_blank">Twitter</a></li>
-                <li class="facebook"><a href="http://www.facebook.com/sharer.php?u=<?= get_current_url() ?>&quote=<?= urlencode($mycenterdeal['title']) ?>" target="_blank">Facebook</a></li>
-                <li class="email"><a href="mailto:?subject=<?= $mycenterdeal['retailer_name'] ?> - <?= $mycenterdeal['title'] ?>&body=Hi,%0D%0A%0D%0ACheckout this Deal! - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterdeal['deal_title'] ?>%0D%0A%0D%0A<?= strip_tags($mycenterdeal['deal_message']) ?>%0D%0A%0D%0AValid Until: <?= $mycenterdeal['deal_end_date'] ?>%0D%0A%0D%0AStore: <?= $mycenterdeal['retailer_name'] ?>%0D%0ACenter Location: <?= $mycenterdeal['center_name'] ?>, <?= $mycenterdeal['center_location'] ?>%0D%0APhone: <?= $mycenterdeal['retailer_phone'] ?>%0D%0A%0D%0A">Email</a></li>
-              </ul>
+          <?php if( !empty($retailer_phone) || !empty($retailer_location) ) : ?>
+            <div class="eyeon-retailer-phone-location">
+              <?php if( !empty($retailer_phone) ) : ?>
+                <div class="mcd-retailer-phone"><span class="mcd-label">Retailer Phone:</span> <?= $retailer_phone ?></div>
+              <?php endif; ?>
+              <?php if( !empty($retailer_location) ) : ?>
+                <div class="mcd-retailer-location"><span class="mcd-label">Retailer Location:</span> <?= $retailer_location ?></div>
+              <?php endif; ?>
             </div>
-            <?php endif; ?>
+          <?php endif; ?>
+          
+          <?php if( $this->mcd_settings['deals_single_social_share'] ) : ?>
+          <div class="mcd-deal-share clearfix">
+            <span class="mcd-share-title mcd-label">Share</span>
+            <ul class="mcd-social-icons">
+              <li class="twitter"><a href="http://twitter.com/share?text=<?= urlencode($mycenterdeal['title']) ?>&url=<?= get_current_url() ?>" target="_blank">Twitter</a></li>
+              <li class="facebook"><a href="http://www.facebook.com/sharer.php?u=<?= get_current_url() ?>&quote=<?= urlencode($mycenterdeal['title']) ?>" target="_blank">Facebook</a></li>
+              <li class="email"><a href="mailto:?subject=<?= $mycenterdeal['retailer_name'] ?> - <?= $mycenterdeal['title'] ?>&body=Hi,%0D%0A%0D%0ACheckout this Deal! - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterdeal['deal_title'] ?>%0D%0A%0D%0A<?= strip_tags($mycenterdeal['deal_message']) ?>%0D%0A%0D%0AValid Until: <?= $mycenterdeal['deal_end_date'] ?>%0D%0A%0D%0AStore: <?= $mycenterdeal['retailer_name'] ?>%0D%0ACenter Location: <?= $mycenterdeal['center_name'] ?>, <?= $mycenterdeal['center_location'] ?>%0D%0APhone: <?= $mycenterdeal['retailer_phone'] ?>%0D%0A%0D%0A">Email</a></li>
+            </ul>
           </div>
-          <div class="mcd-retailer-details">
-            <div class="mcd-retailer-logo">
-              <img src="<?= $mycenterdeal['retailer']['media']['url'] ?>" />
-            </div>
-          </div>
+          <?php endif; ?>
 				</div>
 			</div>
 		</div>
