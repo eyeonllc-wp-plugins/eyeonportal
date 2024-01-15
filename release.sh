@@ -14,17 +14,17 @@ if [ -n "$stable_tag" ]; then
  
   # Push to master and check the exit status
   if git push origin master; then
-    # Tag and push the stable tag
-    git tag $stable_tag
     
-    # Push the tag and check the exit status
-    if git push origin $stable_tag; then
+    if git rev-parse -q --verify "refs/tags/$stable_tag" >/dev/null; then
+      echo "Error: Tag '$stable_tag' already exists. Aborting script."
+    else
+      git tag $stable_tag
+      git push origin $stable_tag
+
       # Release version
       gh release create $stable_tag --notes "$commit_message"
 
       echo "Version Released: $stable_tag"
-    else
-      echo "Error: Failed to push tag to the repository."
     fi
   else
     echo "Error: Failed to push changes to master branch."
