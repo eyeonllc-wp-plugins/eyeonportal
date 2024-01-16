@@ -214,7 +214,6 @@ $unique_id = uniqid();
                 ` : ''}
                 ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
               </div>
-              <!--<h3 class="store-name">${retailer.name}</h3>-->
             </a>
           `);
           retailersList.append(retailerItem);
