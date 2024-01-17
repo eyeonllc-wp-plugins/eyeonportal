@@ -20,7 +20,7 @@ if( empty($event_url) ) {
 			<span class="mcd-event-times">
 			<?php if( !empty($slider_item['start_time']) && !$slider_item['all_day_event'] ) : ?>
 				<i class="far fa-clock"></i>&nbsp;
-				<?= date("h:ia", strtotime($slider_item['start_time'])) ?> - <?= date("h:ia", strtotime($slider_item['end_time'])) ?>
+				<?= date("g:ia", strtotime($slider_item['start_time'])) ?> - <?= date("g:ia", strtotime($slider_item['end_time'])) ?>
 			<?php else : ?>
 				&nbsp;
 			<?php endif; ?>

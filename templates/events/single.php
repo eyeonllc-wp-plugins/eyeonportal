@@ -2,8 +2,8 @@
 $mycenterevent = $this->mcd_settings['mycenterevent'];
 $mycenterevent['start_date'] = date("M d, Y", strtotime($mycenterevent['start_date']));
 $mycenterevent['end_date'] = date("M d, Y", strtotime($mycenterevent['end_date']));
-$mycenterevent['start_time'] = date("h:ia", strtotime($mycenterevent['start_time']));
-$mycenterevent['end_time'] = date("h:ia", strtotime($mycenterevent['end_time']));
+$mycenterevent['start_time'] = date("g:ia", strtotime($mycenterevent['start_time']));
+$mycenterevent['end_time'] = date("g:ia", strtotime($mycenterevent['end_time']));
 
 $rdate = '';
 if( isset($mycenterevent['rrdate']) ) {
