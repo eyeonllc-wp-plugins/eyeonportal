@@ -9,6 +9,7 @@ $filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'retailer_categories',
   'retailer_tags',
   'featured_image',
+  'no_results_found_text',
 ], get_carousel_fields())));
 $unique_id = uniqid();
 
@@ -223,9 +224,16 @@ $unique_id = uniqid();
         <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
       } else {
         eyeonStores.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">No retailers found.</div>
+          <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }
+      
+      if( retailers.length > 0 && elementorFrontend.config.environmentMode.edit) {
+        eyeonStores.find('.eyeon-wrapper').append(`
+          <div class="no-items-found">${settings.no_results_found_text}</div>
+        `);
+      }
+
     }
 
     function filterRetailersByCategoryAndSearch(category, search) {

@@ -7,6 +7,7 @@ $filtered_settings = array_intersect_key($settings, array_flip([
   'expiry_date',
   'career_expiry_prefix',
   'career_expiry_suffix',
+  'no_results_found_text',
 ]));
 $unique_id = uniqid();
 ?>
@@ -89,7 +90,13 @@ $unique_id = uniqid();
         });
       } else {
         eyeonCareers.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">More Careers Coming Soon.</div>
+          <div class="no-items-found">${settings.no_results_found_text}</div>
+        `);
+      }
+      
+      if( careers.length > 0 && elementorFrontend.config.environmentMode.edit) {
+        eyeonCareers.find('.eyeon-wrapper').append(`
+          <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }
     }

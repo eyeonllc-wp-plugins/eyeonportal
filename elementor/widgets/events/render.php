@@ -7,6 +7,7 @@ $filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'event_title',
   'event_excerpt',
   'event_metadata',
+  'no_results_found_text',
 ], get_carousel_fields())));
 $unique_id = uniqid();
 ?>
@@ -111,7 +112,13 @@ $unique_id = uniqid();
         });
       } else {
         eyeonEvents.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">More Events Coming Soon.</div>
+          <div class="no-items-found">${settings.no_results_found_text}</div>
+        `);
+      }
+      
+      if( events.length > 0 && elementorFrontend.config.environmentMode.edit) {
+        eyeonEvents.find('.eyeon-wrapper').append(`
+          <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }
 

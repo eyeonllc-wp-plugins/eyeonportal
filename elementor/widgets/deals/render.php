@@ -3,6 +3,7 @@ $settings = $this->get_settings_for_display();
 $filtered_settings = array_intersect_key($settings, array_flip([
   'fetch_all',
   'fetch_limit',
+  'no_results_found_text',
 ]));
 $unique_id = uniqid();
 ?>
@@ -87,7 +88,13 @@ $unique_id = uniqid();
         });
       } else {
         eyeonDeals.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">More Deals Coming Soon.</div>
+          <div class="no-items-found">${settings.no_results_found_text}</div>
+        `);
+      }
+      
+      if( deals.length > 0 && elementorFrontend.config.environmentMode.edit) {
+        eyeonDeals.find('.eyeon-wrapper').append(`
+          <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }
     }

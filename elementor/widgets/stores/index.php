@@ -204,30 +204,6 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
 
     // ================================================================
-    // NO RESULTS FOUND - CONTENT
-    // ================================================================
-
-    $this->start_controls_section(
-      'no_results_found_content',
-      [
-        'label' => __( 'No Results Found', EYEON_NAMESPACE ),
-        'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
-      ]
-    );
-
-    $this->add_control(
-      'no_results_found_text',
-      [
-        'label' => __( 'Text', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::TEXT,
-        'default' => 'No retailers found',
-        'label_block' => true
-      ]
-    );
-
-    $this->end_controls_section();
-
-    // ================================================================
     // GRID SETTINGS
     // ================================================================
 
@@ -576,11 +552,60 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+      'no_results_found_text',
+      [
+        'label' => __( 'Text', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::TEXT,
+        'default' => 'Retailers Coming Soon!',
+        'label_block' => true,
+        'frontend_available' => true,
+      ]
+    );
+
+    $this->add_control(
+      'no_results_found_align',
+      [
+        'label' => __( 'Alignment', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+          'left' => [
+            'title' => __( 'Left', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-left',
+          ],
+          'center' => [
+            'title' => __( 'Center', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-center',
+          ],
+          'right' => [
+            'title' => __( 'Right', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-right',
+          ],
+        ],
+        'default' => 'center',
+        'toggle' => true,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .no-items-found' => 'text-align: {{VALUE}};',
+        ],
+      ]
+    );
+
     $this->add_group_control(
       \Elementor\Group_Control_Typography::get_type(),
       [
         'name' => 'no_results_found_typography',
         'selector' => '{{WRAPPER}} .eyeon-stores .no-items-found',
+      ]
+    );
+
+    $this->add_control(
+      'no_results_found_color',
+      [
+        'label' => __( 'Text Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .no-items-found' => 'color: {{VALUE}}',
+        ],
       ]
     );
 
