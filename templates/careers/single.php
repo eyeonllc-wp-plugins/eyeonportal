@@ -62,10 +62,10 @@ if( isset($mycentercareer['next']) ) {
 					<?php if( isset($mycentercareer['start_date']) || isset($mycentercareer['end_date']) ) :?>
 					<div class="mcd-career-dates">
 						<?php if( isset($mycentercareer['start_date']) ) :?>
-						<div class="mcd-start-date"><span class="mcd-label">Start Date:</span> <?= $mycentercareer['start_date'] ?></div>
+						<div class="mcd-start-date"><span class="mcd-label">Start Date:</span> <?= eyeon_format_date($mycentercareer['start_date']) ?></div>
 						<?php endif; ?>
 						<?php if( isset($mycentercareer['end_date']) ) :?>
-						<div class="mcd-end-date"><span class="mcd-label">End Date:</span> <?= $mycentercareer['end_date'] ?></div>
+						<div class="mcd-end-date"><span class="mcd-label">End Date:</span> <?= eyeon_format_date($mycentercareer['end_date']) ?></div>
 						<?php endif; ?>
 					</div>
 					<?php endif; ?>

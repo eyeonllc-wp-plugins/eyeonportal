@@ -327,8 +327,6 @@ if( !class_exists('MCDShortcodes') ) {
 				$this->template = 'templates/deals/single.php';
 				$req_url = MCD_API_DEALS.'/'.get_query_var('mycenterdeal', 0);
         $dealData = mcd_api_data($req_url);
-        $dealData['start_date'] = date("M d, Y", strtotime($dealData['start_date']));
-        $dealData['end_date'] = date("M d, Y", strtotime($dealData['end_date']));
 				$this->mcd_settings['mycenterdeal'] = $dealData;
 				if( $this->mcd_settings['deals_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['deals_single_page_custom_title'];
@@ -350,7 +348,12 @@ if( !class_exists('MCDShortcodes') ) {
 				$this->mcd_settings['map_config'] = $map_config;
 			} elseif ( array_key_exists( 'mycenterevent', $wp_query->query_vars ) ) {
 				$this->template = 'templates/events/single.php';
-				mcd_include_js('add-to-calendar', 'assets/plugins/add-to-calendar.min.js', true);
+
+        // ==================
+        $this->mcd_settings['events_single_add_to_calendar'] = false;
+				// mcd_include_js('add-to-calendar', 'assets/plugins/add-to-calendar.min.js', true);
+        // ==================
+
 				$req_url = MCD_API_EVENTS.'/'.get_query_var('mycenterevent', 0);
         $eventData = mcd_api_data($req_url);
 				$this->mcd_settings['mycenterevent'] = $eventData;
@@ -363,8 +366,6 @@ if( !class_exists('MCDShortcodes') ) {
 				$this->template = 'templates/careers/single.php';
 				$req_url = MCD_API_CAREERS.'/'.get_query_var('mycentercareer', 0);
         $careerData = mcd_api_data($req_url);
-        $careerData['start_date'] = date("M d, Y", strtotime($careerData['start_date']));
-        $careerData['end_date'] = date("M d, Y", strtotime($careerData['end_date']));
 				$this->mcd_settings['mycentercareer'] = $careerData;
 				if( $this->mcd_settings['careers_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['careers_single_page_custom_title'];
@@ -373,6 +374,8 @@ if( !class_exists('MCDShortcodes') ) {
 				}
 			} elseif ( array_key_exists( 'mycenterblogpost', $wp_query->query_vars ) ) {
 				$this->template = 'templates/news/single.php';
+        wp_enqueue_script( 'eyeon-moment' );
+        wp_enqueue_script( 'eyeon-elementor-utils' );
 				$req_url = MCD_API_NEWS.'/'.get_query_var('mycenterblogpost', 0);
 				$blogpost = mcd_api_data($req_url);
         $this->mcd_settings['mycenterblogpost'] = $blogpost;
@@ -381,10 +384,6 @@ if( !class_exists('MCDShortcodes') ) {
 				} else {
 					$this->page_title = $this->mcd_settings['mycenterblogpost']['title'];
 				}
-
-				$req_url = MCD_API_NEWS.'?center='.$this->mcd_settings['center_id'].'&limit=4';
-				$mcd_latest_posts = mcd_api_data($req_url);
-				$this->mcd_settings['mcd_latest_posts'] = $mcd_latest_posts['posts'];
 			} elseif( $this->is_search_page() ) {
 				$this->template = 'templates/search/index.php';
 				$search_keywords = urldecode(get_query_var('mycentersearch'));

@@ -18,7 +18,7 @@ if( $this->mcd_settings['stores_single_deals'] ) {
         <div class="deal-content">
           <div class="details">
             <h3 class="deal-title"><?= $deal['title'] ?></h3>
-            <div class="deal-expiry">Valid until <?= date("M d, Y", strtotime($deal['end_date'])) ?></div>
+            <div class="deal-expiry">Valid until <?= eyeon_format_date($deal['end_date']) ?></div>
           </div>
         </div>
       </a>

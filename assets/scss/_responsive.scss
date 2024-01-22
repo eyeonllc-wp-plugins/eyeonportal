@@ -13,31 +13,6 @@
     grid-template-columns: repeat(3, 1fr) !important;
   }
 
-  #mcd-blog-post .mcd-post-cols {
-    flex-wrap: wrap;
-  }
-
-  #mcd-blog-post .mcd-post-cols .mcd-post-image-col {
-    max-width: 240px;
-  }
-
-  #mcd-blog-post .mcd-post-cols .mcd-post-details-col {
-    padding-left: 15px;
-  }
-
-  #mcd-blog-post .mcd-post-cols .mcd-post-sidebar-col {
-    max-width: none;
-    margin-left: 0;
-    padding-left: 0;
-    border: none;
-  }
-
-  #mcd-blog-post .mcd-latest-posts .mcd-posts {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 0 10px;
-  }
-
   /* STORES */
   .mcd-retailer-listing.alphabetical .mcd-retailers {
     grid-template-columns: repeat(6, 1fr) !important;
@@ -77,10 +52,6 @@
     grid-gap: 30px 15px;
   }
 
-  #mcd-blog-post .mcd-post-cols .mcd-post-image-col {
-    max-width: 30%;
-  }
-
   #mcd-retailer .mcd-retailer-details .mcd-retailer-name,
   #mcd-event .mcd-event-details .mcd-event-name,
   #mcd-event .mcd-event-details .mcd-event-date-time,
@@ -104,34 +75,20 @@
 
 @media screen and (max-width: 599px) {
 
-  #mcd-retailer,
-  #mcd-event,
-  #mcd-career,
-  #mcd-blog-post {
+  #mcd-career {
     font-size: 14px;
   }
 
-  #mcd-retailer .mcd-retailer-image-col,
-  #mcd-event .mcd-event-image-col,
   #mcd-career .mcd-career-image-col {
     width: 50%;
     padding-right: 15px;
   }
 
-  #mcd-retailer .mcd-retailer-details .mcd-retailer-name {
-    font-size: 18px;
-    line-height: 22px;
-  }
-
-  #mcd-retailer .mcd-retailer-details,
-  #mcd-event .mcd-event-details,
   #mcd-career .mcd-career-details {
     padding-left: 0;
     line-height: 16px;
   }
 
-  #mcd-retailer .mcd-retailer-details .mcd-retailer-location,
-  #mcd-retailer .mcd-retailer-details .mcd-retailer-phone,
   #mcd-event .mcd-event-details .mcd-event-dates {
     margin-bottom: 6px;
   }
@@ -183,28 +140,8 @@
     width: 100% !important;
   }
 
-  #mcd-blog-post .mcd-post-share {
-    margin-bottom: 20px;
-  }
-
   #mcd-blog-post .mcd-latest-posts .mcd-posts {
     display: block;
-  }
-
-  .mcd-post-featured-image .mcd-post-date {
-    left: -6px;
-    top: 8px;
-    width: 40px;
-    line-height: 11px;
-    padding: 3px 0 5px;
-  }
-
-  .mcd-post-featured-image .mcd-post-date .mcd-day {
-    font-size: 12px;
-  }
-
-  .mcd-post-featured-image .mcd-post-date .mcd-month {
-    font-size: 14px;
   }
 
   body.mycenterdeals-plugin.code-mycentermap2 #threejs-map .amenities .amenity .img img {

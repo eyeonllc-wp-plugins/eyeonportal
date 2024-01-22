@@ -187,6 +187,11 @@ function mcd_current_theme_name() {
 	return $theme_name;
 }
 
+function eyeon_format_date($date) {
+	$time = date('M j, Y', strtotime($date));
+	return $time;
+}
+
 function eyeon_format_time($time) {
 	$time = strtoupper(date('g:i a', strtotime($time)));
 	return $time;

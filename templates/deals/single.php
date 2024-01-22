@@ -41,7 +41,7 @@ if( isset($mycenterdeal['next']) ) {
 				<div class="eyeon-deal-details">
           <div class="mcd-deal-title"><?= $mycenterdeal['title'] ?></div>
           <div class="mcd-retailer-name"><?= $mycenterdeal['retailer']['name'] ?></div>
-          <div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= $mycenterdeal['end_date'] ?></div>
+          <div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= eyeon_format_date($mycenterdeal['end_date']) ?></div>
           <div class="mcd-deal-message editor_output"><?= get_editor_output($mycenterdeal['description']) ?></div>
 
           <?php
