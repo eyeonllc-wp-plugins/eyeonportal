@@ -22,13 +22,8 @@
           align-items: center;
           color: #888;
           margin-bottom: 20px;
-
-          >div:not(:first-child):before {
-            content: '';
-            margin-left: 10px;
-            padding-left: 10px;
-            border-left: 1px solid #EEE;
-          }
+          flex-wrap: wrap;
+          gap: 0 20px;
         }
 
         .mcd-post-image {
@@ -98,48 +93,66 @@
   @include media-query(tablet-landscape) {
     .eyeon-newspost {
       .mcd-post-cols {
-        flex-wrap: wrap;
-      }
+        .mcd-post-details-col {
+          flex: 0 0 60%
+        }
 
-      .mcd-post-cols .mcd-post-image-col {
-        max-width: 240px;
-      }
-
-      .mcd-post-cols .mcd-post-details-col {
-        padding-left: 15px;
-      }
-
-      .mcd-post-cols .mcd-post-sidebar-col {
-        max-width: none;
-        margin-left: 0;
-        padding-left: 0;
-        border: none;
-      }
-
-      .mcd-latest-posts .mcd-posts {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 0 10px;
+        .mcd-post-sidebar-col {
+          flex: 0 0 40%;
+          padding-left: 20px;
+          border: none;
+        }
       }
     }
   }
 
   @include media-query(tablet-portrait) {
     .eyeon-newspost {
-      .mcd-post-cols .mcd-post-image-col {
-        max-width: 30%;
+      .mcd-post-cols {
+        flex-direction: column;
+        gap: 20px;
+
+        .mcd-post-details-col {
+          flex: auto;
+        }
+
+        .mcd-post-sidebar-col {
+          flex: auto;
+          padding-left: 0;
+
+          .mcd-latest-posts {
+            .mcd-posts {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+            }
+          }
+        }
       }
     }
   }
 
-  @include media-query(mobile-large) {
+  @include media-query(mobile) {
     .eyeon-newspost {
-      .eyeon-newspost1123 {
-        font-size: 14px;
-      }
+      .mcd-post-cols {
+        .mcd-post-details-col .mcd-post-title {
+          font-size: 20px;
+          line-height: 24px;
+          margin-bottom: 12px;
+        }
 
-      #mcd-blog-post .mcd-post-share {
-        margin-bottom: 20px;
+        .mcd-post-sidebar-col {
+
+          .mcd-post-share {
+            margin-bottom: 20px;
+          }
+
+          .mcd-latest-posts {
+            .mcd-posts {
+              grid-template-columns: repeat(1, 1fr);
+              gap: 10px;
+            }
+          }
+        }
       }
     }
   }
