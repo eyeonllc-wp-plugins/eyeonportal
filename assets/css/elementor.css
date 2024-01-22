@@ -950,8 +950,8 @@
 }
 .eyeon-news .eyeon-wrapper .news-list .news .news-item .image {
   position: relative;
-  padding-top: 56.25%;
-  background-color: #FFF;
+  padding-top: 100%;
+  background-color: #EEE;
 }
 .eyeon-news .eyeon-wrapper .news-list .news .news-item .image img {
   position: absolute;
