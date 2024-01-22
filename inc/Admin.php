@@ -20,16 +20,6 @@ function mcd_centers_dropdown_values() {
 	return $values;
 }
 
-function mcp_retailers_categories() {
-	if( !on_mcd_plugin_page() ) return array();
-
-	global $mcd_settings;
-
-	$api_url = MCD_API_STORES . '/categories?limit=100&page=1';
-	$response = mcd_api_data($api_url);
-	return $response['items'] ?: array();
-}
-
 function mcd_page_widths() {
 	return array(
 		'default' => 'Default',

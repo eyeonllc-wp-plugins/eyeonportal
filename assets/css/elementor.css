@@ -669,7 +669,7 @@
   font-size: 26px;
   border-bottom: 2px solid #DDD;
 }
-.eyeon-deals .deals-list {
+.eyeon-deals .deals-list.grid-view {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 20px;

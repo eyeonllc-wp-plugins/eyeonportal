@@ -15,6 +15,10 @@ if( !class_exists('MCDShortcodes') ) {
 
 		function register() {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue') );
+
+      add_shortcode('mcp_site_name', function() { return get_bloginfo('name'); });
+      add_shortcode('mcp_site_url', function() { return site_url(); });
+      add_shortcode('mcp_site_domain', function() { return $_SERVER['HTTP_HOST']; });
 			
 			add_shortcode( 'mycenterdeals', array( $this, 'deals_shortcode' ) );
 			add_shortcode( 'mycenterstores', array( $this, 'stores_shortcode' ) );
@@ -368,12 +372,9 @@ if( !class_exists('MCDShortcodes') ) {
 					$this->page_title = $this->mcd_settings['mycentercareer']['title'];
 				}
 			} elseif ( array_key_exists( 'mycenterblogpost', $wp_query->query_vars ) ) {
-				$this->template = 'templates/blog/single.php';
-				$req_url = MCD_API_BLOG_POSTS.'/'.get_query_var('mycenterblogpost', 0);
+				$this->template = 'templates/news/single.php';
+				$req_url = MCD_API_NEWS.'/'.get_query_var('mycenterblogpost', 0);
 				$blogpost = mcd_api_data($req_url);
-        $blogpost['post_date_day'] = date('d', strtotime($blogpost['post_date']));
-        $blogpost['post_date_month'] = date('M', strtotime($blogpost['post_date']));
-        $blogpost['post_date'] = date("M d, Y", strtotime($blogpost['post_date']));
         $this->mcd_settings['mycenterblogpost'] = $blogpost;
 				if( $this->mcd_settings['blog_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['blog_single_page_custom_title'];
@@ -381,7 +382,7 @@ if( !class_exists('MCDShortcodes') ) {
 					$this->page_title = $this->mcd_settings['mycenterblogpost']['title'];
 				}
 
-				$req_url = MCD_API_BLOG_POSTS.'?center='.$this->mcd_settings['center_id'].'&limit=4';
+				$req_url = MCD_API_NEWS.'?center='.$this->mcd_settings['center_id'].'&limit=4';
 				$mcd_latest_posts = mcd_api_data($req_url);
 				$this->mcd_settings['mcd_latest_posts'] = $mcd_latest_posts['posts'];
 			} elseif( $this->is_search_page() ) {

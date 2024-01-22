@@ -270,7 +270,7 @@ function eyeon_format_phone($phoneNumber) {
     if (strlen($last10Digits) === 10) {
         // Format the phone number: +1 (XXX) XXX-XXXX
         $formattedNumber = sprintf(
-            "+1 (%s) %s-%s",
+            "%s.%s.%s",
             substr($last10Digits, 0, 3),
             substr($last10Digits, 3, 3),
             substr($last10Digits, 6)

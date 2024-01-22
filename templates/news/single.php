@@ -92,7 +92,7 @@ jQuery(document).ready(function($) {
   postsDiv.addClass('mcd_loading_div small');
 
   $.ajax({
-    url: "<?= MCD_API_BLOG_POSTS.'?limit=100&page=1' ?>",
+    url: "<?= MCD_API_NEWS.'?limit=100&page=1' ?>",
     method: 'GET',
     dataType: 'json',
     headers: {

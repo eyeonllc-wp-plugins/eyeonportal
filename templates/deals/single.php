@@ -52,7 +52,7 @@ if( isset($mycenterdeal['next']) ) {
           <?php if( !empty($retailer_phone) || !empty($retailer_location) ) : ?>
             <div class="eyeon-retailer-phone-location">
               <?php if( !empty($retailer_phone) ) : ?>
-                <div class="mcd-retailer-phone"><span class="mcd-label">Retailer Phone:</span> <?= $retailer_phone ?></div>
+                <div class="mcd-retailer-phone"><span class="mcd-label">Retailer Phone:</span> <?= eyeon_format_phone($retailer_phone) ?></div>
               <?php endif; ?>
               <?php if( !empty($retailer_location) ) : ?>
                 <div class="mcd-retailer-location"><span class="mcd-label">Retailer Location:</span> <?= $retailer_location ?></div>
@@ -66,7 +66,7 @@ if( isset($mycenterdeal['next']) ) {
             <ul class="mcd-social-icons">
               <li class="twitter"><a href="http://twitter.com/share?text=<?= urlencode($mycenterdeal['title']) ?>&url=<?= get_current_url() ?>" target="_blank">Twitter</a></li>
               <li class="facebook"><a href="http://www.facebook.com/sharer.php?u=<?= get_current_url() ?>&quote=<?= urlencode($mycenterdeal['title']) ?>" target="_blank">Facebook</a></li>
-              <li class="email"><a href="mailto:?subject=<?= $mycenterdeal['retailer_name'] ?> - <?= $mycenterdeal['title'] ?>&body=Hi,%0D%0A%0D%0ACheckout this Deal! - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterdeal['deal_title'] ?>%0D%0A%0D%0A<?= strip_tags($mycenterdeal['deal_message']) ?>%0D%0A%0D%0AValid Until: <?= $mycenterdeal['deal_end_date'] ?>%0D%0A%0D%0AStore: <?= $mycenterdeal['retailer_name'] ?>%0D%0ACenter Location: <?= $mycenterdeal['center_name'] ?>, <?= $mycenterdeal['center_location'] ?>%0D%0APhone: <?= $mycenterdeal['retailer_phone'] ?>%0D%0A%0D%0A">Email</a></li>
+              <li class="email"><a href="mailto:?subject=<?= $mycenterdeal['retailer']['name'] ?> - <?= $mycenterdeal['title'] ?>&body=Hi,%0D%0A%0D%0ACheckout this Deal! - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterdeal['title'] ?>%0D%0A%0D%0A<?= strip_tags($mycenterdeal['short_description']) ?>%0D%0A%0D%0AValid Until: <?= $mycenterdeal['end_date'] ?>%0D%0A%0D%0AStore: <?= $mycenterdeal['retailer']['name'].', '.$mycenterdeal['center']['name'] ?>%0D%0APhone: <?= eyeon_format_phone($retailer_phone) ?>%0D%0A%0D%0A">Email</a></li>
             </ul>
           </div>
           <?php endif; ?>

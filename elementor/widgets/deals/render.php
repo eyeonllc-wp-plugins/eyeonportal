@@ -1,17 +1,31 @@
 <?php
 $settings = $this->get_settings_for_display();
-$filtered_settings = array_intersect_key($settings, array_flip([
+$fields = [
   'fetch_all',
   'fetch_limit',
   'no_results_found_text',
-]));
+];
+$filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
 ?>
 
 <div id="eyeon-deals-<?= $unique_id ?>" class="eyeon-deals eyeon-loader">
   <div class="eyeon-wrapper eyeon-hide">
-      <div id="deals-list-<?= $unique_id ?>" class="deals-list"></div>
-    </div>
+    <?php
+    $classes = '';
+    if ($settings['view_mode']==='carousel' ) {
+      $classes .= ' owl-carousel owl-carousel-'.$unique_id.' owl-theme';
+      if($settings['carousel_navigation']==='show') {
+        $classes .= ' owl-nav-show';
+      }
+      if($settings['carousel_dots']==='show') {
+        $classes .= ' owl-dots-show';
+      }
+    } else {
+      $classes .= ' grid-view';
+    }
+    ?>
+    <div id="deals-list-<?= $unique_id ?>" class="deals-list <?= $classes ?>"></div>
   </div>
 </div>
 
@@ -97,6 +111,8 @@ $unique_id = uniqid();
           <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }
+
+      <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
     }
   });
 </script>

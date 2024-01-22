@@ -3,7 +3,7 @@ $mcd_center_id = isset( $this->mcd_settings['center_id'] ) ? $this->mcd_settings
 $isotope_grid = $this->mcd_settings['blog_posts_shortcode_atts']['filters'] == 'yes';
 ?>
 
-<div ng-app="MyCenterPortalApp" ng-controller="BlogPostsCtrl" data-url="<?= MCD_API_BLOG_POSTS.'?limit=100&page=1' ?>" data-center-id="<?= $this->mcd_settings['center_id'] ?>">
+<div ng-app="MyCenterPortalApp" ng-controller="BlogPostsCtrl" data-url="<?= MCD_API_NEWS.'?limit=100&page=1' ?>" data-center-id="<?= $this->mcd_settings['center_id'] ?>">
 	<div class="mycenterdeals-wrapper mycenterblog">
 		<div id="mcd-error-msg" ng-show="data.error" ng-cloak>
 			<div class="mcd-alert">{{ data.error }}</div>
