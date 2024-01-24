@@ -1,7 +1,7 @@
 <?php
 $settings = $this->get_settings_for_display();
 
-$filtered_settings = array_intersect_key($settings, array_flip(array_merge([
+$fields = [
   'fetch_all',
   'fetch_limit',
   'deal_flag',
@@ -10,7 +10,8 @@ $filtered_settings = array_intersect_key($settings, array_flip(array_merge([
   'retailer_tags',
   'featured_image',
   'no_results_found_text',
-], get_carousel_fields())));
+];
+$filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
 
 // eyeon_debug($filtered_settings, false);

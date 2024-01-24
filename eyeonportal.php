@@ -54,6 +54,8 @@ defined('MCD_API_EVENTS')			      OR define( 'MCD_API_EVENTS', API_BASE_URL . 'v
 defined('MCD_API_CAREERS')		      OR define( 'MCD_API_CAREERS', API_BASE_URL . 'v1/careers' );
 defined('MCD_API_NEWS')	            OR define( 'MCD_API_NEWS', API_BASE_URL . 'v1/blogs' );
 
+defined('MCD_API_CENTER_HOURS')	    OR define( 'MCD_API_CENTER_HOURS', API_BASE_URL . 'v1/opening_hours' );
+
 defined('MCD_API_MAP_CONFIG')	      OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 'api/mapit2/config' );
 
 defined('MCD_API_SEARCH')			      OR define( 'MCD_API_SEARCH', API_BASE_URL . 'api/search' );

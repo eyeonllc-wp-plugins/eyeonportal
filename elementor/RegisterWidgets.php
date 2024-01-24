@@ -80,6 +80,9 @@ function register_eyeon_widgets( $widgets_manager ) {
 
   require_once plugin_dir_path( __FILE__).'widgets/news/index.php';
   $widgets_manager->register( new \EyeOn_News_Widget() );
+
+  require_once plugin_dir_path( __FILE__).'widgets/center-hours/index.php';
+  $widgets_manager->register( new \EyeOn_Center_Hours_Widget() );
 }  
 add_action('elementor/widgets/register', 'register_eyeon_widgets');
 
