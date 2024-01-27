@@ -74,14 +74,77 @@ $unique_id = uniqid();
               page++;
               fetch_events();
             } else {
-              render();
+              setup_events();
             }
           }
         }
       });
     }
 
-    function render() {
+    function setup_events() {
+      events = events.map(parseAndFindUpcoming);
+
+      events.sort(function (a, b) {
+        // Sort by ongoing events
+        if (a.ongoing_event && !b.ongoing_event) return 1;
+        if (!a.ongoing_event && b.ongoing_event) return -1;
+
+        // Sort by upcoming_date if available
+        if (a.upcoming_date && b.upcoming_date) {
+          return a.upcoming_date.localeCompare(b.upcoming_date);
+        } else if (a.upcoming_date) {
+          // Handle the case where b.upcoming_date is undefined
+          return -1;
+        } else if (b.upcoming_date) {
+          // Handle the case where a.upcoming_date is undefined
+          return 1;
+        }
+
+        // Sort by start_date and start_time
+        var startDateA = new Date(a.start_date + ' ' + (a.is_all_day_event ? '00:00:00' : a.start_time));
+        var startDateB = new Date(b.start_date + ' ' + (b.is_all_day_event ? '00:00:00' : b.start_time));
+
+        if (startDateA > startDateB) return 1;
+        if (startDateA < startDateB) return -1;
+
+        return 0;
+      });
+
+      render_events();
+    }
+
+    function parseAndFindUpcoming(event) {
+      if (event.repeat_rrule && event.repeat_rrule !== '') {
+        var rule = rrule.RRule.fromString(event.repeat_rrule);
+
+        var startDate = new Date();
+        startDate.setDate(startDate.getDate() - 1);
+
+        // Get occurrences within a certain time range (adjust as needed)
+        var occurrences = rule.between(startDate, new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000));
+
+        // Find the next occurrence after the current date
+        var upcomingOccurrence = occurrences.find(function (occurrence) {
+          return occurrence >= startDate;
+        });
+
+        if (upcomingOccurrence) {
+          // Update event with the upcoming occurrence date
+          event.upcoming_date = upcomingOccurrence.toISOString().split('T')[0];
+        }
+      }
+
+      event.datesStr = '';
+      if( event.upcoming_date ) {
+        event.datesStr = eyeonFormatDate(event.upcoming_date);
+      } else {
+        event.datesStr = event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date);
+      }
+
+      return event;
+    }
+
+    function render_events() {
       eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
 
       eventsList.empty();
@@ -99,12 +162,14 @@ $unique_id = uniqid();
                 <div class="metadata">
                   <div class="date">
                     <i class="far fa-calendar"></i>
-                    <span>${event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date)}</span>
+                    <span>${event.datesStr}</span>
                   </div>
-                  <div class="time">
-                    <i class="far fa-clock"></i>
-                    <span>${eyeonConvertTo12HourFormat(event.start_time)} - ${eyeonConvertTo12HourFormat(event.end_time)}</span>
-                  </div>
+                  ${!event.is_all_day_event ? `
+                    <div class="time">
+                      <i class="far fa-clock"></i>
+                      <span>${eyeonConvertTo12HourFormat(event.start_time)} - ${eyeonConvertTo12HourFormat(event.end_time)}</span>
+                    </div>
+                  ` : '' }
                 </div>
               `: '' }
             </a>

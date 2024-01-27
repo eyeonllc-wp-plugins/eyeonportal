@@ -19,9 +19,10 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
 
   public function get_script_depends() {
 		return [
+      'eyeon-rrule',
       'eyeon-moment',
       'eyeon-elementor-utils',
-      'eyeon-owl-carousel'
+      'eyeon-owl-carousel',
     ];
 	}
   
