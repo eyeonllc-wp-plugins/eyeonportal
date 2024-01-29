@@ -1,0 +1,24 @@
+.eyeon-center-hours {
+  .center-hours {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 15px;
+    line-height: 20px;
+
+    .center-hour {
+      display: flex;
+      justify-content: space-between;
+
+      .day {}
+
+      .values {
+        text-align: right;
+
+        .value {}
+
+        .reason {}
+      }
+    }
+  }
+}

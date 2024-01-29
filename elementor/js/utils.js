@@ -1,9 +1,12 @@
 function eyeonConvertTo12HourFormat(timeString) {
-  const [hours, minutes] = timeString.split(':');
-  const ampm = hours >= 12 ? 'pm' : 'am';
-  const formattedHours = (hours % 12) || 12; // If it's 0, set it to 12
-  const formattedTime = `${formattedHours}:${minutes}${ampm}`;
-  return formattedTime;
+  if (timeString) {
+    const [hours, minutes] = timeString.split(':');
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    const formattedHours = (hours % 12) || 12; // If it's 0, set it to 12
+    const formattedTime = `${formattedHours}:${minutes}${ampm}`;
+    return formattedTime;
+  }
+  return timeString;
 }
 
 function eyeonFormatDate(dateString) {
@@ -16,4 +19,11 @@ function getResponsiveBreakpoints() {
     breakpoints = window.elementorFrontend.config.breakpoints;
   }
   return breakpoints;
+}
+
+function getFullDatByDate(dateString, type = 'short') {
+  const dateObj = new Date(dateString);
+  const options = { weekday: type };
+  const dayOfWeek = dateObj.toLocaleDateString('en-US', options);
+  return dayOfWeek;
 }
