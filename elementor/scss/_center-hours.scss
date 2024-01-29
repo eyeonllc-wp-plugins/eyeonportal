@@ -1,23 +1,36 @@
 .eyeon-center-hours {
-  .center-hours {
+  .center-hours-wrapper {
     display: flex;
-    flex-direction: column;
     gap: 8px;
-    font-size: 15px;
-    line-height: 20px;
 
-    .center-hour {
-      display: flex;
-      justify-content: space-between;
+    .icon-col {
+      svg {
+        height: auto;
+      }
+    }
 
-      .day {}
+    .content-col {
+      flex: 1;
 
-      .values {
-        text-align: right;
+      .center-hours {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 15px;
+        line-height: 20px;
 
-        .value {}
+        .center-hour {
+          display: flex;
+          justify-content: space-between;
 
-        .reason {}
+          .values {
+            text-align: right;
+          }
+        }
+      }
+
+      .extra-text {
+        padding-top: 12px;
       }
     }
   }

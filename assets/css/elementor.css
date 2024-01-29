@@ -1209,7 +1209,21 @@
   }
 }
 
-.eyeon-center-hours .center-hours {
+.eyeon-center-hours .center-hours-wrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+}
+.eyeon-center-hours .center-hours-wrapper .icon-col svg {
+  height: auto;
+}
+.eyeon-center-hours .center-hours-wrapper .content-col {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+.eyeon-center-hours .center-hours-wrapper .content-col .center-hours {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1221,7 +1235,7 @@
   font-size: 15px;
   line-height: 20px;
 }
-.eyeon-center-hours .center-hours .center-hour {
+.eyeon-center-hours .center-hours-wrapper .content-col .center-hours .center-hour {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1229,6 +1243,9 @@
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
-.eyeon-center-hours .center-hours .center-hour .values {
+.eyeon-center-hours .center-hours-wrapper .content-col .center-hours .center-hour .values {
   text-align: right;
+}
+.eyeon-center-hours .center-hours-wrapper .content-col .extra-text {
+  padding-top: 12px;
 }/*# sourceMappingURL=elementor.css.map */

@@ -10,7 +10,19 @@ $unique_id = uniqid();
 
 <div id="eyeon-center-hours-<?= $unique_id ?>" class="eyeon-center-hours eyeon-loader">
   <div class="eyeon-wrapper" style="display:none;">
-    <div class="center-hours"></div>
+    <div class="center-hours-wrapper">
+      <?php if( $settings['center_hours_icon']['value'] ) : ?>
+        <div class="icon-col">
+          <?php \Elementor\Icons_Manager::render_icon( $settings['center_hours_icon'], [ 'aria-hidden' => 'true' ] ); ?>
+        </div>
+      <?php endif; ?>
+      <div class="content-col">
+        <div class="center-hours"></div>
+        <?php if( !empty($settings['center_hours_extra_text']) ) : ?>
+          <div class="extra-text"><?= $settings['center_hours_extra_text'] ?></div>
+        <?php endif; ?>
+      </div>
+    </div>
   </div>
 </div>
 

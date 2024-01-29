@@ -83,6 +83,22 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+      'center_hours_icon',
+      [
+        'label' => __( 'Icon', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::ICONS,
+      ]
+    );
+
+    $this->add_control(
+      'center_hours_extra_text',
+      [
+        'label' => __( 'Additional Text', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::TEXTAREA,
+      ]
+    );
+
     $this->end_controls_section();
 
     // include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
@@ -143,6 +159,136 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
     
     $this->end_controls_section();
 
+    // ================================================================
+    // ICON
+    // ================================================================
+    
+    $this->start_controls_section(
+      'icon_style_settings',
+      [
+        'label' => __( 'Icon', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'center_hours_icon!' => '',
+      ]
+    );
+
+    $this->add_responsive_control(
+      'icon_size',
+      [
+        'label' => __( 'Icon Size', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 80,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px', '%'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 40,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col i' => 'font-size: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col svg' => 'width: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'icon_gap',
+      [
+        'label' => __( 'Icon Gap', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 40,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px', '%'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 8,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper' => 'gap: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'icon_color',
+      [
+        'label' => __( 'Icon Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col i' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col svg' => 'color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
+    // ADDITIONAL TEXT
+    // ================================================================
+    
+    $this->start_controls_section(
+      'extra_text_style_settings',
+      [
+        'label' => __( 'Additional Text', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'center_hours_extra_text!' => '',
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'extra_text_typography',
+        'selector' => '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .content-col .extra-text',
+      ]
+    );
+
+    $this->add_responsive_control(
+      'extra_text_padding_top',
+      [
+        'label' => __( 'Padding Top', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 40,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px', '%'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 12,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .content-col .extra-text' => 'padding-top: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'extra_text_color',
+      [
+        'label' => __( 'Text Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .content-col .extra-text' => 'color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->end_controls_section();
   }
 
 }
