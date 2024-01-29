@@ -211,7 +211,7 @@ $unique_id = uniqid();
                 ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
                 ${(settings.custom_flags === 'show' && retailer.custom_flags && retailer.custom_flags.length > 0) ? `
                   <ul class="custom-flags">
-                    ${retailer.custom_flags.map(flag => `<li>${flag}</li>`).join('')}
+                    ${retailer.custom_flags.map(flag => `<li>${flag.name}</li>`).join('')}
                   </ul>
                 ` : ''}
                 ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
