@@ -226,7 +226,7 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::COLOR,
         'selectors' => [
           '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col i' => 'color: {{VALUE}}',
-          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col svg' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col svg' => 'color: {{VALUE}}; fill: {{VALUE}}',
         ],
       ]
     );
