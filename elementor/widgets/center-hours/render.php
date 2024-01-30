@@ -57,7 +57,6 @@ $unique_id = uniqid();
       if( settings.combine_days === 'yes' ) {
         weeklyOpeningHours = combineCenterHoursDaysArray(weeklyOpeningHours);
       }
-      console.log('weeklyOpeningHours', weeklyOpeningHours);
 
       centerHours.empty();
 
@@ -165,7 +164,7 @@ $unique_id = uniqid();
           newItem.value = 'Closed';
           newItem.title = item.title;
         } else {
-          newItem.value = eyeonConvertTo12HourFormat(item.start_time)+' - '+eyeonConvertTo12HourFormat(item.start_time);
+          newItem.value = eyeonConvertTo12HourFormat(item.start_time)+' - '+eyeonConvertTo12HourFormat(item.end_time);
           if( item.irregular ) {
             newItem.title = item.title;
           }

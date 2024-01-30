@@ -92,7 +92,6 @@
             if (event.is_repeat_event) {
               calendar_event.rrule = event.repeat_rrule;
             }
-            console.log('calendar_event', calendar_event);
             events.push(calendar_event);
           });
 
