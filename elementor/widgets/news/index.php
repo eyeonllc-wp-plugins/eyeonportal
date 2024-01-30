@@ -206,9 +206,9 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::DIMENSIONS,
         'size_units' => [ 'px', '%' ],
         'default' => [
-          'top' => '0',
+          'top' => '5',
           'right' => '18',
-          'bottom' => '10',
+          'bottom' => '5',
           'left' => '18',
           'unit' => 'px',
           'isLinked' => false,
@@ -234,10 +234,10 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
         'size_units' => ['px', '%'],
         'default' => [
           'unit' => 'px',
-          'size' => 1,
+          'size' => 0,
         ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-news .news-categories ul li' => 'border-width: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-news .news-categories ul li' => 'border-bottom-width: {{SIZE}}{{UNIT}}; border-style: solid;',
         ],
       ]
     );
