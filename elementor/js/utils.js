@@ -21,9 +21,9 @@ function getResponsiveBreakpoints() {
   return breakpoints;
 }
 
-function getFullDatByDate(dateString, type = 'short') {
+function getDayByDate(dateString, type = 'short') {
   const dateObj = new Date(dateString);
-  const options = { weekday: type };
+  const options = { weekday: type, timeZone: 'UTC' };
   const dayOfWeek = dateObj.toLocaleDateString('en-US', options);
   return dayOfWeek;
 }

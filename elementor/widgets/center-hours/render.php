@@ -91,7 +91,7 @@ $unique_id = uniqid();
         const formattedDate = `${dayDate.getFullYear()}-${(dayDate.getMonth() + 1).toString().padStart(2, '0')}-${dayDate.getDate().toString().padStart(2, '0')}`;
         const day = {
           date: formattedDate,
-          day: getFullDatByDate(formattedDate, settings.day_names)
+          day: getDayByDate(formattedDate, settings.day_names)
         };
         weeklyOpeningHours.push(day);
       }
@@ -112,7 +112,7 @@ $unique_id = uniqid();
           const endDate = new Date(set.end_date);
 
           while (startDate <= endDate) {
-            const dayName = startDate.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+            const dayName = startDate.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }).toLowerCase();
             const dayIndex = getIndexByDay(dayName);
             const day = weeklyOpeningHours[dayIndex];
 
