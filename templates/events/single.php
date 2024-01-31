@@ -13,7 +13,7 @@ if( isset($_GET['rdate']) ) {
 
 $event_dates = eyeon_format_date($mycenterevent['start_date']).' - '.eyeon_format_date($mycenterevent['end_date']);
 if( $mycenterevent['start_date'] === $mycenterevent['end_date'] ) {
-	$event_dates = $mycenterevent['start_date'];
+	$event_dates = eyeon_format_date($mycenterevent['start_date']);
 }
 
 $event_url = mcd_single_page_url('mycenterevent');
