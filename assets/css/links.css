@@ -12,10 +12,10 @@ body {
   padding: 20px;
 }
 #main .center {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 #main .center .logo img {
-  max-width: 200px;
+  max-width: 180px;
 }
 #main .center .name {
   display: none;
