@@ -15,7 +15,7 @@ body {
   margin-bottom: 40px;
 }
 #main .center .logo img {
-  height: 170px;
+  max-width: 200px;
 }
 #main .center .name {
   display: none;

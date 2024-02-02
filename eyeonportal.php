@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal.
-Version: 0.0.59
+Version: 0.0.60
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -55,6 +55,10 @@ defined('MCD_API_CAREERS')		      OR define( 'MCD_API_CAREERS', API_BASE_URL . '
 defined('MCD_API_NEWS')	            OR define( 'MCD_API_NEWS', API_BASE_URL . 'v1/blogs' );
 
 defined('MCD_API_CENTER_HOURS')	    OR define( 'MCD_API_CENTER_HOURS', API_BASE_URL . 'v1/opening_hours' );
+defined('MCP_API_LINKS')			      OR define( 'MCP_API_LINKS', API_BASE_URL.'v1/links' );
+
+defined('RESTAURANTS_CATEGORY_ID')	OR define( 'RESTAURANTS_CATEGORY_ID', '4' );
+
 
 defined('MCD_API_MAP_CONFIG')	      OR define( 'MCD_API_MAP_CONFIG', API_BASE_URL . 'api/mapit2/config' );
 
@@ -63,8 +67,6 @@ defined('MCD_API_SEARCH')			      OR define( 'MCD_API_SEARCH', API_BASE_URL . 'a
 defined('MCD_OPENING_HOURS_WEEK')   OR define( 'MCD_OPENING_HOURS_WEEK', API_BASE_URL . 'api/opening-hours/week' );
 defined('MCD_OPENING_HOURS_TODAY')	OR define( 'MCD_OPENING_HOURS_TODAY', API_BASE_URL . 'api/opening-hours/today' );
 
-defined('MCP_API_LINKS')			      OR define( 'MCP_API_LINKS', API_BASE_URL.'api/links' );
-defined('RESTAURANTS_CATEGORY_ID')	OR define( 'RESTAURANTS_CATEGORY_ID', '4' );
 
 add_theme_support( 'title-tag' );
 

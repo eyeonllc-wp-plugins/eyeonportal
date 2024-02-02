@@ -18,12 +18,13 @@ $links_data = mcd_api_data($api_call_url);
 
 	<style type="text/css">
 	#main .links ul li a {
-		background-color: #<?= $links_data['settings']['bg_color'] ?>;
-		border-color: #<?= $links_data['settings']['bg_color'] ?>;
-		color: #<?= $links_data['settings']['text_color'] ?>;
+		background-color: <?= $links_data['settings']['bg_color'] ?>;
+		border-color: <?= $links_data['settings']['bg_color'] ?>;
+		color: <?= $links_data['settings']['text_color'] ?>;
 	}
 	#main .links ul li a:hover {
-		color: #<?= $links_data['settings']['bg_color'] ?>;
+    background-color: #FFF;
+		color: <?= $links_data['settings']['bg_color'] ?>;
 	}
 	</style>
 </head>
@@ -33,13 +34,13 @@ $links_data = mcd_api_data($api_call_url);
 	<div class="wrapper">
 		<div class="center">
 			<div class="logo">
-				<img src="<?= $links_data['center']['image'] ?>" alt="<?= $links_data['center']['name'] ?>" />
+				<img src="<?= $links_data['center']['media']['light']['url'] ?>" alt="<?= $links_data['center']['name'] ?>" />
 			</div>
 			<div class="name"><?= $links_data['center']['name'] ?></div>
 		</div>
 		<div class="links">
 			<ul>
-				<?php foreach( $links_data['links'] as $link ) : ?>
+				<?php foreach( $links_data['items'] as $link ) : ?>
 					<li>
 						<a href="<?= $link['link'] ?>" target="_blank"><?= $link['title'] ?></a>
 					</li>
