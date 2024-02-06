@@ -44,7 +44,8 @@
   ],
   "liveSassCompile.settings.includeItems": [
     "/assets/scss/**.scss",
-    "/elementor/scss/**.scss"
+    "/elementor/scss/**.scss",
+    "/elementor/widgets/map/assets/**.scss"
   ],
   "liveSassCompile.settings.generateMap": true,
   //autoprefix, will auto add perfix like -webkit- -moz-..
