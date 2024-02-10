@@ -686,6 +686,36 @@
   font-size: 26px;
   border-bottom: 2px solid #DDD;
 }
+.eyeon-deals .sorting-wrapper {
+  margin-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+}
+.eyeon-deals .sorting-wrapper .sorting-options {
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+.eyeon-deals .sorting-wrapper .sorting-options .option {
+  background-color: #EEEEEE;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-transition: background-color 300ms;
+  transition: background-color 300ms;
+}
+.eyeon-deals .sorting-wrapper .sorting-options .option.active {
+  background-color: #0d6efd;
+  color: white;
+}
 .eyeon-deals .deals-list.grid-view {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

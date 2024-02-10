@@ -105,9 +105,247 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+      'default_sorting',
+      [
+        'label' => __( 'Default Sorting', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'options' => [
+          'recently_added' => __( 'Recently Added', EYEON_NAMESPACE ),
+          'ending_soon' => __( 'Ending Soon', EYEON_NAMESPACE ),
+        ],
+        'default' => 'recently_added',
+        'frontend_available' => true,
+      ]
+    );
+
+    $this->add_control(
+      'sorting_options',
+      [
+        'label' => esc_html__( 'Sorting Options', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
+        'condition' => [
+          'view_mode' => 'grid',
+        ],
+      ]
+    );
+
     $this->end_controls_section();
 
     include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
+
+    // ================================================================
+    // SORTING OPTIONS
+    // ================================================================
+    
+    $this->start_controls_section(
+      'sorting_options_style',
+      [
+        'label' => __( 'Sorting Options', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'view_mode' => 'grid',
+          'sorting_options' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'no_results_found_align',
+      [
+        'label' => __( 'Alignment', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+          'left' => [
+            'flex-start' => __( 'Left', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-left',
+          ],
+          'center' => [
+            'center' => __( 'Center', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-center',
+          ],
+          'right' => [
+            'flex-end' => __( 'Right', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-right',
+          ],
+        ],
+        'default' => 'flex-end',
+        'toggle' => true,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-deals .sorting-wrapper' => 'justify-content: {{VALUE}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'sorting_options_margin_bottom',
+      [
+        'label' => __( 'Margin Bottom', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 60,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px', '%'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 20,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-deals .sorting-wrapper' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+			\Elementor\Group_Control_Border::get_type(),
+			[
+				'name' => 'sorting_options_border',
+				'selector' => '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options',
+			]
+		);
+
+    $this->add_responsive_control(
+      'sorting_options_border_radius',
+      [
+        'label' => __( 'Border Radius', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 30,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px', '%'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 0,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options' => 'border-radius: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'sorting_options_item_padding',
+      [
+        'label' => __( 'Padding', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::DIMENSIONS,
+        'size_units' => [ 'px', '%' ],
+        'default' => [
+          'top' => '4',
+          'right' => '10',
+          'bottom' => '4',
+          'left' => '10',
+          'unit' => 'px',
+          'isLinked' => false,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->start_controls_tabs(
+			'item_style_tabs'
+		);
+
+      $this->start_controls_tab(
+        'item_style_normal_tab',
+        [
+          'label' => esc_html__( 'Normal', EYEON_NAMESPACE ),
+        ]
+      );
+
+        $this->add_group_control(
+          \Elementor\Group_Control_Typography::get_type(),
+          [
+            'name' => 'item_style_normal_typography',
+            'selector' => '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option',
+          ]
+        );
+
+        $this->add_control(
+          'item_style_normal_color',
+          [
+            'label' => __( 'Text Color', EYEON_NAMESPACE ),
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [
+              '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option' => 'color: {{VALUE}}',
+            ],
+            'default' => '#444444',
+          ]
+        );
+
+        $this->add_control(
+          'item_style_normal_bg_color',
+          [
+            'label' => __( 'Background Color', EYEON_NAMESPACE ),
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [
+              '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option' => 'background-color: {{VALUE}}',
+            ],
+            'default' => '#EEEEEE',
+          ]
+        );
+
+      $this->end_controls_tab();
+
+      $this->start_controls_tab(
+        'item_style_active_tab',
+        [
+          'label' => esc_html__( 'Active', EYEON_NAMESPACE ),
+        ]
+      );
+
+        $this->add_group_control(
+          \Elementor\Group_Control_Typography::get_type(),
+          [
+            'name' => 'item_style_active_typography',
+            'selector' => '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option.active',
+          ]
+        );
+
+        $this->add_control(
+          'item_style_active_color',
+          [
+            'label' => __( 'Text Color', EYEON_NAMESPACE ),
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [
+              '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option.active' => 'color: {{VALUE}}',
+            ],
+            'default' => '#FFFFFF',
+          ]
+        );
+
+        $this->add_control(
+          'item_style_active_bg_color',
+          [
+            'label' => __( 'Background Color', EYEON_NAMESPACE ),
+            'type' => \Elementor\Controls_Manager::COLOR,
+            'selectors' => [
+              '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options .option.active' => 'background-color: {{VALUE}}',
+            ],
+            'default' => '#0d6efd',
+          ]
+        );
+
+      $this->end_controls_tab();
+
+    $this->end_controls_section();
+
+    // ================================================================
+    // GRID SETTINGS
+    // ================================================================
 
     $this->start_controls_section(
       'grid_style_settings',
@@ -145,6 +383,10 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
 
     $this->end_controls_section();
 
+    // ================================================================
+    // DEAL IMAGE
+    // ================================================================
+
     $this->start_controls_section(
       'deal_image_style_settings',
       [
@@ -173,6 +415,10 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
     );
 
     $this->end_controls_section();
+
+    // ================================================================
+    // RETAILER LOGO
+    // ================================================================
 
     $this->start_controls_section(
       'deal_retailer_logo_style_settings',
@@ -305,6 +551,10 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
 		);
 
     $this->end_controls_section();
+
+    // ================================================================
+    // DEAL TITLE
+    // ================================================================
 
     $this->start_controls_section(
       'deal_title_style_settings',

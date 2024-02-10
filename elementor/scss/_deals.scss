@@ -6,6 +6,33 @@
     border-bottom: 2px solid #DDD;
   }
 
+  .sorting-wrapper {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+
+    .sorting-options {
+      border: none;
+      border-radius: 0;
+      overflow: hidden;
+      display: inline-flex;
+
+      .option {
+        background-color: #EEEEEE;
+        padding: 4px 10px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 300ms;
+
+        &.active {
+          background-color: #0d6efd;
+          color: white;
+        }
+      }
+    }
+  }
+
   .deals-list {
     &.grid-view {
       display: grid;
