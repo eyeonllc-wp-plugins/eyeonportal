@@ -91,7 +91,11 @@ $unique_id = uniqid();
               page++;
               fetch_news();
             } else {
-              setup_categories();
+              <?php if( $settings['categories_filters'] === 'show' ) : ?>
+                setup_categories();
+              <?php else : ?>
+                renderNews();
+              <?php endif; ?>
             }
           }
         }
@@ -121,7 +125,6 @@ $unique_id = uniqid();
 
       categories = [{id: 0, name: 'All'}].concat(fetchedCategories);
 
-      <?php if( $settings['categories_filters'] === 'show' ) : ?>
       categories.forEach(category => {
         categoryList.append(`
           <li data-value="${category.id}" class="${category.id===0?'active':''}">${category.name}</li>
@@ -130,13 +133,12 @@ $unique_id = uniqid();
           <option value="${category.id}">${category.name}</option>
         `);
       });
-      <?php endif; ?>
 
-      eyeonNews.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
       renderNews();
     }
-
+    
     function renderNews() {
+      eyeonNews.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
       newsList.empty();
 
       if( news.length > 0 ) {

@@ -502,6 +502,41 @@
   }
 }
 
+.eyeon-events .eyeon-wrapper .categories {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin-bottom: 40px;
+}
+.eyeon-events .eyeon-wrapper .categories ul {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.eyeon-events .eyeon-wrapper .categories ul li {
+  cursor: pointer;
+  padding: 5px 18px;
+  font-size: 14px;
+  line-height: 21px;
+  background-color: transparent;
+  color: #101921;
+}
+.eyeon-events .eyeon-wrapper .categories ul li.active {
+  background-color: #49caee;
+  font-weight: 600;
+}
 .eyeon-events .eyeon-wrapper .events-list.grid-view {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
