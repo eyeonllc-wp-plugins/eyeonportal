@@ -155,7 +155,7 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_responsive_control(
-      'no_results_found_align',
+      'sorting_options_align',
       [
         'label' => __( 'Alignment', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::CHOOSE,
@@ -227,7 +227,7 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
         'size_units' => ['px', '%'],
         'default' => [
           'unit' => 'px',
-          'size' => 0,
+          'size' => 4,
         ],
         'selectors' => [
           '{{WRAPPER}} .eyeon-deals .sorting-wrapper .sorting-options' => 'border-radius: {{SIZE}}{{UNIT}};',
