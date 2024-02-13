@@ -7,6 +7,7 @@ $fields = [
   'event_title',
   'event_excerpt',
   'event_metadata',
+  'event_ongoing_dates',
   'no_results_found_text',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
@@ -207,7 +208,9 @@ $unique_id = uniqid();
       eventsList.empty();
 
       if( events.length > 0 ) {
+        console.log('settings', settings.event_ongoing_dates);
         events.forEach(event => {
+          console.log('event', event.ongoing_event);
           const eventItem = $(`
             <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event event-${event.id}" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
               <div class="image">
@@ -215,7 +218,7 @@ $unique_id = uniqid();
               </div>
               ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
               ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
-              ${ settings.event_metadata ? `
+              ${ settings.event_metadata && (!event.ongoing_event || (event.ongoing_event && settings.event_ongoing_dates)) ? `
                 <div class="metadata">
                   <div class="date">
                     <i class="far fa-calendar"></i>

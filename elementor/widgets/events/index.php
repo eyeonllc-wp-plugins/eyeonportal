@@ -168,6 +168,22 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
+      'event_ongoing_dates',
+      [
+        'label' => esc_html__( 'On-Going Events Date', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
+        'frontend_available' => true,
+        'condition' => [
+          'event_metadata' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_control(
 			'hr_2',
 			[
 				'type' => \Elementor\Controls_Manager::DIVIDER,
