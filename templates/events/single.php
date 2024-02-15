@@ -11,7 +11,10 @@ if( isset($_GET['rdate']) ) {
 	$rdate = date('M jS, Y', $_GET['rdate']);
 }
 
-$event_dates = eyeon_format_date($mycenterevent['start_date']).' - '.eyeon_format_date($mycenterevent['end_date']);
+$event_dates = eyeon_format_date($mycenterevent['start_date']);
+if( $mycenterevent['end_date'] ) {
+  $event_dates .= ' - '.eyeon_format_date($mycenterevent['end_date']);
+}
 if( $mycenterevent['start_date'] === $mycenterevent['end_date'] ) {
 	$event_dates = eyeon_format_date($mycenterevent['start_date']);
 }
@@ -44,19 +47,23 @@ if( isset($mycenterevent['next']) ) {
 
 				<div class="mcd-event-details-col">
 					<div class="mcd-event-name"><?= $mycenterevent['title'] ?></div>
-					<div class="mcd-event-date-time">
-						<div class="mcd-event-dates">
-							<i class="far fa-calendar-alt"></i>&nbsp;
-							<?= (!empty($rdate) ? $rdate : $event_dates) ?>
-						</div>
-						<?php if( !empty($mycenterevent['start_time']) && !$mycenterevent['is_all_day_event'] ) : ?>
-							<div class="mcd-event-times">
-								<i class="far fa-clock"></i>&nbsp;
-								<?= $mycenterevent['start_time'] ?> - <?= $mycenterevent['end_time'] ?>
-							</div>
-						<?php endif; ?>
-					</div>
-					<div class="mcd-event-description editor_output"><?= get_editor_output($mycenterevent['description']) ?></div>
+
+          <?php if( !$mycenterevent['ongoing_event'] ) : ?>
+            <div class="mcd-event-date-time">
+              <div class="mcd-event-dates">
+                <i class="far fa-calendar-alt"></i>&nbsp;
+                <?= (!empty($rdate) ? $rdate : $event_dates) ?>
+              </div>
+              <?php if( !empty($mycenterevent['start_time']) && !$mycenterevent['is_all_day_event'] ) : ?>
+                <div class="mcd-event-times">
+                  <i class="far fa-clock"></i>&nbsp;
+                  <?= $mycenterevent['start_time'] ?> - <?= $mycenterevent['end_time'] ?>
+                </div>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
+					
+          <div class="mcd-event-description editor_output"><?= get_editor_output($mycenterevent['description']) ?></div>
 
 					<?php if( $this->mcd_settings['events_single_add_to_calendar'] ) : ?>
 					<div class="mcd-event-add-to-calendar">
