@@ -188,6 +188,39 @@
     padding-bottom: 30px;
   }
 }
+.eyeon-stores .eyeon-wrapper .stores-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 15px;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .categories-sidebar-placeholder {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 220px;
+          flex: 0 0 220px;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .search-bar {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search {
+  width: 240px;
+  border: 1px solid #AAA;
+  padding: 5px 12px;
+  font-size: 14px;
+  outline: none;
+}
 .eyeon-stores .eyeon-wrapper .content-cols {
   display: -webkit-box;
   display: -ms-flexbox;

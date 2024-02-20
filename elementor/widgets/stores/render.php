@@ -19,7 +19,20 @@ $unique_id = uniqid();
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
   <div class="eyeon-wrapper" style="display:none;">
-    <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search eyeon-hide" placeholder="Search..." />
+
+    <?php if( $settings['view_mode'] === 'grid' ) : ?>
+      <div class="stores-header">
+        <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
+          <div class="categories-sidebar-placeholder"></div>
+        <?php endif; ?>
+        
+        <div class="search-bar">
+          <?php if( $settings['stores_search'] === 'show' ) : ?>
+            <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
+          <?php endif; ?>
+        </div>
+      </div>
+    <?php endif; ?>
 
     <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
       <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
@@ -272,7 +285,7 @@ $unique_id = uniqid();
     });
 
     searchInput.on('input', function() {
-      const selectedCategory = categoryList.find('ul li.active:first').attr('data-value');
+      const selectedCategory = categoryList.find('li.active:first').attr('data-value');
       const search = $(this).val().toLowerCase();
       filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
