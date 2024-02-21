@@ -117,7 +117,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'label_on' => __( 'Show', EYEON_NAMESPACE ),
         'label_off' => __( 'Hide', EYEON_NAMESPACE ),
         'return_value' => 'show',
-        'default' => 'show',
+        'default' => '',
         'condition' => [
           'view_mode' => 'grid',
         ],
