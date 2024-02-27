@@ -266,16 +266,21 @@ $unique_id = uniqid();
       categoryList.find('li.active').removeClass('active');
       $(this).addClass('active');
       const selectedCategory = $(this).attr('data-value');
-      const search = searchInput.val().toLowerCase();
+      let search = '';
+      if( searchInput.length > 0 ) {
+        search = searchInput.val().toLowerCase();
+      }
 
       categoryDropdownList.val(selectedCategory);
-
       filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
 
     categoryDropdownList.on('change', function() {
       const selectedCategory = $(this).val();
-      const search = searchInput.val().toLowerCase();
+      let search = '';
+      if( searchInput.length > 0 ) {
+        search = searchInput.val().toLowerCase();
+      }
 
       // change categories list selection
       categoryList.find('li.active').removeClass('active');
