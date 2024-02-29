@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal.
-Version: 0.0.71
+Version: 0.0.72
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -90,37 +90,3 @@ if ( is_admin() ) {
 	require_once MCD_PLUGIN_PATH . 'elementor/RegisterWidgets.php';
 // }
 
-
-// Enqueue Elementor library
-function enqueue_elementor_library() {
-    if (class_exists('Elementor\Plugin')) {
-        wp_enqueue_script('elementor-frontend');
-        wp_enqueue_style('elementor-frontend');
-    }
-}
-add_action('wp_enqueue_scripts', 'enqueue_elementor_library');
-
-// Register custom Elementor template
-function register_custom_elementor_template() {
-    \Elementor\Plugin::instance()->templates_manager->register_template_type('custom', [
-        'label' => __('Custom Template 1', 'your-textdomain'),
-    ]);
-}
-add_action('elementor/template-library/before_template', 'register_custom_elementor_template');
-
-// Render custom Elementor template content
-function render_custom_elementor_template_content($content, $template_id) {
-  echo $template_id;
-    if ('your-custom-template-id' === $template_id) {
-        ob_start();
-        ?>
-        <div class="custom-elementor-template">
-            <!-- Your custom template content here -->
-            <h2>This is a custom Elementor template generated programmatically.</h2>
-        </div>
-        <?php
-        $content = ob_get_clean();
-    }
-    return $content;
-}
-add_filter('elementor/frontend/template_content', 'render_custom_elementor_template_content', 10, 2);
