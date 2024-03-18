@@ -175,11 +175,9 @@
 }
 
 .eyeon-btn {
-  background-color: #0d6efd;
-  border: 1px solid #0d6efd;
+  background-color: #0763b1;
   border-radius: 0.25rem;
   color: white;
-  cursor: pointer;
   display: inline-block;
   font-size: 1rem;
   font-weight: 500;
@@ -196,6 +194,11 @@
    -ms-user-select: none;
        user-select: none;
   vertical-align: middle;
+  cursor: pointer;
+}
+.eyeon-btn:hover {
+  color: white;
+  background-color: #054983;
 }
 
 @media screen and (min-width: 600px) {
