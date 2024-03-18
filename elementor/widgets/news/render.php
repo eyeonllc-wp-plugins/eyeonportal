@@ -67,6 +67,8 @@ $unique_id = uniqid();
         page,
         category_ids: [],
         tag_ids: [],
+        sortColumn: 'post_date',
+        sortOrder: 'DESC',
       };
 
       $.ajax({
