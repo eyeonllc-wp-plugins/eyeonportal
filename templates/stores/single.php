@@ -1,5 +1,6 @@
 <?php
 $mycenterstore = $this->mcd_settings['mycenterstore'];
+eyeon_debug($mycenterstore);
 
 $social_links = array('affiliate_url', 'website', 'facebook', 'instagram', 'pinterest', 'twitter', 'youtube');
 $store_url = mcd_single_page_url('mycenterstore');
