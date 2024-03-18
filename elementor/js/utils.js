@@ -9,8 +9,9 @@ function eyeonConvertTo12HourFormat(timeString) {
   return timeString;
 }
 
-function eyeonFormatDate(dateString) {
-  return moment(dateString).format('MMM D, YYYY');
+function eyeonFormatDate(dateString = null) {
+  if (dateString) return moment(dateString).format('MMM D, YYYY');
+  return moment().format('MMM D, YYYY');
 }
 
 function getResponsiveBreakpoints() {

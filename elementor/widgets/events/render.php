@@ -55,6 +55,15 @@ $unique_id = uniqid();
     var defaultLimit = 100;
     let categories = [];
 
+    function getTimezoneDate(date = null) {
+      const wpTimezone = `<?= wp_timezone_string() ?>`;
+      const today = date ? date : new Date();
+      return new Date(today.toLocaleString('en-US', { timeZone: wpTimezone }));
+    }
+    
+    var todayDate = getTimezoneDate();
+    console.log('todayDate', todayDate);
+
     fetch_events();
 
     function fetch_events() {
@@ -98,26 +107,30 @@ $unique_id = uniqid();
       <?php endif; ?>
 
       events = events.map(parseAndFindUpcoming);
+      console.log('events', events);
 
       events.sort(function (a, b) {
         // Sort by ongoing events
         if (a.ongoing_event && !b.ongoing_event) return 1;
         if (!a.ongoing_event && b.ongoing_event) return -1;
 
-        // Sort by upcoming_date if available
         if (a.upcoming_date && b.upcoming_date) {
-          return a.upcoming_date.localeCompare(b.upcoming_date);
+          if (a.upcoming_date > b.upcoming_date) {
+            return 1;
+          } else if (a.upcoming_date < b.upcoming_date) {
+            return -1;
+          } else {
+            return 0;
+          }
         } else if (a.upcoming_date) {
-          // Handle the case where b.upcoming_date is undefined
           return -1;
         } else if (b.upcoming_date) {
-          // Handle the case where a.upcoming_date is undefined
           return 1;
         }
 
         // Sort by start_date and start_time
-        var startDateA = new Date(a.start_date + ' ' + (a.is_all_day_event ? '00:00:00' : a.start_time));
-        var startDateB = new Date(b.start_date + ' ' + (b.is_all_day_event ? '00:00:00' : b.start_time));
+        var startDateA = getTimezoneDate(new Date(a.start_date + ' ' + (a.is_all_day_event ? '00:00:00' : a.start_time)));
+        var startDateB = getTimezoneDate(new Date(b.start_date + ' ' + (b.is_all_day_event ? '00:00:00' : b.start_time)));
 
         if (startDateA > startDateB) return 1;
         if (startDateA < startDateB) return -1;
@@ -172,31 +185,36 @@ $unique_id = uniqid();
     }
     
     function parseAndFindUpcoming(event) {
+      var upcomingOccurrence = null;
       if (event.repeat_rrule && event.repeat_rrule !== '') {
         var rule = rrule.RRule.fromString(event.repeat_rrule);
 
-        var startDate = new Date();
-        startDate.setDate(startDate.getDate() - 1);
-
         // Get occurrences within a certain time range (adjust as needed)
-        var occurrences = rule.between(startDate, new Date(new Date().getTime() + 365 * 24 * 60 * 60 * 1000));
+        var occurrences = rule.between(todayDate, getTimezoneDate(new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)));
+        // console.log('occurrences', occurrences);
 
         // Find the next occurrence after the current date
-        var upcomingOccurrence = occurrences.find(function (occurrence) {
-          return occurrence >= startDate;
+        upcomingOccurrence = occurrences.find(function (occurrence) {
+          return occurrence >= todayDate;
         });
-
-        if (upcomingOccurrence) {
-          // Update event with the upcoming occurrence date
-          event.upcoming_date = upcomingOccurrence.toISOString().split('T')[0];
-        }
       }
+
+      if (upcomingOccurrence) {
+        event.upcoming_date = upcomingOccurrence;
+      } else {
+        var tempStartDate = getTimezoneDate(new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time)));
+        event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
+      }
+
+      console.log('event.upcoming_date', event.upcoming_date);
 
       event.datesStr = '';
       if( event.upcoming_date ) {
         event.datesStr = eyeonFormatDate(event.upcoming_date);
-      } else {
-        event.datesStr = event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date);
+      // } else {
+      //   event.datesStr = event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date);
+      // } else if() {
+      //   event.datesStr = event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date);
       }
 
       return event;

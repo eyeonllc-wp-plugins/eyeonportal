@@ -43,7 +43,7 @@ if( isset($mcd_settings['mcd_site_mode']) ) {
 	if( $mcd_settings['mcd_site_mode'] == 'staging' ) {
 		$api_base_url = 'https://web-backend-staging.eyeonportal.com/';
 	} elseif( $mcd_settings['mcd_site_mode'] == 'development' ) {
-		$api_base_url = 'https://staging.mycenterportal.test/';
+		$api_base_url = 'http://localhost:3002/';
 	}
 }
 defined('API_BASE_URL')				      OR define( 'API_BASE_URL', $api_base_url );
