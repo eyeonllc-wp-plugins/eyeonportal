@@ -1,19 +1,8 @@
 <?php
 $mycenterstore = $this->mcd_settings['mycenterstore'];
-$map_config = $this->mcd_settings['map_config'];
 
 $social_links = array('affiliate_url', 'website', 'facebook', 'instagram', 'pinterest', 'twitter', 'youtube');
-
 $store_url = mcd_single_page_url('mycenterstore');
-$prev_url = '';
-$next_url = '';
-
-if( isset($mycenterstore['prev']) ) {
-	$prev_url = $store_url.$mycenterstore['prev']['slug'];
-}
-if( isset($mycenterstore['next']) ) {
-	$next_url = $store_url.$mycenterstore['next']['slug'];
-}
 ?>
 
 <?php if( is_array($mycenterstore) ) : ?>
@@ -27,8 +16,6 @@ if( isset($mycenterstore['next']) ) {
 				<?php if( !empty($this->mcd_settings['stores_listing_page']) ) : ?>
 					<a href="<?= get_permalink($this->mcd_settings['stores_listing_page']) ?>" class="item back">Back to Stores</a>
 				<?php endif; ?>
-				<a <?= (!empty($prev_url)?'href="'.$prev_url.'"':'') ?> class="item prev hide <?= (empty($prev_url)?'disabled':'') ?>"><i class="fas fa-chevron-left"></i><span>Prev</span></a>
-				<a <?= (!empty($next_url)?'href="'.$next_url.'"':'') ?> class="item next hide <?= (empty($next_url)?'disabled':'') ?>"><span>Next</span><i class="fas fa-chevron-right"></i></a>
 			</div>
 
 			<div class="mcd-store-cols">
@@ -93,15 +80,10 @@ if( isset($mycenterstore['next']) ) {
                 <?php endif; ?>
               <?php endif; ?>
 
-              <?php if( !empty($this->mcd_settings['map_page']) || !empty($map_config['map_url']) ) :
-                $new_tab = false;
+              <?php if( !empty($this->mcd_settings['map_page']) && $mycenterstore['mapit'] ) :
                 $map_url = get_permalink($this->mcd_settings['map_page']).$mycenterstore['slug'];
-                if( !empty($map_config['map_url']) ) {
-                  $new_tab = true;
-                  $map_url = $map_config['map_url'];
-                }
                 ?>
-                <a href="<?= $map_url ?>" <?= ($new_tab?'target="blank"':'') ?> class="mcd_mapit_link">Find IT</a>
+                <a href="<?= $map_url ?>" class="eyeon-btn">Map IT</a>
               <?php endif; ?>
             </div>
 

@@ -9,8 +9,8 @@ $mapboxProps = array(
   'config' => Array(
     'CENTER_ID' => $mcd_settings['center_id'],
     'ROLE' => 'WP_SITE',
-    'KIOSK' => '',
-    'STYLE' => '2D',
+    // 'KIOSK' => '',
+    // 'STYLE' => '2D',
   ),
   'webApiURI' => API_BASE_URL,
 );
