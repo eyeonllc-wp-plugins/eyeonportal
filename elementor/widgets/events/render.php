@@ -107,7 +107,6 @@ $unique_id = uniqid();
       <?php endif; ?>
 
       events = events.map(parseAndFindUpcoming);
-      console.log('events', events);
 
       events.sort(function (a, b) {
         // Sort by ongoing events
@@ -206,17 +205,7 @@ $unique_id = uniqid();
         event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
       }
 
-      console.log('event.upcoming_date', event.upcoming_date);
-
-      event.datesStr = '';
-      if( event.upcoming_date ) {
-        event.datesStr = eyeonFormatDate(event.upcoming_date);
-      // } else {
-      //   event.datesStr = event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date);
-      // } else if() {
-      //   event.datesStr = event.start_date!==event.end_date ? eyeonFormatDate(event.start_date)+' - '+eyeonFormatDate(event.end_date) : eyeonFormatDate(event.start_date);
-      }
-
+      event.datesStr = eyeonFormatDate(event.upcoming_date);
       return event;
     }
 
