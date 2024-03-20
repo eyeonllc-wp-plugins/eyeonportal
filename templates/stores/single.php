@@ -89,7 +89,7 @@ $store_url = mcd_single_page_url('mycenterstore');
 
             <?php if( $mycenterstore['opening_hours'] ) : ?>
             <div class="mcd-retailer-opening-hours">
-              <h4>Opening Hours:</h4>
+              <h4>Hours:</h4>
               <div class="hours-sets">
                 <?php foreach( eyeon_weekdays() as $key=>$day ) : ?>
                 <div class="hours-set">
