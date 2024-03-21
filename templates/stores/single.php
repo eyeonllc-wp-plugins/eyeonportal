@@ -1,8 +1,10 @@
 <?php
 $mycenterstore = $this->mcd_settings['mycenterstore'];
 
-$social_links = array('affiliate_url', 'website', 'facebook', 'instagram', 'pinterest', 'twitter', 'youtube');
+$social_links = array_merge($mycenterstore['global_retailer']['links'], $mycenterstore['links']);
+$social_links_order = array('website', 'twitter', 'facebook', 'linkedin', 'instagram', 'youtube', 'snapchat', 'tiktok', 'tripadvisor', 'pinterest');
 $store_url = mcd_single_page_url('mycenterstore');
+
 ?>
 
 <?php if( is_array($mycenterstore) ) : ?>
@@ -67,9 +69,9 @@ $store_url = mcd_single_page_url('mycenterstore');
               <?php if( $this->mcd_settings['stores_single_social_links'] ) : ?>
                 <?php
                 $social_links_html = '';
-                  foreach ($social_links as $link) {
-                    if( !empty($mycenterstore['global_retailer']['links'][$link]) ) {
-                      $social_links_html .= '<li class="'.$link.'"><a href="'.$mycenterstore['global_retailer']['links'][$link].'" target="_blank">'.$link.'</a></li>';
+                  foreach ($social_links_order as $link) {
+                    if( !empty($social_links[$link]) ) {
+                      $social_links_html .= '<li class="'.$link.'"><a href="'.$social_links[$link].'" target="_blank">'.$link.'</a></li>';
                     }
                   }
                 ?>
