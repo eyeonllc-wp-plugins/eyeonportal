@@ -1,7 +1,16 @@
 <?php
 $mycenterstore = $this->mcd_settings['mycenterstore'];
 
-$social_links = array_merge($mycenterstore['global_retailer']['links'], $mycenterstore['links']);
+$global_retailer_links = array();
+if( isset($mycenterstore['global_retailer']['links']) && is_array($mycenterstore['global_retailer']['links']) ) {
+  $global_retailer_links = $mycenterstore['global_retailer']['links'];
+}
+$retailer_links = array();
+if( isset($mycenterstore['links']) && is_array($mycenterstore['links']) ) {
+  $retailer_links = $mycenterstore['links'];
+}
+
+$social_links = array_merge($global_retailer_links, $retailer_links);
 $social_links_order = array('website', 'twitter', 'facebook', 'linkedin', 'instagram', 'youtube', 'snapchat', 'tiktok', 'tripadvisor', 'pinterest');
 $store_url = mcd_single_page_url('mycenterstore');
 
