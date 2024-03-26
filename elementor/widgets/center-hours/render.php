@@ -133,10 +133,13 @@ $unique_id = uniqid();
       });
 
       data.holidays.forEach((holiday) => {
-        const holidayDate = new Date(holiday.start_date);
+        const holidayDate = getTimezoneDate(holiday.start_date);
+        holidayDate.setHours(0, 0, 0, 0);
         if (holidayDate < currentWeekStart || holidayDate > currentWeekEnd) return;
+
+        let dayIndex = holidayDate.getDay();
+        dayIndex = (dayIndex === 0) ? 6 : dayIndex - 1;
     
-        const dayIndex = Math.abs((holidayDate.getDay() + 6) % 7 - (currentDate.getDay() + 6) % 7);
         const day = weeklyOpeningHours[dayIndex];
         if (day) {
           day.holiday = true;
@@ -145,7 +148,7 @@ $unique_id = uniqid();
       });
 
       data.irregular_openings.forEach((irregularOpening) => {
-        const openingDate = new Date(irregularOpening.start_date);
+        const openingDate = getTimezoneDate(irregularOpening.start_date);
         if (openingDate < currentWeekStart || openingDate > currentWeekEnd) return;
 
         const dayIndex = Math.abs((openingDate.getDay() + 6) % 7 - (currentDate.getDay() + 6) % 7);
