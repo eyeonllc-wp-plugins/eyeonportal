@@ -20,8 +20,6 @@ if($selected_store) {
   $mapboxProps['config']['SELECTED_RETAILER_SLUG'] = $selected_store;
 }
 
-eyeon_debug($mapboxProps, false, false);
-
 $encodedProps = htmlspecialchars(json_encode($mapboxProps), ENT_QUOTES, 'UTF-8');
 ?>
 

@@ -33,6 +33,12 @@ $unique_id = uniqid();
     const eyeonCenterHours = $('#eyeon-center-hours-<?= $unique_id ?>');
     const centerHours = eyeonCenterHours.find('.center-hours');
 
+    function getTimezoneDate(date = null) {
+      const wpTimezone = `<?= wp_timezone_string() ?>`;
+      const today = date ? date : new Date();
+      return new Date(today.toLocaleString('en-US', { timeZone: wpTimezone }));
+    }
+    
     fetch_center_hours();
 
     function fetch_center_hours() {
@@ -77,7 +83,7 @@ $unique_id = uniqid();
     function calculateWeeklyOpeningHours(data) {
       const weeklyOpeningHours = [];
       
-      const currentDate = new Date();
+      const currentDate = getTimezoneDate();
       currentDate.setHours(0, 0, 0, 0);
       const currentWeekStart = new Date(currentDate);
       currentWeekStart.setDate(currentDate.getDate() - (currentDate.getDay() + 6) % 7);
