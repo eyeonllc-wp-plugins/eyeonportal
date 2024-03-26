@@ -38,6 +38,8 @@ $unique_id = uniqid();
       const today = date ? date : new Date();
       return new Date(today.toLocaleString('en-US', { timeZone: wpTimezone }));
     }
+
+    console.log('todayDate', getTimezoneDate());
     
     fetch_center_hours();
 
@@ -137,8 +139,7 @@ $unique_id = uniqid();
         holidayDate.setHours(0, 0, 0, 0);
         if (holidayDate < currentWeekStart || holidayDate > currentWeekEnd) return;
 
-        let dayIndex = holidayDate.getDay();
-        dayIndex = (dayIndex === 0) ? 6 : dayIndex - 1;
+        let dayIndex = holidayDate.getUTCDay();
     
         const day = weeklyOpeningHours[dayIndex];
         if (day) {
