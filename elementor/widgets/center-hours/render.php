@@ -39,8 +39,6 @@ $unique_id = uniqid();
       return new Date(today.toLocaleString('en-US', { timeZone: wpTimezone }));
     }
 
-    console.log('todayDate', getTimezoneDate());
-    
     fetch_center_hours();
 
     function fetch_center_hours() {

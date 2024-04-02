@@ -15,7 +15,7 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-events-<?= $unique_id ?>" class="eyeon-events eyeon-loader">
-  <div class="eyeon-wrapper eyeon-hide">
+  <div class="eyeon-wrapper" style="display:none;">
     <?php if( $settings['categories_filters'] === 'show' ) : ?>
     <div class="categories">
       <select id="categories-dropdown-<?= $unique_id ?>" class="show-on-mob"></select>
@@ -62,7 +62,6 @@ $unique_id = uniqid();
     }
     
     var todayDate = getTimezoneDate();
-    console.log('todayDate', todayDate);
 
     fetch_events();
 
@@ -185,12 +184,14 @@ $unique_id = uniqid();
     
     function parseAndFindUpcoming(event) {
       var upcomingOccurrence = null;
-      if (event.repeat_rrule && event.repeat_rrule !== '') {
+      if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
+        if( event.title === 'Joanna Test Future Event') {
+          console.log('event', event);
+        }
         var rule = rrule.RRule.fromString(event.repeat_rrule);
 
         // Get occurrences within a certain time range (adjust as needed)
         var occurrences = rule.between(todayDate, getTimezoneDate(new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)));
-        // console.log('occurrences', occurrences);
 
         // Find the next occurrence after the current date
         upcomingOccurrence = occurrences.find(function (occurrence) {
@@ -202,6 +203,9 @@ $unique_id = uniqid();
         event.upcoming_date = upcomingOccurrence;
       } else {
         var tempStartDate = getTimezoneDate(new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time)));
+        if( event.title === 'Joanna Test Future Event') {
+          console.log('tempStartDate', tempStartDate);
+        }
         event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
       }
 
@@ -210,7 +214,7 @@ $unique_id = uniqid();
     }
 
     function render_events() {
-      eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
 
       eventsList.empty();
 
