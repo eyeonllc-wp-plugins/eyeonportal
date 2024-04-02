@@ -127,11 +127,11 @@ $unique_id = uniqid();
         }
 
         // Sort by start_date and start_time
-        var startDateA = getTimezoneDate(new Date(a.start_date + ' ' + (a.is_all_day_event ? '00:00:00' : a.start_time)));
-        var startDateB = getTimezoneDate(new Date(b.start_date + ' ' + (b.is_all_day_event ? '00:00:00' : b.start_time)));
+        // var startDateA = getTimezoneDate(new Date(a.start_date + ' ' + (a.is_all_day_event ? '00:00:00' : a.start_time)));
+        // var startDateB = getTimezoneDate(new Date(b.start_date + ' ' + (b.is_all_day_event ? '00:00:00' : b.start_time)));
 
-        if (startDateA > startDateB) return 1;
-        if (startDateA < startDateB) return -1;
+        // if (startDateA > startDateB) return 1;
+        // if (startDateA < startDateB) return -1;
 
         return 0;
       });
@@ -202,10 +202,7 @@ $unique_id = uniqid();
       if (upcomingOccurrence) {
         event.upcoming_date = upcomingOccurrence;
       } else {
-        var tempStartDate = getTimezoneDate(new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time)));
-        if( event.title === 'Joanna Test Future Event') {
-          console.log('tempStartDate', tempStartDate);
-        }
+        var tempStartDate = new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time));
         event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
       }
 
