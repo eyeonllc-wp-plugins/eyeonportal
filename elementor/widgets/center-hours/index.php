@@ -21,6 +21,7 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
     return [
       'eyeon-moment',
       'eyeon-elementor-utils',
+      'eyeon-date-fns',
     ];
   }
   
@@ -59,14 +60,17 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'day_names',
+      'day_name_type',
       [
         'label' => __( 'Day Names', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
         'default' => 'long',
         'options' => [
-          'short' => __( 'Short', EYEON_NAMESPACE ),
           'long' => __( 'Long', EYEON_NAMESPACE ),
+          'short' => __( 'Short', EYEON_NAMESPACE ),
+        ],
+        'condition' => [
+          'view_mode' => 'week',
         ],
       ]
     );
@@ -80,6 +84,9 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
         'label_off' => __( 'No', EYEON_NAMESPACE ),
         'return_value' => 'yes',
         'default' => 'yes',
+        'condition' => [
+          'view_mode' => 'week',
+        ],
       ]
     );
 
@@ -100,8 +107,6 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
     );
 
     $this->end_controls_section();
-
-    // include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
 
     // ================================================================
     // Styles

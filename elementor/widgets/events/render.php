@@ -233,7 +233,7 @@ $unique_id = uniqid();
                   ${!event.is_all_day_event ? `
                     <div class="time">
                       <i class="far fa-clock"></i>
-                      <span>${eyeonConvertTo12HourFormat(event.start_time)} - ${eyeonConvertTo12HourFormat(event.end_time)}</span>
+                      <span>${eyeonFormatTime(event.start_time)} - ${eyeonFormatTime(event.end_time)}</span>
                     </div>
                   ` : '' }
                 </div>

@@ -1,7 +1,7 @@
 <?php
 $settings = $this->get_settings_for_display();
 $fields = [
-  'day_names',
+  'day_name_type',
   'combine_days',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip($fields));
@@ -39,6 +39,8 @@ $unique_id = uniqid();
       return new Date(today.toLocaleString('en-US', { timeZone: wpTimezone }));
     }
 
+    const todayDate = getTimezoneDate();
+
     fetch_center_hours();
 
     function fetch_center_hours() {
@@ -59,130 +61,111 @@ $unique_id = uniqid();
 
     function renderHours(data) {
       eyeonCenterHours.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
-      let weeklyOpeningHours = getFormattedOpeningHours(data);
-      if( settings.combine_days === 'yes' ) {
-        weeklyOpeningHours = combineCenterHoursDaysArray(weeklyOpeningHours);
-      }
-
       centerHours.empty();
 
-      weeklyOpeningHours.forEach(openingHour => {
-        const openingHourItem = $(`
-          <div class="center-hour">
-            <div class="day">${openingHour.day}</div>
-            <div class="values">
-              <div class="value">${openingHour.value}</div>
-              ${openingHour.title ? `<div class="reason">${openingHour.title}</div>` : '' }
-            </div>
-          </div>
-        `);
-        centerHours.append(openingHourItem);
-      });
-    }
-
-    function calculateWeeklyOpeningHours(data) {
-      const weeklyOpeningHours = [];
-      
-      const currentDate = getTimezoneDate();
-      currentDate.setHours(0, 0, 0, 0);
-      const currentWeekStart = new Date(currentDate);
-      currentWeekStart.setDate(currentDate.getDate() - (currentDate.getDay() + 6) % 7);
-      const currentWeekEnd = new Date(currentWeekStart);
-      currentWeekEnd.setDate(currentWeekStart.getDate() + 6);
-
-      for (let i = 0; i < 7; i++) {
-        const dayDate = new Date(currentWeekStart);
-        dayDate.setDate(currentWeekStart.getDate() + i);
-
-        const formattedDate = `${dayDate.getFullYear()}-${(dayDate.getMonth() + 1).toString().padStart(2, '0')}-${dayDate.getDate().toString().padStart(2, '0')}`;
-        const day = {
-          date: formattedDate,
-          day: getDayByDate(formattedDate, settings.day_names)
-        };
-        weeklyOpeningHours.push(day);
+      const weeklyOpeningHours = getOpeningHoursForNext7Days(data);
+      const formattedOpeningHours = formatOpeningHours(weeklyOpeningHours);
+      if( settings.combine_days === 'yes' ) {
+        formattedOpeningHours = combineCenterHoursDays(formattedOpeningHours);
       }
 
-      data.sets.forEach((set) => {
-        const openingHours = set.days;
-        if( set.is_primary ) {
-          Object.keys(openingHours).forEach((dayName) => {
-            const dayIndex = getIndexByDay(dayName);
-            const day = weeklyOpeningHours[dayIndex];
-            if (day) {
-              day.start_time = openingHours[dayName].start_time;
-              day.end_time = openingHours[dayName].end_time;
-            }
-          });
-        } else {
-          const startDate = new Date(set.start_date);
-          const endDate = new Date(set.end_date);
+      <?php if( $settings['view_mode'] === 'week' ) : ?>
+        formattedOpeningHours.forEach(openingHour => {
+          const openingHourItem = $(`
+            <div class="center-hour">
+              <div class="day">${openingHour.day}</div>
+              <div class="values">
+                <div class="value">${openingHour.value}</div>
+                ${openingHour.title ? `<div class="reason">${openingHour.title}</div>` : '' }
+              </div>
+            </div>
+          `);
+          centerHours.append(openingHourItem);
+        });
+      <?php endif; ?>
 
-          while (startDate <= endDate) {
-            const dayName = startDate.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }).toLowerCase();
-            const dayIndex = getIndexByDay(dayName);
-            const day = weeklyOpeningHours[dayIndex];
-
-            if (day) {
-              day.start_time = openingHours[dayName].start_time;
-              day.end_time = openingHours[dayName].end_time;
-            }
-            
-            startDate.setDate(startDate.getDate() + 1); // Move to the next day
-          }
-        }
-      });
-
-      data.holidays.forEach((holiday) => {
-        const holidayDate = getTimezoneDate(holiday.start_date);
-        holidayDate.setHours(0, 0, 0, 0);
-        if (holidayDate < currentWeekStart || holidayDate > currentWeekEnd) return;
-
-        let dayIndex = holidayDate.getUTCDay();
-    
-        const day = weeklyOpeningHours[dayIndex];
-        if (day) {
-          day.holiday = true;
-          day.title = holiday.title;
-        }
-      });
-
-      data.irregular_openings.forEach((irregularOpening) => {
-        const openingDate = getTimezoneDate(irregularOpening.start_date);
-        if (openingDate < currentWeekStart || openingDate > currentWeekEnd) return;
-
-        const dayIndex = Math.abs((openingDate.getDay() + 6) % 7 - (currentDate.getDay() + 6) % 7);
-        const day = weeklyOpeningHours[dayIndex];
-        if (day) {
-          day.start_time = irregularOpening.start_time;
-          day.end_time = irregularOpening.end_time;
-          day.irregular = true;
-          day.title = irregularOpening.title;
-        }
-      });
-
-      return weeklyOpeningHours;
+      <?php if( $settings['view_mode'] === 'today' ) : ?>
+        let todayOpeningHours = getTodayOpeningHours(weeklyOpeningHours);
+      <?php endif; ?>
     }
 
-    function getFormattedOpeningHours(data) {
-      let opening_hours = calculateWeeklyOpeningHours(data);
+    const getOpeningHoursForNext7Days = (openingHours) => {
+      const { addDays, format, isWithinInterval, parseISO, startOfWeek } = dateFns;
 
-      let formatted_hours = opening_hours.map((item) => {
-        let newItem = { day: item.day};
-        if(item.holiday) {
-          newItem.value = 'Closed';
-          newItem.title = item.title;
-        } else {
-          newItem.value = eyeonConvertTo12HourFormat(item.start_time)+' - '+eyeonConvertTo12HourFormat(item.end_time);
-          if( item.irregular ) {
-            newItem.title = item.title;
+      const next7Days = Array.from({ length: 7 }, (_, i) =>
+        addDays(startOfWeek(todayDate, { weekStartsOn: 1 }), i)
+      );
+      const primarySet = openingHours.sets.find((set) => set.is_primary);
+      const childSets = openingHours.sets.filter((set) => !set.is_primary);
+
+      return next7Days.map((day) => {
+        const dayOfWeek = format(day, "eeee");
+        const shortDayOfWeek = format(day, "eee").toLowerCase();
+        const holiday = openingHours.holidays.find((h) =>
+          isWithinInterval(day, {
+            start: parseISO(h.start_date),
+            end: parseISO(h.end_date),
+          })
+        );
+        const irregularOpening = openingHours.irregular_openings.find(
+          (io) => parseISO(io.start_date).getDate() === day.getDate()
+        );
+        const childSet = childSets.find((set) =>
+          isWithinInterval(day, {
+            start: parseISO(set.start_date),
+            end: parseISO(set.end_date),
+          })
+        );
+
+        let returnData = {
+          day: dayOfWeek,
+          shortDay: format(day, "eee"),
+          date: eyeonFormatDate(day),
+        };
+        if (holiday) {
+          returnData.type = 'holiday';
+          returnData.closed = true;
+          returnData.title = holiday.title;
+        } else if (irregularOpening) {
+          returnData.type = 'irregular';
+          returnData.hours = {
+            start: irregularOpening.start_time,
+            end: irregularOpening.end_time
+          };
+          returnData.title = irregularOpening.title;
+        } else if (childSet) {
+          type: 'child',
+          returnData.hours = {
+            start: childSet.days[shortDayOfWeek].start_time,
+            end: childSet.days[shortDayOfWeek].end_time
           }
+        } else if (primarySet) {
+          type: 'primary',
+          returnData.hours = {
+            start: primarySet.days[shortDayOfWeek].start_time,
+            end: primarySet.days[shortDayOfWeek].end_time
+          }
+        } else {
+          returnData.closed = true;
+        }
+        return returnData;
+      });
+    };
+
+    const formatOpeningHours = (openingHours) => {
+      return openingHours.map(item => {
+        const newItem = {
+          day: settings.day_name_type==='short' ? item.shortDay : item.day,
+          value: item.hours ? `${eyeonFormatTime(item.hours.start)} - ${eyeonFormatTime(item.hours.end)}` : 'Closed',
+        };
+        if(item.title) {
+          newItem.title = item.title;
         }
         return newItem;
       });
-      return formatted_hours;
     }
 
-    function combineCenterHoursDaysArray(data) {
+    function combineCenterHoursDays(data) {
       let combinedArray = [];
 
       data.forEach((item) => {
@@ -211,6 +194,12 @@ $unique_id = uniqid();
       return combinedArray;
     }
 
+    function getTodayOpeningHours(data) {
+      const dayName = todayDate.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }).toLowerCase();
+      const dayIndex = getIndexByDay(dayName);
+      console.log('data', data);
+      console.log('today data', data[dayIndex]);
+    }
 
     function getIndexByDay(day) {
       const weekDays = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];

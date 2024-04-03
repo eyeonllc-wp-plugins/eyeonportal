@@ -1,4 +1,4 @@
-function eyeonConvertTo12HourFormat(timeString) {
+function eyeonFormatTime(timeString) {
   if (timeString) {
     const [hours, minutes] = timeString.split(':');
     const ampm = hours >= 12 ? 'pm' : 'am';
@@ -23,6 +23,7 @@ function getResponsiveBreakpoints() {
 }
 
 function getDayByDate(dateString, type = 'short') {
+  if (type === null || type === undefined) type = 'long';
   const dateObj = new Date(dateString);
   const options = { weekday: type, timeZone: 'UTC' };
   const dayOfWeek = dateObj.toLocaleDateString('en-US', options);
