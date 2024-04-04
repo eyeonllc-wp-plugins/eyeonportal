@@ -185,9 +185,6 @@ $unique_id = uniqid();
     function parseAndFindUpcoming(event) {
       var upcomingOccurrence = null;
       if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
-        if( event.title === 'Joanna Test Future Event') {
-          console.log('event', event);
-        }
         var rule = rrule.RRule.fromString(event.repeat_rrule);
 
         // Get occurrences within a certain time range (adjust as needed)

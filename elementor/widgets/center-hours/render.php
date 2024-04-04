@@ -203,8 +203,6 @@ $unique_id = uniqid();
     function getTodayOpeningHours(data) {
       let dayIndex = getIndexByDay(format(todayDate, "eee").toLowerCase());
       const todayData = data[dayIndex];
-      console.log('todayData', todayData);
-
       const returnData = {
         value: todayData.hours ? `${todayData.type!=='irregular'?'Open Today<br>':''}${eyeonFormatTime(todayData.hours.start)} - ${eyeonFormatTime(todayData.hours.end)}` : 'Closed Today',
         title: todayData.title || ''
