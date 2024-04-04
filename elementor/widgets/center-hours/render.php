@@ -33,6 +33,8 @@ $unique_id = uniqid();
     const eyeonCenterHours = $('#eyeon-center-hours-<?= $unique_id ?>');
     const centerHours = eyeonCenterHours.find('.center-hours');
 
+    const { addDays, format, isWithinInterval, parseISO, startOfWeek } = dateFns;
+
     function getTimezoneDate(date = null) {
       const wpTimezone = `<?= wp_timezone_string() ?>`;
       const today = date ? date : new Date();
@@ -85,13 +87,15 @@ $unique_id = uniqid();
       <?php endif; ?>
 
       <?php if( $settings['view_mode'] === 'today' ) : ?>
-        let todayOpeningHours = getTodayOpeningHours(weeklyOpeningHours);
+        const todayData = getTodayOpeningHours(weeklyOpeningHours);
+        centerHours.html(`
+          <div class="value">${todayData.value}</div>
+          ${todayData.title ? `<div class="reason">${todayData.title}</div>` : '' }
+        `);
       <?php endif; ?>
     }
 
     const getOpeningHoursForNext7Days = (openingHours) => {
-      const { addDays, format, isWithinInterval, parseISO, startOfWeek } = dateFns;
-
       const next7Days = Array.from({ length: 7 }, (_, i) =>
         addDays(startOfWeek(todayDate, { weekStartsOn: 1 }), i)
       );
@@ -195,10 +199,16 @@ $unique_id = uniqid();
     }
 
     function getTodayOpeningHours(data) {
-      const dayName = todayDate.toLocaleDateString('en-US', { weekday: 'short', timeZone: 'UTC' }).toLowerCase();
-      const dayIndex = getIndexByDay(dayName);
-      console.log('data', data);
-      console.log('today data', data[dayIndex]);
+      let dayIndex = getIndexByDay(format(todayDate, "eee").toLowerCase());
+      const todayData = data[dayIndex];
+      console.log('todayData', todayData);
+      const returnData = {
+        value: todayData.hours ? `${eyeonFormatTime(todayData.hours.start)} - ${eyeonFormatTime(todayData.hours.end)}` : 'Closed',
+      };
+      if(todayData.title) {
+        returnData.title = todayData.title;
+      }
+      return returnData;
     }
 
     function getIndexByDay(day) {
