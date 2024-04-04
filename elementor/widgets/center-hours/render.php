@@ -89,8 +89,10 @@ $unique_id = uniqid();
       <?php if( $settings['view_mode'] === 'today' ) : ?>
         const todayData = getTodayOpeningHours(weeklyOpeningHours);
         centerHours.html(`
-          <div class="value">${todayData.value}</div>
-          ${todayData.title ? `<div class="reason">${todayData.title}</div>` : '' }
+          <div class="values">
+            <div class="value">${todayData.value}</div>
+            ${todayData.title ? `<div class="reason">${todayData.title}</div>` : '' }
+          </div>
         `);
       <?php endif; ?>
     }
@@ -202,12 +204,11 @@ $unique_id = uniqid();
       let dayIndex = getIndexByDay(format(todayDate, "eee").toLowerCase());
       const todayData = data[dayIndex];
       console.log('todayData', todayData);
+
       const returnData = {
-        value: todayData.hours ? `${eyeonFormatTime(todayData.hours.start)} - ${eyeonFormatTime(todayData.hours.end)}` : 'Closed',
+        value: todayData.hours ? `${todayData.type!=='irregular'?'Open Today<br>':''}${eyeonFormatTime(todayData.hours.start)} - ${eyeonFormatTime(todayData.hours.end)}` : 'Closed Today',
+        title: todayData.title || ''
       };
-      if(todayData.title) {
-        returnData.title = todayData.title;
-      }
       return returnData;
     }
 

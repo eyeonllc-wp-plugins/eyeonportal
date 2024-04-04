@@ -140,6 +140,9 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
         'selectors' => [
           '{{WRAPPER}} .eyeon-center-hours .center-hours' => 'gap: {{SIZE}}{{UNIT}};',
         ],
+        'condition' => [
+          'view_mode' => 'week',
+        ],
       ]
     );
 
