@@ -518,10 +518,8 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    gap: 0;
   }
   #eyeonstore-single .eyeon-store .mcd-store-cols .mcd-retailer-details .eyeon-retailer-details-cols .mcd-retailer-opening-hours {
-    max-width: 220px;
     -webkit-box-flex: 0;
         -ms-flex: 0 0 auto;
             flex: 0 0 auto;
