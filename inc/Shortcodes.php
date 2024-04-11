@@ -340,7 +340,7 @@ if( !class_exists('MCDShortcodes') ) {
 				if( $this->mcd_settings['stores_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['stores_single_page_custom_title'];
 				} else {
-					$this->page_title = $this->mcd_settings['mycenterstore']['name'];
+					$this->page_title = @$this->mcd_settings['mycenterstore']['name'];
 				}
 
 				$req_url = MCD_API_MAP_CONFIG.'?center='.$this->mcd_settings['center_id'];
