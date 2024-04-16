@@ -66,7 +66,7 @@ $unique_id = uniqid();
       centerHours.empty();
 
       const weeklyOpeningHours = getOpeningHoursForNext7Days(data);
-      const formattedOpeningHours = formatOpeningHours(weeklyOpeningHours);
+      let formattedOpeningHours = formatOpeningHours(weeklyOpeningHours);
       if( settings.combine_days === 'yes' ) {
         formattedOpeningHours = combineCenterHoursDays(formattedOpeningHours);
       }
