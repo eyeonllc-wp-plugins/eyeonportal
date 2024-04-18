@@ -37,6 +37,8 @@ define( 'MCD_PLUGIN_URL', plugins_url( '', __FILE__ ).'/' );
 $plugin_data = get_file_data(MCD_PLUGIN_PATH.'eyeonportal.php', array("version"=>"Version"));
 define('MCD_PLUGIN_VERSION', $plugin_data['version']);
 
+define('THREEJS_MAP_VERSION', '0.0.0');
+
 // API to get data from mycenterdeals portal
 $api_base_url = 'https://web-backend-prod.eyeonportal.com/';
 if( isset($mcd_settings['mcd_site_mode']) ) {

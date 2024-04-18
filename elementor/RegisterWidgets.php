@@ -32,8 +32,8 @@ function eyeon_elementor_scripts() {
   
   wp_register_script( 'eyeon-date-fns', mcd_version_url( 'assets/plugins/date-fns.min.js' ) );
 
-  wp_register_script( 'eyeon-map', mcd_version_url( 'elementor/widgets/map/assets/main.js' ) );
-  wp_register_style( 'eyeon-map', mcd_version_url( 'elementor/widgets/map/assets/main.css' ) );
+  wp_register_script( 'eyeon-map', mcd_version_url( 'assets/map-releases/'.THREEJS_MAP_VERSION.'/main.js' ) );
+  wp_register_style( 'eyeon-map', mcd_version_url( 'assets/map-releases/'.THREEJS_MAP_VERSION.'/main.css' ) );
 }
 add_action( 'wp_enqueue_scripts', 'eyeon_elementor_scripts' );
 
