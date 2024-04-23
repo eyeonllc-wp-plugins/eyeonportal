@@ -5,9 +5,14 @@ $filtered_settings = array_intersect_key($settings, array_flip([
 ]));
 $unique_id = uniqid();
 
+$center_id = $mcd_settings['center_id'];
+if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']) ) {
+  $center_id = $settings['custom_center_id'];  
+}
+
 $mapboxProps = array(
   'config' => Array(
-    'CENTER_ID' => $mcd_settings['center_id'],
+    'CENTER_ID' => $center_id,
     'ROLE' => 'WP_SITE',
     // 'KIOSK' => '',
     // 'STYLE' => '2D',

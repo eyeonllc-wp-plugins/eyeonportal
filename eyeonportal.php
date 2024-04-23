@@ -9,6 +9,8 @@ Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
 */
 
+define('THREEJS_MAP_VERSION', '0.0.118');
+
 require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
@@ -36,8 +38,6 @@ define( 'MCD_PLUGIN_URL', plugins_url( '', __FILE__ ).'/' );
 
 $plugin_data = get_file_data(MCD_PLUGIN_PATH.'eyeonportal.php', array("version"=>"Version"));
 define('MCD_PLUGIN_VERSION', $plugin_data['version']);
-
-define('THREEJS_MAP_VERSION', '0.0.0');
 
 // API to get data from mycenterdeals portal
 $api_base_url = 'https://web-backend-prod.eyeonportal.com/';

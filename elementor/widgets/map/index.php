@@ -68,6 +68,14 @@ class EyeOn_Map_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+    $this->add_control(
+			'custom_center_id',
+			[
+				'label' => esc_html__( 'CENTER ID', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+			]
+		);
+
     $this->end_controls_section();
 
   }
