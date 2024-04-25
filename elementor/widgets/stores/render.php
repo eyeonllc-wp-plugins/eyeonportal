@@ -14,6 +14,11 @@ $fields = [
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
 
+$center_id = $mcd_settings['center_id'];
+if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']) ) {
+  $center_id = $settings['custom_center_id'];  
+}
+
 // eyeon_debug($filtered_settings, false);
 ?>
 
@@ -116,7 +121,7 @@ $unique_id = uniqid();
         method: 'GET',
         dataType: 'json',
         headers: {
-          center_id: '<?= $mcd_settings['center_id'] ?>'
+          center_id: '<?= $center_id ?>'
         },
         success: function (response) {
           if (response.items) {
@@ -151,7 +156,7 @@ $unique_id = uniqid();
         method: 'GET',
         dataType: 'json',
         headers: {
-          center_id: '<?= $mcd_settings['center_id'] ?>'
+          center_id: '<?= $center_id ?>'
         },
         success: function (response) {
           if (response.items) {

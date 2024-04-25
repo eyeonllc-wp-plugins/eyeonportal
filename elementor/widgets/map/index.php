@@ -73,6 +73,7 @@ class EyeOn_Map_Widget extends \Elementor\Widget_Base {
 			[
 				'label' => esc_html__( 'CENTER ID', EYEON_NAMESPACE ),
 				'type' => \Elementor\Controls_Manager::TEXT,
+        'description' => 'Override the Center ID you have in plugin settings.'
 			]
 		);
 

@@ -214,6 +214,16 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       ]
     );
 
+
+    $this->add_control(
+			'custom_center_id',
+			[
+				'label' => esc_html__( 'CENTER ID', EYEON_NAMESPACE ),
+				'type' => \Elementor\Controls_Manager::TEXT,
+        'description' => 'Override the Center ID you have in plugin settings.'
+			]
+		);
+
     $this->end_controls_section();
 
     include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
