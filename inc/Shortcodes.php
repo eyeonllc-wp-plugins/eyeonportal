@@ -336,7 +336,8 @@ if( !class_exists('MCDShortcodes') ) {
 			} elseif ( array_key_exists( 'mycenterstore', $wp_query->query_vars ) ) {
 				$this->template = 'templates/stores/single.php';
 				$req_url = MCD_API_STORES.'/'.get_query_var('mycenterstore', 0);
-				$this->mcd_settings['mycenterstore'] = mcd_api_data($req_url);
+        $custom_center_id = (isset($_GET['c']) && !empty(['c'])) ? $_GET['c'] : null;
+				$this->mcd_settings['mycenterstore'] = mcd_api_data($req_url, $custom_center_id);
 				if( $this->mcd_settings['stores_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['stores_single_page_custom_title'];
 				} else {

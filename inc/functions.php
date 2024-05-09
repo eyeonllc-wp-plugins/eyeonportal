@@ -50,13 +50,13 @@ function mcd_image_url($url = '') {
 	return MCD_PLUGIN_URL.'assets/img/blank.gif';
 }
 
-function mcd_api_data($url) {
+function mcd_api_data($url, $center_id = null) {
   global $mcd_settings;
 	$url .= (strpos($url, '?')?'&':'?').'time='.time();
 	$args = array(
 		'sslverify' => false,
     'headers' => array(
-      'center_id' => $mcd_settings['center_id'],
+      'center_id' => $center_id===null ? $mcd_settings['center_id']: $center_id,
       'Origin' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
     ),
 	);

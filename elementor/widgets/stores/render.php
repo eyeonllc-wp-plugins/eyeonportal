@@ -14,9 +14,11 @@ $fields = [
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
 
+$custom_center_id = null;
 $center_id = $mcd_settings['center_id'];
 if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']) ) {
-  $center_id = $settings['custom_center_id'];  
+  $center_id = $settings['custom_center_id'];
+  $custom_center_id = $center_id;
 }
 
 // eyeon_debug($filtered_settings, false);
@@ -223,7 +225,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
       if( retailers.length > 0 ) {
         retailers.forEach(retailer => {
           const retailerItem = $(`
-            <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}" class="store store-${retailer.id}">
+            <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}<?= ($custom_center_id!==null?'?c='.$custom_center_id:'') ?>" class="store store-${retailer.id}">
               <div class="image ${(settings.featured_image === 'show')?'show-featured-image':''}">
                 <img class="retailer-logo" src="${retailer.media.url}" alt="${retailer.name}" />
                 ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
