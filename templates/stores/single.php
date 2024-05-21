@@ -20,7 +20,11 @@ $store_url = mcd_single_page_url('mycenterstore');
 
 <div id="eyeonstore-single" class="mycenterdeals-wrapper">
 	<?php if( isset( $mycenterstore['error'] ) ) : ?>
-		<div class="mcd-alert"><?= $mycenterstore['error'] ?></div>
+    <?php if( isset( $mycenterstore['error']['description'] ) ) : ?>
+      <div class="mcd-alert"><?= $mycenterstore['error']['description'] ?></div>
+    <?php else: ?>
+      <div class="mcd-alert"><?= $mycenterstore['error'] ?></div>
+    <?php endif; ?>
 	<?php else: ?>
 		<div class="eyeon-store clearfix">
 			<div class="mcd-prev-next-nav">
