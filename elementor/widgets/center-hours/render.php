@@ -64,7 +64,7 @@ $unique_id = uniqid();
     function renderHours(data) {
       eyeonCenterHours.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
       centerHours.empty();
-
+      
       const weeklyOpeningHours = getOpeningHoursForNext7Days(data);
       let formattedOpeningHours = formatOpeningHours(weeklyOpeningHours);
       if( settings.combine_days === 'yes' ) {
@@ -114,7 +114,7 @@ $unique_id = uniqid();
           })
         );
         const irregularOpening = openingHours.irregular_openings.find(
-          (io) => parseISO(io.start_date).getDate() === day.getDate()
+          (io) => parseISO(io.start_date).getTime() === day.getTime()
         );
         const childSet = childSets.find((set) =>
           isWithinInterval(day, {
@@ -172,32 +172,40 @@ $unique_id = uniqid();
     }
 
     function combineCenterHoursDays(data) {
-      let combinedArray = [];
+      const groupedHours = [];
+      let currentGroup = {
+        startDay: data[0].day,
+        endDay: data[0].day,
+        value: data[0].value,
+        title: data[0].title || '',
+      };
 
-      data.forEach((item) => {
-        const existingItem = combinedArray.find(
-          (combinedItem) => combinedItem.value === item.value
-        );
-
-        if (existingItem) {
-          if (existingItem.days && !existingItem.days.includes(item.day)) {
-            existingItem.days.push(item.day);
-          }
+      for (let i = 1; i < data.length; i++) {
+        const currentDay = data[i];
+        if (currentDay.value === currentGroup.value) {
+          currentGroup.endDay = currentDay.day;
         } else {
-          combinedArray.push({ ...item, days: [item.day] });
+          groupedHours.push(currentGroup);
+          currentGroup = {
+            startDay: currentDay.day,
+            endDay: currentDay.day,
+            value: currentDay.value,
+            title: currentDay.title || ''
+          };
         }
+      }
+      groupedHours.push(currentGroup);
+
+      const combinedHours = groupedHours.map(group => {
+        const outputGroup ={
+          day: group.startDay === group.endDay ? group.startDay : `${group.startDay}-${group.endDay}`,
+          value: group.value
+        }
+        if( group.title ) outputGroup.title = group.title;
+        return outputGroup;
       });
 
-      combinedArray = combinedArray.map((item) => {
-        const daysRange = item.days;
-        delete item.days;
-        if(daysRange.length > 1 ) {
-          return {...item, day: daysRange[0]+' - '+daysRange[daysRange.length-1]};  
-        }
-        return item;
-      });
-
-      return combinedArray;
+      return combinedHours;
     }
 
     function getTodayOpeningHours(data) {
