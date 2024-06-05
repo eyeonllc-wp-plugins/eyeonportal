@@ -2,10 +2,10 @@ jQuery(function ($) {
   elementor.hooks.addAction('panel/open_editor/widget', function (panel, model, view) {
     const widgetName = model.attributes.widgetType;
 
-    if (widgetName === 'eyeon_stores_widget') {
-      const categoriesSelect2 = $('.elementor-control-retailer_categories select');
+    if (widgetName === 'eyeon_events_widget') {
+      const categoriesSelect2 = $('.elementor-control-event_categories select');
 
-      const selectedCategories = model.attributes.settings.attributes.retailer_categories.map(function (item) {
+      const selectedCategories = model.attributes.settings.attributes.event_categories.map(function (item) {
         return parseInt(item);
       });
 
@@ -14,7 +14,6 @@ jQuery(function ($) {
         data: {
           limit: 100,
           page: 1,
-          group: true
         },
         method: 'GET',
         dataType: 'json',
@@ -22,10 +21,11 @@ jQuery(function ($) {
           center_id: categoriesCustomData.center_id
         },
         success: function (response) {
+          // categoriesSelect2.append(new Option(item.title, item.id, false, selected));
           if (response.items) {
             $.each(response.items, function (index, item) {
               const selected = selectedCategories.includes(item.id);
-              const option = new Option(item.name, item.id, false, selected)
+              const option = new Option(item.title, item.id, false, selected)
               categoriesSelect2.append(option);
             });
             categoriesSelect2.trigger('change');

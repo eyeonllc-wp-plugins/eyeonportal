@@ -8,6 +8,7 @@ $fields = [
   'event_excerpt',
   'event_metadata',
   'event_ongoing_dates',
+  'event_category',
   'no_results_found_text',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
@@ -71,9 +72,15 @@ $unique_id = uniqid();
         var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
         limit = Math.min(remainingLimit, defaultLimit);
       }
+
+      const event_category = parseInt(settings.event_category);
+      const apiParams = {limit, page};
+      if(event_category === 0 ) apiParams.ongoing = true;
+      if(event_category > 0 ) apiParams.category_ids = [event_category];
+
       $.ajax({
         url: "<?= MCD_API_EVENTS ?>",
-        data: { limit, page },
+        data: apiParams,
         method: 'GET',
         dataType: 'json',
         headers: {

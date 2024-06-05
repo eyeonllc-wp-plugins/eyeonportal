@@ -34,6 +34,20 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     ];
 	}
 
+  private function get_categories_from_api() {
+    $eventCategoriesResp = mcd_api_data(MCD_API_EVENTS.'/categories');
+    $options = array(
+      -1 => 'All',
+      0 => 'On-Going',
+    );
+    if( isset($eventCategoriesResp['items']) & count($eventCategoriesResp['items'])>0 ) {
+      foreach( $eventCategoriesResp['items'] as $category ) {
+        $options[$category['id']] = $category['title'];
+      }
+    }
+    return $options;
+  }
+
   protected function render() {
     global $mcd_settings;
     include dirname(__FILE__) . '/render.php';
@@ -184,13 +198,6 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-			'hr_2',
-			[
-				'type' => \Elementor\Controls_Manager::DIVIDER,
-			]
-		);
-
-    $this->add_control(
       'external_event_new_tab',
       [
         'label' => esc_html__( 'External Events in New Tab', EYEON_NAMESPACE ),
@@ -199,6 +206,38 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
         'return_value' => 'yes',
         'default' => 'yes',
+      ]
+    );
+
+    $this->add_control(
+			'hr_2',
+			[
+				'type' => \Elementor\Controls_Manager::DIVIDER,
+			]  
+		);
+
+    // $this->add_control(
+    //   'event_categories',
+    //   [
+    //     'label' => __( 'Categories', EYEON_NAMESPACE ),
+    //     'type' => \Elementor\Controls_Manager::SELECT2,
+    //     'options' => [],
+    //     'default' => [],
+    //     'multiple' => true,
+    //     'label_block' => true,
+    //     'frontend_available' => true,
+    //   ]
+    // );
+
+    $this->add_control(
+      'event_category',
+      [
+        'label' => __( 'Category Filter', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'options' => $this->get_categories_from_api(),
+        'default' => -1,
+        'label_block' => true,
+        'frontend_available' => true,
       ]
     );
 
