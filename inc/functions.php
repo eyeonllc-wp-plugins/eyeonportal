@@ -97,7 +97,7 @@ function mcd_single_page_url($var) {
 }
 
 function get_current_url() {
-	return $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+	return ($_SERVER['HTTPS']==='on'?'https':'http')."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }
 
 function make_excerpt($post_content) {
