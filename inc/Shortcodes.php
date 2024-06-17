@@ -331,7 +331,7 @@ if( !class_exists('MCDShortcodes') ) {
 				if( $this->mcd_settings['deals_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['deals_single_page_custom_title'];
 				} else {
-					$this->page_title = $this->mcd_settings['mycenterdeal']['title'];
+					$this->page_title = @$this->mcd_settings['mycenterdeal']['title'];
 				}
 			} elseif ( array_key_exists( 'mycenterstore', $wp_query->query_vars ) ) {
 				$this->template = 'templates/stores/single.php';

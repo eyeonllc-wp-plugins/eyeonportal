@@ -17,7 +17,11 @@ if( isset($mycenterdeal['next']) ) {
 
 <div id="eyeondeal-single" class="mycenterdeals-wrapper">
 	<?php if( isset( $mycenterdeal['error'] ) ) : ?>
-		<div class="mcd-alert"><?= $mycenterdeal['error'] ?></div>
+		<?php if( isset( $mycenterdeal['error']['description'] ) ) : ?>
+      <div class="mcd-alert"><?= $mycenterdeal['error']['description'] ?></div>
+    <?php else: ?>
+      <div class="mcd-alert"><?= $mycenterdeal['error'] ?></div>
+    <?php endif; ?>
 	<?php else: ?>
 		<div class="eyeon-deal clearfix">
 			<div class="mcd-prev-next-nav">

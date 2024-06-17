@@ -110,7 +110,7 @@ $store_url = mcd_single_page_url('mycenterstore');
                 <div class="hours-set">
                   <div class="day"><?= $day ?></div>
                   <div class="time">
-                    <?php if( $mycenterstore['opening_hours'][$key]['isClosed'] ) : ?>
+                    <?php if( @$mycenterstore['opening_hours'][$key]['isClosed'] ) : ?>
                       Closed
                     <?php else: ?>
                       <?= eyeon_format_time($mycenterstore['opening_hours'][$key]['startTime']) ?> - <?= eyeon_format_time($mycenterstore['opening_hours'][$key]['endTime']) ?>

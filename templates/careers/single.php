@@ -17,7 +17,11 @@ if( isset($mycentercareer['next']) ) {
 
 <div class="mycenterdeals-wrapper mycentercareer">
 	<?php if( isset( $mycentercareer['error'] ) ) : ?>
-		<div class="mcd-alert"><?= $mycentercareer['error'] ?></div>
+		<?php if( isset( $mycentercareer['error']['description'] ) ) : ?>
+      <div class="mcd-alert"><?= $mycentercareer['error']['description'] ?></div>
+    <?php else: ?>
+      <div class="mcd-alert"><?= $mycentercareer['error'] ?></div>
+    <?php endif; ?>
 	<?php else: ?>
 		<div id="mcd-career" class="clearfix">
 			<div class="mcd-prev-next-nav">

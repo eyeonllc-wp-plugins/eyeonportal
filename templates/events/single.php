@@ -35,7 +35,11 @@ if( isset($mycenterevent['next']) ) {
 
 <div id="eyeonevent-single" class="mycenterdeals-wrapper">
 	<?php if( isset( $mycenterevent['error'] ) ) : ?>
-		<div class="mcd-alert"><?= $mycenterevent['error'] ?></div>
+		<?php if( isset( $mycenterevent['error']['description'] ) ) : ?>
+      <div class="mcd-alert"><?= $mycenterevent['error']['description'] ?></div>
+    <?php else: ?>
+      <div class="mcd-alert"><?= $mycenterevent['error'] ?></div>
+    <?php endif; ?>
 	<?php else: ?>
 		<div class="eyeon-event clearfix">
 			<div class="mcd-event-cols">
