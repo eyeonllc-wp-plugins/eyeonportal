@@ -75,8 +75,11 @@ $unique_id = uniqid();
 
       const event_category = parseInt(settings.event_category);
       const apiParams = {limit, page};
-      if(event_category === 0 ) apiParams.ongoing = true;
-      if(event_category > 0 ) apiParams.category_ids = [event_category];
+      if(event_category === 999999 ) {
+        apiParams.ongoing = true;
+      } else if(event_category > 0 ) {
+        apiParams.category_ids = [event_category];
+      }
 
       $.ajax({
         url: "<?= MCD_API_EVENTS ?>",
@@ -193,7 +196,8 @@ $unique_id = uniqid();
       var upcomingOccurrence = null;
       if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
         var rruleStringParts = event.repeat_rrule.split('Z\n');
-        var rule = rrule.RRule.fromString(rruleStringParts[1]);
+        // var rule = rrule.RRule.fromString(rruleStringParts[1]);
+        var rule = rrule.RRule.fromString(event.repeat_rrule);
         console.log('%c'+event.title+' - %c'+rule.toText(), 'font-size: 14px; font-family: system-ui;', 'font-size: 14px; font-weight: bold; font-style: italic; border: 1px solid rgba(255,255,255,0.5); padding: 3px 6px; background-color: rgba(255,255,255,0.1); border-radius: 4px; font-family: system-ui;');
 
         // Get occurrences within a certain time range (adjust as needed)
