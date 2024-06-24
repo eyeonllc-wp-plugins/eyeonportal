@@ -46,6 +46,8 @@ $unique_id = uniqid();
   jQuery(document).ready(function($) {
     const settings = <?= json_encode($filtered_settings) ?>;
 
+    const wpTimezone = `<?= wp_timezone_string() ?>`;
+    
     const eyeonEvents = $('#eyeon-events-<?= $unique_id ?>');
     const categoryList = $('#categories-<?= $unique_id ?>');
     const categoryDropdownList = $('#categories-dropdown-<?= $unique_id ?>');
@@ -57,12 +59,18 @@ $unique_id = uniqid();
     let categories = [];
 
     function getTimezoneDate(date = null) {
-      const wpTimezone = `<?= wp_timezone_string() ?>`;
       const today = date ? date : new Date();
       return new Date(today.toLocaleString('en-US', { timeZone: wpTimezone }));
     }
-    
+
+    function addMinutesToDate(date, minutes) {
+      const newDate = new Date(date.getTime());
+      newDate.setTime(newDate.getTime() + minutes * 60 * 1000);
+      return newDate;
+    }
+
     var todayDate = getTimezoneDate();
+    const timezoneOffsetInMinutes = todayDate.getTimezoneOffset();
 
     fetch_events();
 
@@ -195,16 +203,18 @@ $unique_id = uniqid();
     function parseAndFindUpcoming(event) {
       var upcomingOccurrence = null;
       if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
-        var rruleStringParts = event.repeat_rrule.split('Z\n');
-        var rule = rrule.RRule.fromString(rruleStringParts[1]);
-        // var rule = rrule.RRule.fromString(event.repeat_rrule);
+        var rule = rrule.RRule.fromString(event.repeat_rrule);
         console.log('%c'+event.title+' - %c'+rule.toText(), 'font-size: 14px; font-family: system-ui;', 'font-size: 14px; font-weight: bold; font-style: italic; border: 1px solid rgba(255,255,255,0.5); padding: 3px 6px; background-color: rgba(255,255,255,0.1); border-radius: 4px; font-family: system-ui;');
 
         // Get occurrences within a certain time range (adjust as needed)
-        var occurrences = rule.between(todayDate, getTimezoneDate(new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)));
+        var occurrences = rule.between(
+          new Date(),
+          new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)
+        );
+        var occurrencesInTimezone = occurrences.map(date => addMinutesToDate(date, timezoneOffsetInMinutes));
 
         // Find the next occurrence after the current date
-        upcomingOccurrence = occurrences.find(function (occurrence) {
+        upcomingOccurrence = occurrencesInTimezone.find(function (occurrence) {
           return occurrence >= todayDate;
         });
       }

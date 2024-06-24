@@ -22,6 +22,7 @@ function eyeon_elementor_scripts() {
   wp_register_style( 'eyeon-elementor-style', mcd_version_url( 'assets/css/elementor.min.css' ) );
 
   wp_register_script( 'eyeon-moment', mcd_version_url( 'assets/plugins/calendar/moment.min.js' ) );
+  // wp_register_script( 'eyeon-moment-timezone', mcd_version_url( 'assets/plugins/calendar/moment-timezone.min.js' ) );
   wp_register_script( 'eyeon-elementor-utils', mcd_version_url( 'elementor/js/utils.js' ) );
 
   wp_register_script( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/owl.carousel.min.js' ) );

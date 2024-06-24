@@ -21,6 +21,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
 		return [
       'eyeon-rrule',
       'eyeon-moment',
+      'eyeon-moment-timezone',
       'eyeon-elementor-utils',
       'eyeon-owl-carousel',
     ];
