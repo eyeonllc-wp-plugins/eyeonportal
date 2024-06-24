@@ -5,6 +5,7 @@ $fields = [
   'fetch_limit',
   'show_post_date',
   'show_excerpt',
+  'news_category',
   'no_results_found_text',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
@@ -62,10 +63,12 @@ $unique_id = uniqid();
         var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
         limit = Math.min(remainingLimit, defaultLimit);
       }
+
+      const news_category = parseInt(settings.news_category);
       const ajaxData = {
         limit,
         page,
-        category_ids: [],
+        category_ids: (news_category > 0 ) ? [news_category]: [],
         tag_ids: [],
         sortColumn: 'post_date',
         sortOrder: 'DESC',

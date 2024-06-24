@@ -33,6 +33,19 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
     ];
   }
 
+  private function get_categories_from_api() {
+    $categoriesResp = mcd_api_data(MCD_API_NEWS.'/categories');
+    $options = array(
+      -1 => 'All',
+    );
+    if( isset($categoriesResp['items']) & count($categoriesResp['items'])>0 ) {
+      foreach( $categoriesResp['items'] as $category ) {
+        $options[$category['id']] = $category['name'];
+      }
+    }
+    return $options;
+  }
+
   protected function render() {
     global $mcd_settings;
     include dirname(__FILE__) . '/render.php';
@@ -153,6 +166,18 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
       'hr_1',
       [
         'type' => \Elementor\Controls_Manager::DIVIDER,
+      ]
+    );
+
+    $this->add_control(
+      'news_category',
+      [
+        'label' => __( 'Filter by Category', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'options' => $this->get_categories_from_api(),
+        'default' => -1,
+        'label_block' => true,
+        'frontend_available' => true,
       ]
     );
 

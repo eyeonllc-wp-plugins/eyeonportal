@@ -232,7 +232,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     $this->add_control(
       'event_category',
       [
-        'label' => __( 'Category Filter', EYEON_NAMESPACE ),
+        'label' => __( 'Filter by Category', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
         'options' => $this->get_categories_from_api(),
         'default' => -1,
