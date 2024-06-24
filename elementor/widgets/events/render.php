@@ -154,7 +154,7 @@ $unique_id = uniqid();
 
         if( item.ongoing_event ) {
           item.categories.push({
-            id: 9999,
+            id: 999999,
             title: 'On-Going'
           });
         }

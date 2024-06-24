@@ -36,7 +36,7 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
   private function get_categories_from_api() {
     $categoriesResp = mcd_api_data(MCD_API_NEWS.'/categories');
     $options = array(
-      -1 => 'All',
+      0 => 'All',
     );
     if( isset($categoriesResp['items']) & count($categoriesResp['items'])>0 ) {
       foreach( $categoriesResp['items'] as $category ) {
@@ -175,7 +175,7 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
         'label' => __( 'Filter by Category', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
         'options' => $this->get_categories_from_api(),
-        'default' => -1,
+        'default' => 0,
         'label_block' => true,
         'frontend_available' => true,
       ]

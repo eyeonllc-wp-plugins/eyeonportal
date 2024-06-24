@@ -37,8 +37,8 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
   private function get_categories_from_api() {
     $eventCategoriesResp = mcd_api_data(MCD_API_EVENTS.'/categories');
     $options = array(
-      -1 => 'All',
-      0 => 'On-Going',
+      0 => 'All',
+      999999 => 'On-Going',
     );
     if( isset($eventCategoriesResp['items']) & count($eventCategoriesResp['items'])>0 ) {
       foreach( $eventCategoriesResp['items'] as $category ) {
@@ -235,7 +235,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'label' => __( 'Filter by Category', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
         'options' => $this->get_categories_from_api(),
-        'default' => -1,
+        'default' => 0,
         'label_block' => true,
         'frontend_available' => true,
       ]
