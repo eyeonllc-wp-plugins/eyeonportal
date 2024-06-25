@@ -208,7 +208,7 @@ $unique_id = uniqid();
 
         // Get occurrences within a certain time range (adjust as needed)
         var occurrences = rule.between(
-          new Date(),
+          new Date(todayDate.getTime() - 2 * 24 * 60 * 60 * 1000),
           new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)
         );
         var occurrencesInTimezone = occurrences.map(date => addMinutesToDate(date, timezoneOffsetInMinutes));

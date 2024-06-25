@@ -22,14 +22,13 @@ function eyeon_elementor_scripts() {
   wp_register_style( 'eyeon-elementor-style', mcd_version_url( 'assets/css/elementor.min.css' ) );
 
   wp_register_script( 'eyeon-moment', mcd_version_url( 'assets/plugins/calendar/moment.min.js' ) );
-  // wp_register_script( 'eyeon-moment-timezone', mcd_version_url( 'assets/plugins/calendar/moment-timezone.min.js' ) );
   wp_register_script( 'eyeon-elementor-utils', mcd_version_url( 'elementor/js/utils.js' ) );
 
   wp_register_script( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/owl.carousel.min.js' ) );
   wp_register_style( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/assets/owl.carousel.min.css' ) );
   wp_register_style( 'eyeon-owl-carousel-theme', mcd_version_url( 'assets/plugins/owl/assets/owl.theme.default.min.css' ) );
   
-  wp_register_script( 'eyeon-rrule', mcd_version_url( 'assets/plugins/calendar/rrule.min.js' ), array('jquery'), null, array('strategy'  => 'defer'));
+  wp_register_script( 'eyeon-rrule', mcd_version_url( 'assets/plugins/rrule/rrule.min.js' ), array('jquery'), null, array('strategy'  => 'defer'));
   
   wp_register_script( 'eyeon-date-fns', mcd_version_url( 'assets/plugins/date-fns.min.js' ) );
 
