@@ -78,6 +78,9 @@
 .mycenterdeals-wrapper .hide {
   display: none !important;
 }
+.mycenterdeals-wrapper .editor_output {
+  word-break: break-word;
+}
 .mycenterdeals-wrapper .editor_output a {
   color: var(--mcdAccentColor);
 }
@@ -721,6 +724,24 @@
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-description {
   line-height: 24px;
   margin-bottom: 20px;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-media-gallery {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-media-gallery .image {
+  position: relative;
+  padding-top: 100%;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-media-gallery .image img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-add-to-calendar {
   margin-bottom: 20px;

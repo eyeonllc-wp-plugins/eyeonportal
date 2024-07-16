@@ -70,6 +70,8 @@
   }
 
   .editor_output {
+    word-break: break-word;
+
     a {
       color: var(--mcdAccentColor);
 
