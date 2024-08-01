@@ -9,6 +9,7 @@
 
         .mcd-event-image {
           position: relative;
+          margin-bottom: 20px;
 
           &:before {
             content: '';
@@ -29,6 +30,26 @@
             height: 100%;
             object-fit: cover;
             z-index: 1;
+          }
+        }
+
+        .event-media-gallery {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          grid-gap: 20px;
+
+          .image {
+            position: relative;
+            padding-top: 100%;
+
+            img {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              inset: 0;
+              object-fit: cover;
+              cursor: pointer;
+            }
           }
         }
       }
@@ -59,26 +80,6 @@
         .mcd-event-description {
           line-height: 24px;
           margin-bottom: 20px;
-        }
-
-        .event-media-gallery {
-          display: grid;
-          grid-template-columns: repeat(6, 1fr);
-          grid-gap: 10px;
-          margin-bottom: 20px;
-
-          .image {
-            position: relative;
-            padding-top: 100%;
-
-            img {
-              position: absolute;
-              width: 100%;
-              height: 100%;
-              inset: 0;
-              object-fit: cover;
-            }
-          }
         }
 
         .mcd-event-add-to-calendar {

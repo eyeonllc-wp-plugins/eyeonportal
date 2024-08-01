@@ -679,6 +679,7 @@
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-image-col .mcd-event-image {
   position: relative;
+  margin-bottom: 20px;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-image-col .mcd-event-image:before {
   content: "";
@@ -699,6 +700,24 @@
   -o-object-fit: cover;
      object-fit: cover;
   z-index: 1;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-image-col .event-media-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 20px;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-image-col .event-media-gallery .image {
+  position: relative;
+  padding-top: 100%;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-image-col .event-media-gallery .image img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  -o-object-fit: cover;
+     object-fit: cover;
+  cursor: pointer;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col {
   -webkit-box-flex: 1;
@@ -724,24 +743,6 @@
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-description {
   line-height: 24px;
   margin-bottom: 20px;
-}
-#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-media-gallery {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-gap: 10px;
-  margin-bottom: 20px;
-}
-#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-media-gallery .image {
-  position: relative;
-  padding-top: 100%;
-}
-#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-media-gallery .image img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  inset: 0;
-  -o-object-fit: cover;
-     object-fit: cover;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-add-to-calendar {
   margin-bottom: 20px;

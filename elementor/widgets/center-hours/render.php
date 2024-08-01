@@ -140,13 +140,13 @@ $unique_id = uniqid();
           };
           returnData.title = irregularOpening.title;
         } else if (childSet) {
-          type: 'child',
+          returnData.type = 'child';
           returnData.hours = {
             start: childSet.days[shortDayOfWeek].start_time,
             end: childSet.days[shortDayOfWeek].end_time
           }
         } else if (primarySet) {
-          type: 'primary',
+          returnData.type = 'primary';
           returnData.hours = {
             start: primarySet.days[shortDayOfWeek].start_time,
             end: primarySet.days[shortDayOfWeek].end_time

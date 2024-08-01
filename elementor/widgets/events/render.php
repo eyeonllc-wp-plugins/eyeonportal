@@ -69,6 +69,14 @@ $unique_id = uniqid();
       return newDate;
     }
 
+    function getMinutesBetween(time1, time2) {
+      const date1 = new Date(`1970-01-01T${time1}Z`);
+      const date2 = new Date(`1970-01-01T${time2}Z`);
+      const diffInMs = Math.abs(date2 - date1);
+      const diffInMinutes = diffInMs / (1000 * 60);
+      return diffInMinutes;
+    }
+
     var todayDate = getTimezoneDate();
     const timezoneOffsetInMinutes = todayDate.getTimezoneOffset();
 
@@ -211,7 +219,13 @@ $unique_id = uniqid();
           new Date(todayDate.getTime() - 2 * 24 * 60 * 60 * 1000),
           new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)
         );
-        var occurrencesInTimezone = occurrences.map(date => addMinutesToDate(date, timezoneOffsetInMinutes));
+        let event_duration_in_minutes = 0;
+        if(!event.is_all_day_event) {
+          event_duration_in_minutes = getMinutesBetween(event.end_time, event.start_time);
+        } else {
+          event_duration_in_minutes = 60*24-1;
+        }
+        var occurrencesInTimezone = occurrences.map(date => addMinutesToDate(date, timezoneOffsetInMinutes+event_duration_in_minutes));
 
         // Find the next occurrence after the current date
         upcomingOccurrence = occurrencesInTimezone.find(function (occurrence) {

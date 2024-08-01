@@ -47,7 +47,17 @@ if( isset($mycenterevent['next']) ) {
 					<div class="mcd-event-image">
 						<img src="<?= $mycenterevent['media']['url'] ?>" />
 					</div>
-				</div>
+
+          <?php if( isset($mycenterevent['image_gallery']) && count($mycenterevent['image_gallery'])>0 ) : ?>
+            <div class="event-media-gallery hide">
+              <?php foreach( $mycenterevent['image_gallery'] as $image ) : ?>
+                <div class="image">
+                  <img src="<?= $image['media']['url'] ?>" />
+                </div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+        </div>
 
 				<div class="mcd-event-details-col">
 					<div class="mcd-event-name"><?= $mycenterevent['title'] ?></div>
@@ -68,16 +78,6 @@ if( isset($mycenterevent['next']) ) {
           <?php endif; ?>
 					
           <div class="mcd-event-description editor_output"><?= get_editor_output($mycenterevent['description']) ?></div>
-
-          <?php if( isset($mycenterevent['image_gallery']) && count($mycenterevent['image_gallery'])>0 ) : ?>
-            <div class="event-media-gallery hide">
-              <?php foreach( $mycenterevent['image_gallery'] as $image ) : ?>
-                <div class="image">
-                  <img src="<?= $image['media']['url'] ?>" />
-                </div>
-              <?php endforeach; ?>
-            </div>
-          <?php endif; ?>
 
 					<?php if( $this->mcd_settings['events_single_add_to_calendar'] ) : ?>
 					<div class="mcd-event-add-to-calendar">
