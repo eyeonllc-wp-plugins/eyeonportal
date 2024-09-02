@@ -182,7 +182,7 @@ $unique_id = uniqid();
 
       for (let i = 1; i < data.length; i++) {
         const currentDay = data[i];
-        if (currentDay.value === currentGroup.value) {
+        if (currentDay.value === currentGroup.value && currentGroup.title === (currentDay.title||'')) {
           currentGroup.endDay = currentDay.day;
         } else {
           groupedHours.push(currentGroup);
