@@ -13,9 +13,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
 $mapboxProps = array(
   'config' => Array(
     'CENTER_ID' => $center_id,
-    'ROLE' => 'WP_SITE',
-    // 'KIOSK' => '',
-    // 'STYLE' => '2D',
+    'ROLE' => 'WP_SITE'
   ),
   'webApiURI' => API_BASE_URL,
 );
