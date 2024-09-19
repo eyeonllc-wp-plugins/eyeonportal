@@ -636,6 +636,134 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->end_controls_section();
 
     // ================================================================
+    // RETAILER LOCATION
+    // ================================================================
+
+    $this->start_controls_section(
+      'retailer_location_style_settings',
+      [
+        'label' => __( 'Retailer Location', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+      ]
+    );
+
+    $this->add_control(
+      'retailer_location_position',
+      [
+        'label' => __( 'Position', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+					'left' => [
+						'title' => esc_html__( 'Left', EYEON_NAMESPACE ),
+						'icon' => 'eicon-order-start',
+					],
+					'fullwidth' => [
+						'title' => esc_html__( 'Full Width', EYEON_NAMESPACE ),
+						'icon' => 'eicon-grow',
+					],
+          'right' => [
+            'title' => __( 'Right', EYEON_NAMESPACE ),
+            'icon' => 'eicon-order-end',
+          ],
+        ],
+        'default' => 'fullwidth',
+        'toggle' => true,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => '{{VALUE}}',
+        ],
+        'selectors_dictionary' => [
+          'left' => 'left: 0; right: auto;',
+          'right' => 'left: auto; right: 0;',
+          'fullwidth' => 'left: 0; right: 0;',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'retailer_location_align',
+      [
+        'label' => __( 'Text Alignment', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::CHOOSE,
+        'options' => [
+          'left' => [
+            'title' => __( 'Left', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-left',
+          ],
+          'center' => [
+            'title' => __( 'Center', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-center',
+          ],
+          'right' => [
+            'title' => __( 'Right', EYEON_NAMESPACE ),
+            'icon' => 'eicon-text-align-right',
+          ],
+        ],
+        'default' => 'center',
+        'toggle' => true,
+        'condition' => [
+          'retailer_location_position' => 'fullwidth',
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'text-align: {{VALUE}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'retailer_location_padding',
+      [
+        'label' => __( 'Padding', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::DIMENSIONS,
+        'size_units' => [ 'px' ],
+        'default' => [
+          'top' => '4',
+          'right' => '8',
+          'bottom' => '4',
+          'left' => '8',
+          'unit' => 'px',
+          'isLinked' => false,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'retailer_location_bg_color',
+      [
+        'label' => __( 'Background Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#0000008A',
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'background-color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'retailer_location_text_color',
+      [
+        'label' => __( 'Text Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#FFFFFF',
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'retailer_location_typography',
+        'selector' => '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
     // NO RESULTS FOUND - STYLE
     // ================================================================
 

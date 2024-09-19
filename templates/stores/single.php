@@ -96,7 +96,7 @@ $store_url = mcd_single_page_url('mycenterstore');
               <?php endif; ?>
 
               <?php if( !empty($this->mcd_settings['map_page']) && $mycenterstore['mapit'] ) :
-                $map_url = get_permalink($this->mcd_settings['map_page']).$mycenterstore['slug'];
+                $map_url = get_permalink($this->mcd_settings['map_page']).$mycenterstore['slug'].'?r='.$mycenterstore['id'];
                 ?>
                 <a href="<?= $map_url ?>" class="eyeon-btn">Map IT</a>
               <?php endif; ?>

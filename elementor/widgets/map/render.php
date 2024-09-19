@@ -7,7 +7,7 @@ $unique_id = uniqid();
 
 $center_id = $mcd_settings['center_id'];
 if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']) ) {
-  $center_id = $settings['custom_center_id'];  
+  $center_id = $settings['custom_center_id'];
 }
 
 $mapboxProps = array(
@@ -18,9 +18,14 @@ $mapboxProps = array(
   'webApiURI' => API_BASE_URL,
 );
 
-$selected_store = get_query_var('mcdmapretailer', '');
-if($selected_store) {
-  $mapboxProps['config']['SELECTED_RETAILER_SLUG'] = $selected_store;
+// $selected_store_slug = get_query_var('mcdmapretailer', '');
+// if($selected_store_slug) {
+//   $mapboxProps['config']['SELECTED_RETAILER_SLUG'] = $selected_store_slug;
+// }
+
+$selected_store_id = (isset($_GET['r']) && !empty(['r'])) ? $_GET['r'] : null;
+if($selected_store_id) {
+  $mapboxProps['config']['SELECTED_RETAILER_ID'] = $selected_store_id;
 }
 
 $encodedProps = htmlspecialchars(json_encode($mapboxProps), ENT_QUOTES, 'UTF-8');

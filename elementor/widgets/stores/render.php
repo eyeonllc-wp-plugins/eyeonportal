@@ -10,6 +10,7 @@ $fields = [
   'retailer_tags',
   'featured_image',
   'no_results_found_text',
+  // 'retailer_location_position',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
@@ -219,13 +220,45 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
       });
     }
 
+    function getRepeatedGlobalRetailersIds() {
+      const retailerCount = retailers.reduce((acc, retailer) => {
+        const id = retailer.global_retailer_id;
+        acc[id] = (acc[id] || 0) + 1;
+        return acc;
+      }, {});
+
+      const multipleOccurences = Object.keys(retailerCount).filter(id => retailerCount[id] > 1).map(id => Number(id));
+      return multipleOccurences;
+    }
+
+    function getRetailerUrl(retailer, multipleLocationRetailer) {
+      let retailer_url = `<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}`;
+      let queryString = '';
+      const params = {
+        <?= ($custom_center_id!==null?'c:'.$custom_center_id:'') ?>
+      };
+      if(multipleLocationRetailer) params.r = retailer.id;
+      if (Object.keys(params).length > 0) {
+        queryString = Object.entries(params)
+          .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+          .join('&');
+
+        queryString = `?${queryString}`;
+      }
+      return `${retailer_url}${queryString}`
+    }
+
     function renderRetailers() {
       retailersList.empty();
 
+      const repeatedGlobalRetailersIds = getRepeatedGlobalRetailersIds();
+
       if( retailers.length > 0 ) {
         retailers.forEach(retailer => {
+          const multipleLocationRetailer = repeatedGlobalRetailersIds.includes(retailer.global_retailer_id);
+          
           const retailerItem = $(`
-            <a href="<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}<?= ($custom_center_id!==null?'?c='.$custom_center_id:'') ?>" class="store store-${retailer.id}">
+            <a href="${getRetailerUrl(retailer, multipleLocationRetailer)}" class="store store-${retailer.id}">
               <div class="image ${(settings.featured_image === 'show')?'show-featured-image':''}">
                 <img class="retailer-logo" src="${retailer.media.url}" alt="${retailer.name}" />
                 ${(settings.deal_flag === 'show' && retailer.deals && retailer.deals > 0) ? '<span class="deal-flag">Deal</span>' : ''}
@@ -234,6 +267,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
                     ${retailer.custom_flags.map(flag => `<li>${flag.name}</li>`).join('')}
                   </ul>
                 ` : ''}
+                ${multipleLocationRetailer ? `<span class="retailer-location">${retailer.location}</span>` : ''}
                 ${(settings.featured_image === 'show') ? `<img class="featured-image" src="${retailer.featured_image.url}" alt="${retailer.name}" />` : ''}
               </div>
             </a>

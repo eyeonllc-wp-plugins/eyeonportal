@@ -358,6 +358,18 @@
   font-size: 12px;
   line-height: 14px;
 }
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store .image .retailer-location {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5411764706);
+  color: #FFF;
+  padding: 4px 8px;
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 600;
+}
 .eyeon-stores .eyeon-wrapper .stores-list .stores.grayscale .store .image img {
   -webkit-filter: grayscale(1);
           filter: grayscale(1);
