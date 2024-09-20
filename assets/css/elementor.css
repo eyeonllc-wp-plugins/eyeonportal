@@ -178,7 +178,7 @@
 .eyeon-btn {
   background-color: #0763b1;
   border-radius: 0.25rem;
-  color: white;
+  color: white !important;
   display: inline-block;
   font-size: 1rem;
   font-weight: 500;
@@ -369,6 +369,7 @@
   font-size: 12px;
   line-height: 15px;
   font-weight: 600;
+  text-align: center;
 }
 .eyeon-stores .eyeon-wrapper .stores-list .stores.grayscale .store .image img {
   -webkit-filter: grayscale(1);

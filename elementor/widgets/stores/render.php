@@ -220,7 +220,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
       });
     }
 
-    function getRepeatedGlobalRetailersIds() {
+    function getMultipleLocationsGlobalRetailerIds() {
       const retailerCount = retailers.reduce((acc, retailer) => {
         const id = retailer.global_retailer_id;
         acc[id] = (acc[id] || 0) + 1;
@@ -251,11 +251,11 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
     function renderRetailers() {
       retailersList.empty();
 
-      const repeatedGlobalRetailersIds = getRepeatedGlobalRetailersIds();
+      const multipleLocationsGlobalRetailerIds = getMultipleLocationsGlobalRetailerIds();
 
       if( retailers.length > 0 ) {
         retailers.forEach(retailer => {
-          const multipleLocationRetailer = repeatedGlobalRetailersIds.includes(retailer.global_retailer_id);
+          const multipleLocationRetailer = multipleLocationsGlobalRetailerIds.includes(retailer.global_retailer_id);
           
           const retailerItem = $(`
             <a href="${getRetailerUrl(retailer, multipleLocationRetailer)}" class="store store-${retailer.id}">
