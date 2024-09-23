@@ -255,7 +255,6 @@ $unique_id = uniqid();
 
       if( events.length > 0 ) {
         events.forEach(event => {
-          console.log('event',event);
           const eventItem = $(`
             <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event event-${event.id}" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
               <div class="image">

@@ -53,20 +53,6 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     include dirname(__FILE__) . '/render.php';
   }
 
-  public function before_render() {
-    $settings = $this->get_settings_for_display();
-
-    if ( $settings['event_date'] === 'show' || $settings['event_time'] === 'show' ) {
-      $this->add_render_attribute( 'event_metadata_style_settings', 'style', 'display:block;' );
-      $this->add_render_attribute( 'event_metadata_direction', 'style', 'display:block;' );
-      $this->add_render_attribute( 'event_metadata_flex_spacing', 'style', 'display:block;' );
-    } else {
-      $this->add_render_attribute( 'event_metadata_style_settings', 'style', 'display:none;' );
-      $this->add_render_attribute( 'event_metadata_direction', 'style', 'display:none;' );
-      $this->add_render_attribute( 'event_metadata_flex_spacing', 'style', 'display:none;' );
-    }
-  }
-
   protected function register_controls() {
 
     $this->start_controls_section(

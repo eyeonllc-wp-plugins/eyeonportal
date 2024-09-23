@@ -757,7 +757,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       [
         'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
-        'default' => '#6ec1e4',
+        'default' => '#58a8ca',
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'background-color: {{VALUE}}',
         ],
