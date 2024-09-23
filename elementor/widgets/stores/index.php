@@ -552,6 +552,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       [
         'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#58a8ca',
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .deal-flag' => 'background-color: {{VALUE}}',
         ],
@@ -619,6 +620,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       [
         'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#58a8ca',
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .custom-flags li' => 'background-color: {{VALUE}}',
         ],
