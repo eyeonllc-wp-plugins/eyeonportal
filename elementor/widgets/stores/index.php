@@ -666,7 +666,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
             'icon' => 'eicon-order-end',
           ],
         ],
-        'default' => 'fullwidth',
+        'default' => 'left',
         'toggle' => true,
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => '{{VALUE}}',
@@ -710,6 +710,29 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_responsive_control(
+      'retailer_location_bottom',
+      [
+        'label' => __( 'Bottom', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 40,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px'],
+        'default' => [
+          'size' => '8',
+          'unit' => 'px',
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'bottom: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
       'retailer_location_padding',
       [
         'label' => __( 'Padding', EYEON_NAMESPACE ),
@@ -734,7 +757,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       [
         'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
-        'default' => '#0000008A',
+        'default' => '#6ec1e4',
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .stores-list .stores .store .image .retailer-location' => 'background-color: {{VALUE}}',
         ],

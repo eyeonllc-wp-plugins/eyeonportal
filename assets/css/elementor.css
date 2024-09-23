@@ -360,10 +360,10 @@
 }
 .eyeon-stores .eyeon-wrapper .stores-list .stores .store .image .retailer-location {
   position: absolute;
-  bottom: 0;
+  bottom: 8px;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.5411764706);
+  background-color: #6ec1e4;
   color: #FFF;
   padding: 4px 8px;
   font-size: 12px;

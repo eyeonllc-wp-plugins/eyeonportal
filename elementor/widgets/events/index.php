@@ -53,6 +53,20 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     include dirname(__FILE__) . '/render.php';
   }
 
+  public function before_render() {
+    $settings = $this->get_settings_for_display();
+
+    if ( $settings['event_date'] === 'show' || $settings['event_time'] === 'show' ) {
+      $this->add_render_attribute( 'event_metadata_style_settings', 'style', 'display:block;' );
+      $this->add_render_attribute( 'event_metadata_direction', 'style', 'display:block;' );
+      $this->add_render_attribute( 'event_metadata_flex_spacing', 'style', 'display:block;' );
+    } else {
+      $this->add_render_attribute( 'event_metadata_style_settings', 'style', 'display:none;' );
+      $this->add_render_attribute( 'event_metadata_direction', 'style', 'display:none;' );
+      $this->add_render_attribute( 'event_metadata_flex_spacing', 'style', 'display:none;' );
+    }
+  }
+
   protected function register_controls() {
 
     $this->start_controls_section(
@@ -170,9 +184,37 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'event_metadata',
+      'event_date',
       [
-        'label' => esc_html__( 'Date & Time', EYEON_NAMESPACE ),
+        'label' => esc_html__( 'Event Date', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
+      ]
+    );
+
+    $this->add_control(
+      'event_display_date',
+      [
+        'label' => __( 'Date Format', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'default' => 'upcoming',
+        'options' => [
+          'upcoming' => __( 'Upcoming Event Date', EYEON_NAMESPACE ),
+          'daterange' => __( 'Event Dates Range', EYEON_NAMESPACE ),
+        ],
+        'condition' => [
+          'event_date' => 'show',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'event_time',
+      [
+        'label' => esc_html__( 'Event Time', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
         'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
         'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
@@ -192,7 +234,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'default' => 'show',
         'frontend_available' => true,
         'condition' => [
-          'event_metadata' => 'show',
+          'event_date' => 'show',
         ],
       ]
     );
@@ -574,10 +616,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
       'event_metadata_style_settings',
       [
         'label' => esc_html__( 'Date & Time', EYEON_NAMESPACE ),
-        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-        'condition' => [
-          'event_metadata' => 'show',
-        ],
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE
       ]
     );
 
