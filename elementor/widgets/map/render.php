@@ -12,7 +12,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
 
 $mapboxProps = array(
   'config' => Array(
-    'CENTER_ID' => $center_id,
+    'CENTER_ID' => intval($center_id),
     'ROLE' => 'WP_SITE'
   ),
   'webApiURI' => API_BASE_URL,
@@ -25,7 +25,7 @@ $mapboxProps = array(
 
 $selected_store_id = (isset($_GET['r']) && !empty(['r'])) ? $_GET['r'] : null;
 if($selected_store_id) {
-  $mapboxProps['config']['SELECTED_RETAILER_ID'] = $selected_store_id;
+  $mapboxProps['config']['SELECTED_RETAILER_ID'] = intval($selected_store_id);
 }
 
 $encodedProps = htmlspecialchars(json_encode($mapboxProps), ENT_QUOTES, 'UTF-8');
