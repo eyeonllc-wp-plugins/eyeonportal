@@ -382,6 +382,9 @@
   opacity: 1;
 }
 @media (max-width: 599px) {
+  .eyeon-stores .eyeon-wrapper .stores-header .categories-sidebar-placeholder {
+    display: none;
+  }
   .eyeon-stores .eyeon-wrapper .content-cols {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
