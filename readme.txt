@@ -1,6 +1,6 @@
 === Plugin Name ===
 
-Stable tag:      0.1.13
+Stable tag:      0.1.14
 Tested up to:    6.3
 Licence:         GPLv2 or later
 Licence URI:     http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,4 +34,6 @@ You can find all the shortcodes available under plugin settings after installati
 = 0.0.1 - 29 Sep 2023 =
 
 - Launching
+
+
 
