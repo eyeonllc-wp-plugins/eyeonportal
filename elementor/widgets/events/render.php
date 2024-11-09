@@ -6,10 +6,6 @@ $fields = [
   'external_event_new_tab',
   'event_title',
   'event_excerpt',
-  'event_date',
-  'event_display_date',
-  'event_time',
-  'event_ongoing_dates',
   'event_category',
   'no_results_found_text',
 ];
@@ -257,6 +253,7 @@ $unique_id = uniqid();
 
       if( events.length > 0 ) {
         events.forEach(event => {
+          console.log('event', (event.show_event_time && !event.is_all_day_event), event);
           const eventItem = $(`
             <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event event-${event.id}" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
               <div class="image">
@@ -264,19 +261,16 @@ $unique_id = uniqid();
               </div>
               ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
               ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
-              ${ (settings.event_date === 'show' || settings.event_time === 'show') ? `
+              ${ (event.show_event_date || (event.show_event_time && !event.is_all_day_event)) ? `
                 <div class="metadata">
-                  ${ settings.event_date && (!event.ongoing_event || (event.ongoing_event && settings.event_ongoing_dates)) ? `
+                  ${ settings.show_event_date ? `
                     <div class="date">
                       <i class="far fa-calendar"></i>
-                      ${ settings.event_display_date == 'upcoming' ? `
-                        <span>${event.datesStr}</span>
-                      ` : `
-                        <span>${event.formatted_start_date} - ${event.formatted_end_date}</span>
-                      `}
+                      ${ (event.show_available_dates || event.formatted_start_date === event.formatted_end_date || event.ongoing_event) ? `<span>${event.datesStr}</span>` : '' }
+                      ${ (event.show_date_range && event.formatted_start_date !== event.formatted_end_date) ? `<span>${event.formatted_start_date} - ${event.formatted_end_date}</span>` : '' }
                     </div>
                   `: '' }
-                  ${(settings.event_time && !event.is_all_day_event) ? `
+                  ${(event.show_event_time && !event.is_all_day_event) ? `
                     <div class="time">
                       <i class="far fa-clock"></i>
                       <span>${eyeonFormatTime(event.start_time)} - ${eyeonFormatTime(event.end_time)}</span>
