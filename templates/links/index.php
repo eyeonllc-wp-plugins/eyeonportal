@@ -1,6 +1,5 @@
 <?php
-$api_call_url = MCP_API_LINKS.'?center='.$mcd_settings['center_id'];
-$links_data = mcd_api_data($api_call_url);
+$links_data = mcd_api_data(MCP_API_LINKS);
 ?>
 
 <!DOCTYPE html>
