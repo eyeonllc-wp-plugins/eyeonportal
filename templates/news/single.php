@@ -48,9 +48,11 @@ if( isset($mycenterblogpost['next']) ) {
             <?php endif; ?>
           </div>
 
+          <!--
           <div class="mcd-post-image mcd_shadow_img">
             <img src="<?= $mycenterblogpost['media']['url'] ?>" />
           </div>
+          -->
 
           <div class="mcd-post-content editor_output"><?= get_editor_output($mycenterblogpost['post_content']) ?></div>
         </div>
