@@ -89,8 +89,18 @@ $unique_id = uniqid();
       });
     }
     
-    function sortItems() {
-      deals = deals.sort(function(a, b) {
+    function filterAndSortItems() {
+      const uniqueDeals = [];
+      const seenIds = new Set();
+
+      deals.forEach(deal => {
+        if (!seenIds.has(deal.global_deal_id)) {
+          seenIds.add(deal.global_deal_id);
+          uniqueDeals.push(deal);
+        }
+      });
+
+      deals = uniqueDeals.sort(function(a, b) {
         if( settings.default_sorting === 'recently_added' ) {
           return new Date(b.created_at) - new Date(a.created_at);
         }
@@ -99,7 +109,7 @@ $unique_id = uniqid();
     }
     
     function render() {
-      sortItems();
+      filterAndSortItems();
 
       eyeonDeals.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
       dealsList.empty();

@@ -959,6 +959,18 @@
 #eyeondeal-single .eyeon-deal .mcd-deal-cols .eyeon-deal-details .mcd-deal-message {
   white-space: pre-wrap;
 }
+#eyeondeal-single .eyeon-deal .mcd-deal-cols .eyeon-deal-details .eyeon-retailer-phone-locations {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 12px;
+}
+#eyeondeal-single .eyeon-deal .mcd-deal-cols .eyeon-deal-details .eyeon-retailer-phone-locations .eyeon-retailer-phone-location {
+  border: 1px solid #DDD;
+  padding: 5px 10px;
+  border-radius: 4px;
+  background: whitesmoke;
+}
 #eyeondeal-single .eyeon-deal .mcd-deal-cols .eyeon-deal-details .mcd-deal-share .mcd-share-title {
   display: inline-block;
   vertical-align: middle;

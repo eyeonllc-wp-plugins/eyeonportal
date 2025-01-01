@@ -61,6 +61,18 @@
           white-space: pre-wrap;
         }
 
+        .eyeon-retailer-phone-locations {
+          display: flex;
+          gap: 12px;
+
+          .eyeon-retailer-phone-location {
+            border: 1px solid #DDD;
+            padding: 5px 10px;
+            border-radius: 4px;
+            background: whitesmoke;
+          }
+        }
+
         .mcd-deal-share {
           .mcd-share-title {
             display: inline-block;
