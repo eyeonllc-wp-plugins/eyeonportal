@@ -82,7 +82,7 @@ $unique_id = uniqid();
               <div class="career-content">
                 <h3 class="career-title">${career.title}</h3>
                 ${ settings.career_excerpt ? `<div class="career-excerpt">${career.short_description}</div>` : '' }
-                ${ settings.expiry_date ? `<div class="career-expiry">${settings.career_expiry_prefix?settings.career_expiry_prefix+' ':''}${eyeonFormatDate(career.end_date)}${settings.career_expiry_suffix?' '+settings.career_expiry_suffix:''}</div>` : '' }
+                ${ (settings.expiry_date && career.end_date) ? `<div class="career-expiry">${settings.career_expiry_prefix?settings.career_expiry_prefix+' ':''}${eyeonFormatDate(career.end_date)}${settings.career_expiry_suffix?' '+settings.career_expiry_suffix:''}</div>` : '' }
               </div>
             </a>
           `);
