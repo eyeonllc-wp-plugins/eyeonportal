@@ -3,7 +3,7 @@
 Redux::set_section(
 	$opt_name,
 	array(
-		'title' => __( 'Stores Single', 'redux-framework-demo' ),
+		'title' => __( 'Store', 'redux-framework-demo' ),
 		'id' => 'stores_single',
 		'subsection' => true,
 		'fields' => array(

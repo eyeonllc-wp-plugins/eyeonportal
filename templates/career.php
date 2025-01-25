@@ -15,7 +15,7 @@ if( isset($mycentercareer['next']) ) {
 
 <?php if( is_array($mycentercareer) ) : ?>
 
-<div class="mycenterdeals-wrapper mycentercareer">
+<div id="eyeoncareer-single" class="mycenterdeals-wrapper">
 	<?php if( isset( $mycentercareer['error'] ) ) : ?>
 		<?php if( isset( $mycentercareer['error']['description'] ) ) : ?>
       <div class="mcd-alert"><?= $mycentercareer['error']['description'] ?></div>
@@ -23,7 +23,7 @@ if( isset($mycentercareer['next']) ) {
       <div class="mcd-alert"><?= $mycentercareer['error'] ?></div>
     <?php endif; ?>
 	<?php else: ?>
-		<div id="mcd-career" class="clearfix">
+		<div class="eyeon-career clearfix">
 			<div class="mcd-prev-next-nav">
 				<?php if( !empty($this->mcd_settings['careers_listing_page']) ) : ?>
 					<a href="<?= get_permalink($this->mcd_settings['careers_listing_page']) ?>" class="item back">Back to Careers</a>
@@ -58,20 +58,13 @@ if( isset($mycentercareer['next']) ) {
 							<div class="mcd-contact-detail"><?= $mycentercareer['contact_person']['email'] ?></div>
 						<?php endif; ?>
 						<?php if( !empty($mycentercareer['contact_person']['cell_phone']) ) : ?>
-							<div class="mcd-contact-detail"><?= $mycentercareer['contact_person']['cell_phone'] ?></div>
+							<div class="mcd-contact-detail"><?= eyeon_format_phone($mycentercareer['contact_person']['cell_phone']) ?></div>
 						<?php endif; ?>
 					</div>
 					<?php endif; ?>
 
-					<?php if( isset($mycentercareer['start_date']) || isset($mycentercareer['end_date']) ) :?>
-					<div class="mcd-career-dates">
-						<?php if( isset($mycentercareer['start_date']) ) :?>
-						<div class="mcd-start-date"><span class="mcd-label">Start Date:</span> <?= eyeon_format_date($mycentercareer['start_date']) ?></div>
-						<?php endif; ?>
-						<?php if( isset($mycentercareer['end_date']) ) :?>
-						<div class="mcd-end-date"><span class="mcd-label">End Date:</span> <?= eyeon_format_date($mycentercareer['end_date']) ?></div>
-						<?php endif; ?>
-					</div>
+					<?php if( !empty($mycentercareer['retailer']['phone']) ) :?>
+            <div class="mcd-retailer-phone"><span class="mcd-label">Retailer Phone:</span> <?= eyeon_format_phone($mycentercareer['retailer']['phone']) ?></div>
 					<?php endif; ?>
 
 					<?php if( $this->mcd_settings['careers_single_social_share'] ) : ?>

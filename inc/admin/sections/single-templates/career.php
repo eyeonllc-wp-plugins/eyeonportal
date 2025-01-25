@@ -3,7 +3,7 @@
 Redux::set_section(
 	$opt_name,
 	array(
-		'title' => __( 'Careers Single', 'redux-framework-demo' ),
+		'title' => __( 'Career', 'redux-framework-demo' ),
 		'id' => 'careers_single',
 		'subsection' => true,
 		'fields' => array(

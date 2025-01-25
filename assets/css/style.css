@@ -1340,159 +1340,6 @@ select#mcd-filter-order {
 }
 
 /* POPUP ends */
-/* CAREERS starts */
-#mycentercareers {
-  display: grid;
-  grid-gap: 20px;
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.mcd-career-item {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-
-.mcd-career-item .mcd-retailer-image {
-  position: relative;
-  padding-top: 100%;
-  display: block;
-}
-
-.mcd-career-item .mcd-retailer-image:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.07);
-}
-
-.mcd-career-item .mcd-retailer-image img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border: none;
-}
-
-.mcd-career-item .mcd-career-content {
-  position: relative;
-  background-color: #e2e0e0;
-  color: #444;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-.mcd-career-item .mcd-career-details {
-  text-align: center;
-  padding: 20px 5px;
-  font-size: 15px;
-  line-height: 17px;
-  display: block;
-}
-
-.mcd-career-item .mcd-career-details .mcd-career-title {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 20px;
-}
-
-#mcd-career .mcd-career-cols {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  font-size: 16px;
-}
-
-#mcd-career .mcd-career-image-col {
-  width: 100%;
-  max-width: 320px;
-}
-
-#mcd-career .mcd-career-image-col .mcd-retailer-image {
-  position: relative;
-  padding-top: 100%;
-}
-
-#mcd-career .mcd-career-image-col .mcd-retailer-image:after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.08);
-}
-
-#mcd-career .mcd-career-image-col .mcd-retailer-image img {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border: none;
-  cursor: pointer;
-}
-
-#mcd-career .mcd-career-details {
-  padding-left: 30px;
-  line-height: 23px;
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-}
-
-#mcd-career .mcd-career-details .mcd-career-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  line-height: 24px;
-}
-
-#mcd-career .mcd-career-details .mcd-career-description {
-  margin-bottom: 20px;
-  white-space: pre-wrap;
-}
-
-#mcd-career .mcd-career-details .mcd-career-center-location {
-  margin-bottom: 15px;
-}
-
-#mcd-career .mcd-career-details .mcd-apply-link {
-  margin-bottom: 15px;
-}
-
-#mcd-career .mcd-career-details .mcd-contact-details {
-  margin-bottom: 15px;
-}
-
-#mcd-career .mcd-career-details .mcd-contact-details .mcd-contact-detail {
-  line-height: 23px;
-}
-
-#mcd-career .mcd-career-details .mcd-career-dates {
-  margin-bottom: 15px;
-}
-
-/* CAREERS ends */
 /* Opening Hours starts here */
 .mcd_oh_week table tr th,
 .mcd_oh_week table tr td {
@@ -1518,12 +1365,6 @@ select#mcd-filter-order {
     padding-left: 10px;
     padding-right: 10px;
   }
-  #mycenterdeals {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
-  #mycentercareers {
-    grid-template-columns: repeat(3, 1fr) !important;
-  }
   /* STORES */
   .mcd-retailer-listing.alphabetical .mcd-retailers {
     grid-template-columns: repeat(6, 1fr) !important;
@@ -1542,18 +1383,6 @@ select#mcd-filter-order {
 @media screen and (max-width: 767px) {
   .mcp_btn {
     padding: 0 20px;
-  }
-  #mycenterdeals {
-    grid-gap: 15px;
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-  #mycentercareers {
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-gap: 15px;
-  }
-  #mycenterblog {
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-gap: 30px 15px;
   }
   #mcd-retailer .mcd-retailer-details .mcd-retailer-name,
   #mcd-event .mcd-event-details .mcd-event-name,
@@ -1575,17 +1404,6 @@ select#mcd-filter-order {
   }
 }
 @media screen and (max-width: 599px) {
-  #mcd-career {
-    font-size: 14px;
-  }
-  #mcd-career .mcd-career-image-col {
-    width: 50%;
-    padding-right: 15px;
-  }
-  #mcd-career .mcd-career-details {
-    padding-left: 0;
-    line-height: 16px;
-  }
   #mcd-event .mcd-event-details .mcd-event-dates {
     margin-bottom: 6px;
   }
@@ -1683,27 +1501,18 @@ select#mcd-filter-order {
     grid-template-columns: repeat(2, 1fr) !important;
   }
   #mcd-retailer .mcd-store-cols,
-  #mcd-event .mcd-event-cols,
-  #mcd-career .mcd-career-cols {
+  #mcd-event .mcd-event-cols {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
   }
   #mcd-retailer .mcd-retailer-image-col,
-  #mcd-event .mcd-event-image-col,
-  #mcd-career .mcd-career-image-col {
+  #mcd-event .mcd-event-image-col {
     padding-right: 0;
     margin-bottom: 15px;
     max-width: none;
     width: 100%;
-  }
-  .mcd-career-item .mcd-career-details {
-    padding: 8px 5px;
-  }
-  .mcd-career-item .mcd-career-details .mcd-career-title {
-    font-size: 14px;
-    line-height: 17px;
   }
   #mycenterstores a.mcd-retailer-image {
     -webkit-filter: url("../img/grayscale.svg#normal");

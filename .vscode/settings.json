@@ -23,11 +23,6 @@
     "assets/plugins/**": true,
     "assets/css/**": true,
     "assets/fonts/**": true,
-    "assets/angular/angular.js": true,
-    "assets/angular/angular.min.js": true,
-    "assets/angular/angular.min.js.map": true,
-    "assets/angular/angular-sanitize.min.js": true,
-    "assets/angular/angular-sanitize.min.js.map": true,
     "assets/map-releases/**": true,
     "inc/redux-core/**": true,
     "plugin-update-checker/**": true

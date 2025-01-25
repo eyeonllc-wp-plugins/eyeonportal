@@ -1,0 +1,118 @@
+#eyeoncareer-single {
+  .eyeon-career {
+    .mcd-career-cols {
+      display: flex;
+      font-size: 16px;
+    }
+
+    .mcd-career-image-col {
+      width: 100%;
+      max-width: 320px;
+
+      .mcd-retailer-image {
+        position: relative;
+        padding-top: 100%;
+
+        &:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.08);
+        }
+
+        img {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          border: none;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .mcd-career-details {
+      padding-left: 30px;
+      line-height: 23px;
+      flex: 1;
+
+      .mcd-career-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        line-height: 24px;
+      }
+
+      .mcd-career-description {
+        margin-bottom: 20px;
+        white-space: pre-wrap;
+      }
+
+      .mcd-career-center-location {
+        margin-bottom: 15px;
+      }
+
+      .mcd-apply-link {
+        margin-bottom: 15px;
+      }
+
+      .mcd-contact-details {
+        margin-bottom: 15px;
+
+        .mcd-contact-detail {
+          line-height: 23px;
+        }
+
+      }
+
+      .mcd-retailer-phone {
+        margin-bottom: 15px;
+      }
+    }
+  }
+
+  @include media-query(tablet-portrait) {
+    .eyeon-career {
+      .mcd-career-cols {
+        .mcd-career-image-col {
+          width: 35%;
+          max-width: none;
+        }
+
+        .mcd-career-details {
+          padding-left: 15px;
+        }
+      }
+    }
+  }
+
+  @include media-query(mobile-large) {
+    .eyeon-career {
+      font-size: 14px;
+
+      .mcd-career-cols {
+        flex-direction: column;
+
+        .mcd-career-image-col {
+          padding-right: 0;
+          margin-bottom: 15px;
+          width: 100%;
+        }
+
+        .mcd-career-details {
+          padding: 8px 5px;
+          line-height: 16px;
+
+          .mcd-career-title {
+            font-size: 14px;
+            line-height: 17px;
+          }
+        }
+      }
+    }
+  }
+}

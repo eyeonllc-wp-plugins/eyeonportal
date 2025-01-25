@@ -3,7 +3,7 @@
 Redux::set_section(
 	$opt_name,
 	array(
-		'title' => __( 'Blog Post Single', 'redux-framework-demo' ),
+		'title' => __( 'News', 'redux-framework-demo' ),
 		'id' => 'blog_single',
 		'subsection' => true,
 		'fields' => array(

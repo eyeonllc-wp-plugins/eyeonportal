@@ -126,7 +126,7 @@ $store_url = mcd_single_page_url('mycenterstore');
 			</div>
 		</div>
 
-		<?php include(MCD_PLUGIN_PATH.'templates/stores/single/deals.php') ?>
+		<?php include(MCD_PLUGIN_PATH.'templates/store-deals.php') ?>
 	<?php endif; ?>
 </div>
 

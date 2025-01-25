@@ -228,69 +228,21 @@ Redux::set_args( $opt_name, $args );
 
 require_once $redux_admin_path . 'sections/general/settings.php';
 
+require_once $redux_admin_path . 'sections/pages/index.php';
 
 Redux::set_section(
 	$opt_name,
 	array(
-		'title' => __( 'Deals', 'redux-framework-demo' ),
-		'id' => 'deals_settings_main',
-		'icon' => 'el el-tags',
-	)
-);
-require_once $redux_admin_path . 'sections/deals/deals.php';
-require_once $redux_admin_path . 'sections/deals/deal.php';
-
-
-Redux::set_section(
-	$opt_name,
-	array(
-		'title' => __( 'Stores', 'redux-framework-demo' ),
-		'id' => 'stores_settings_main',
+		'title' => __( 'Single Templates', 'redux-framework-demo' ),
+		'id' => 'single_templates_settings_main',
 		'icon' => 'el el-hdd',
 	)
 );
-require_once $redux_admin_path . 'sections/stores/stores.php';
-require_once $redux_admin_path . 'sections/stores/store.php';
-
-
-Redux::set_section(
-	$opt_name,
-	array(
-		'title' => __( 'Events', 'redux-framework-demo' ),
-		'id' => 'events_settings_main',
-		'icon' => 'el el-calendar',
-	)
-);
-require_once $redux_admin_path . 'sections/events/events.php';
-require_once $redux_admin_path . 'sections/events/event.php';
-
-
-Redux::set_section(
-	$opt_name,
-	array(
-		'title' => __( 'Careers', 'redux-framework-demo' ),
-		'id' => 'careers_settings_main',
-		'icon' => 'el el-briefcase',
-	)
-);
-require_once $redux_admin_path . 'sections/careers/careers.php';
-require_once $redux_admin_path . 'sections/careers/career.php';
-
-
-Redux::set_section(
-	$opt_name,
-	array(
-		'title' => __( 'Blog', 'redux-framework-demo' ),
-		'id' => 'blog_settings_main',
-		'icon' => 'el el-blogger',
-	)
-);
-require_once $redux_admin_path . 'sections/blog/blogs.php';
-require_once $redux_admin_path . 'sections/blog/blog.php';
-
-require_once $redux_admin_path . 'sections/map/map.php';
-
-require_once $redux_admin_path . 'sections/search/search.php';
+require_once $redux_admin_path . 'sections/single-templates/store.php';
+require_once $redux_admin_path . 'sections/single-templates/deal.php';
+require_once $redux_admin_path . 'sections/single-templates/event.php';
+require_once $redux_admin_path . 'sections/single-templates/career.php';
+require_once $redux_admin_path . 'sections/single-templates/blog.php';
 
 require_once $redux_admin_path . 'sections/shortcodes/shortcodes.php';
 
