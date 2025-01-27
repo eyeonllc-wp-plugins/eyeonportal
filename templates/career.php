@@ -48,7 +48,11 @@ if( isset($mycentercareer['next']) ) {
 					<div class="mcd-apply-link"><a href="<?= $mycentercareer['apply_link'] ?>" class="mcp_btn rounded" target="_blank">Apply Now</a></div>
 					<?php endif; ?>
 
-					<?php if( isset($mycentercareer['contact_person']['name']) || isset($mycentercareer['contact_person']['email']) || isset($mycentercareer['contact_person']['cell_phone']) ) : ?>
+					<?php if(
+            (isset($mycentercareer['contact_person']['name']) && !empty($mycentercareer['contact_person']['name']))
+            || (isset($mycentercareer['contact_person']['email']) && !empty($mycentercareer['contact_person']['email']))
+            || (isset($mycentercareer['contact_person']['cell_phone']) && !empty($mycentercareer['contact_person']['cell_phone']))
+          ) : ?>
 					<div class="mcd-contact-details">
 						<span class="mcd-label">Contact Details:</span>
 						<?php if( !empty($mycentercareer['contact_person']['name']) ) : ?>
