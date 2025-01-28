@@ -16,6 +16,10 @@ if( !class_exists('MCDShortcodes') ) {
 		function register() {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue') );
 
+      add_shortcode('mcd_search_form', function() { return ''; });
+      add_shortcode('mcd_opening_hours_week', function() { return ''; });
+      add_shortcode('mcd_opening_hours_today', function() { return ''; });
+
       add_shortcode('mcp_site_name', function() { return get_bloginfo('name'); });
       add_shortcode('mcp_site_url', function() { return site_url(); });
       add_shortcode('mcp_site_domain', function() { return $_SERVER['HTTP_HOST']; });
