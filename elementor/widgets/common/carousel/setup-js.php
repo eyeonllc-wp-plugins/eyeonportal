@@ -35,4 +35,11 @@ var owl_options = {
   }
 };
 jQuery('.owl-carousel-<?= $unique_id ?>').owlCarousel(owl_options);
+
+if (navigator.userAgent.toLowerCase().includes("firefox")) {
+  const owlStage = document.querySelector(".owl-stage");
+  if (owlStage) {
+    owlStage.style.width = (owlStage.offsetWidth + 10) + "px";
+  }
+}
 <?php endif; ?>
