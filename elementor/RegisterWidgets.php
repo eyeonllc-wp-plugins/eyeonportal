@@ -23,6 +23,7 @@ function eyeon_elementor_scripts() {
 
   wp_register_script( 'eyeon-moment', mcd_version_url( 'assets/plugins/calendar/moment.min.js' ) );
   wp_register_script( 'eyeon-elementor-utils', mcd_version_url( 'elementor/js/utils.js' ) );
+  wp_register_script( 'eyeon-elementor-center-website', mcd_version_url( 'elementor/js/center-website.js' ) );
 
   wp_register_script( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/owl.carousel.min.js' ) );
   wp_register_style( 'eyeon-owl-carousel', mcd_version_url( 'assets/plugins/owl/assets/owl.carousel.min.css' ) );
@@ -96,6 +97,9 @@ function register_eyeon_widgets( $widgets_manager ) {
 
   require_once plugin_dir_path( __FILE__).'widgets/center-hours/index.php';
   $widgets_manager->register( new \EyeOn_Center_Hours_Widget() );
+
+  require_once plugin_dir_path( __FILE__).'widgets/slider/index.php';
+  $widgets_manager->register( new \EyeOn_Slider_Widget() );
 }  
 add_action('elementor/widgets/register', 'register_eyeon_widgets');
 

@@ -1520,4 +1520,71 @@
 .eyeon-center-hours .center-hours-wrapper .content-col .extra-text {
   padding-top: 12px;
   text-align: left;
+}
+
+.eyeon-slider-widget .eyeon-slider .slider-wrapper {
+  position: relative;
+  width: 100%;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .slide-item {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .slide-item .slider-container {
+  margin: 0 auto;
+  position: relative;
+  height: 100%;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .slide-item .slider-container .slide-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .slide-item .slider-container .slide-container .slide-layer {
+  position: absolute;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-nav .owl-prev,
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-nav .owl-next {
+  color: var(--nav-color);
+  font-size: var(--nav-size);
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  outline: none;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-nav .owl-prev.disabled,
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-nav .owl-next.disabled {
+  opacity: 0.5;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-nav .owl-prev {
+  left: var(--nav-position);
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-nav .owl-next {
+  right: var(--nav-position);
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-dots {
+  position: absolute;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  bottom: var(--dot-bottom) !important;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-dots .owl-dot {
+  width: var(--dot-width);
+  height: var(--dot-height);
+  background: var(--dot-color);
+  border-radius: var(--dot-border-radius);
+  margin: 0 var(--dot-spacing) !important;
+}
+.eyeon-slider-widget .eyeon-slider .slider-wrapper .owl-carousel .owl-dots .owl-dot.active {
+  background: var(--dot-active-color);
 }/*# sourceMappingURL=elementor.css.map */
