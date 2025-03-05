@@ -80,7 +80,6 @@ $unique_id = uniqid();
     }
 
     var todayDate = getTimezoneDate();
-    const timezoneOffsetInMinutes = todayDate.getTimezoneOffset();
 
     fetch_events();
 
@@ -215,20 +214,24 @@ $unique_id = uniqid();
       var tempStartDate = new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time));
       if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
         var rule = rrule.RRule.fromString(event.repeat_rrule);
-        console.log('%c'+event.title+' - %c'+rule.toText(), 'font-size: 14px; font-family: system-ui;', 'font-size: 14px; font-weight: bold; font-style: italic; border: 1px solid rgba(255,255,255,0.5); padding: 3px 6px; background-color: rgba(255,255,255,0.1); border-radius: 4px; font-family: system-ui;');
+        // console.log('%c'+event.title+' - %c'+rule.toText(), 'font-size: 14px; font-family: system-ui;', 'font-size: 14px; font-weight: bold; font-style: italic; border: 1px solid rgba(255,255,255,0.5); padding: 3px 6px; background-color: rgba(255,255,255,0.1); border-radius: 4px; font-family: system-ui;');
 
         // Get occurrences within a certain time range (adjust as needed)
         var occurrences = rule.between(
           new Date(todayDate.getTime() - 2 * 24 * 60 * 60 * 1000),
           new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)
         );
+
         let event_duration_in_minutes = 0;
         if(!event.is_all_day_event) {
           event_duration_in_minutes = getMinutesBetween(event.end_time, event.start_time);
         } else {
           event_duration_in_minutes = 60*24-1;
         }
-        var occurrencesInTimezone = occurrences.map(date => addMinutesToDate(date, timezoneOffsetInMinutes+event_duration_in_minutes));
+        var occurrencesInTimezone = occurrences.map(date => {
+          const timezoneOffsetInMinutes = date.getTimezoneOffset();
+          return addMinutesToDate(date, timezoneOffsetInMinutes+event_duration_in_minutes)
+        });
 
         // Find the next occurrence after the current date
         upcomingOccurrence = occurrencesInTimezone.find(function (occurrence) {
@@ -237,8 +240,7 @@ $unique_id = uniqid();
       }
 
 
-      if (upcomingOccurrence) {
-        
+      if (upcomingOccurrence) {  
         event.upcoming_date = tempStartDate > upcomingOccurrence ? tempStartDate : upcomingOccurrence;
       } else {
         event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
