@@ -47,13 +47,22 @@ jQuery(document).ready(function($) {
 
         defaultSlides.forEach((slide) => {
           slide.layers.forEach((layer) => {
+            layer.offset = generateScreenResponsiveOffsetValues(layer.offset);
             layer.position = generateScreenResponsivePositionValues(layer.position);
+            layer.isVisible = generateScreenResponsiveValues(layer.isVisible);
+
             if (layer.type === 'text' || layer.type === 'button') {
               layer.font.size = generateScreenResponsiveNumberUnitValues(layer.font.size);
               layer.padding = generateScreenResponsivePaddingValues(layer.padding);
             }
             if (layer.type === 'image') {
               layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
+              layer.height = generateScreenResponsiveNumberUnitValues(layer.height);
+              layer.objectFit = generateScreenResponsiveValues(layer.objectFit);
+            }
+            if (layer.type === 'box') {
+              layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
+              layer.height = generateScreenResponsiveNumberUnitValues(layer.height);
             }
           });
         });
@@ -76,10 +85,9 @@ jQuery(document).ready(function($) {
       slidesCopy.forEach((slide) => {
         slide.layers.forEach((layer) => {
           // Update position
-          layer.position[currentDevice].x = (Number(layer.position[currentDevice]?.x) / DefaultDeviceWidths[currentDevice]) * width;
-          layer.position[currentDevice].y = (Number(layer.position[currentDevice]?.y) / DefaultDeviceWidths[currentDevice]) * width;
+          layer.offset[currentDevice].x = (Number(layer.offset[currentDevice]?.x) / DefaultDeviceWidths[currentDevice]) * width;
+          layer.offset[currentDevice].y = (Number(layer.offset[currentDevice]?.y) / DefaultDeviceWidths[currentDevice]) * width;
 
-          // Update text and button specific properties
           if (layer.type === 'text' || layer.type === 'button') {
             layer.font.size[currentDevice].value = (Number(layer.font.size[currentDevice].value) / DefaultDeviceWidths[currentDevice]) * width;
 
@@ -90,9 +98,9 @@ jQuery(document).ready(function($) {
             layer.padding[currentDevice].left = (Number(layer.padding[currentDevice].left) / DefaultDeviceWidths[currentDevice]) * width;
           }
 
-          // Update image specific properties
-          if (layer.type === 'image') {
+          if (layer.type === 'image' || layer.type === 'box') {
             layer.width[currentDevice].value = (Number(layer.width[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.height[currentDevice].value = (Number(layer.height[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
           }
         });
       });
@@ -123,58 +131,77 @@ jQuery(document).ready(function($) {
     // Add slides
     slides.forEach(slide => {
       sliderHtml += `
-        <div class="slide-item" style="height: ${sliderSettings.height[currentDevice].value}${sliderSettings.height[currentDevice].unit};
-                                background-image: url('${slide.bgImageUrl || ''}'); 
-                                background-color: ${slide.bgColor}; 
-                                cursor: ${slide.link ? 'pointer' : 'default'}"
-              data-link="${slide.link || ''}">
+        <div
+          class="slide-item"
+          style="
+            height: ${sliderSettings.height[currentDevice].value}${sliderSettings.height[currentDevice].unit};
+            background-image: url('${slide.bgImageUrl || ''}'); 
+            ${slide.bgColor ? `background-color: ${slide.bgColor};` : ''}
+            ${slide.link ? 'cursor: pointer;' : ''}
+          "
+          ${slide.link ? `data-link="${slide.link}"` : ''}
+        ">
           <div class="slider-container" style="max-width: ${sliderSettings.width.value}${sliderSettings.width.unit}">
             <div class="slide-container" style="max-width: ${DefaultDeviceWidths[currentDevice]}px">
       `;
 
       // Add layers with device-specific values
       slide.layers.forEach(layer => {
-        const position = `position: absolute; top: ${layer.position[currentDevice].y}px; left: ${layer.position[currentDevice].x}px;`;
-        
-        if (layer.type === 'text') {
-          sliderHtml += `
-            <div class="slide-layer" style="${position}">
-              <div style="font-size: ${layer.font.size[currentDevice].value}${layer.font.size[currentDevice].unit};
-                          font-weight: ${layer.font.weight};
-                          line-height: ${layer.font.lineHeight?.value}${layer.font.lineHeight?.unit};
-                          color: ${layer.font.color};
-                          padding: ${layer.padding[currentDevice].top}px ${layer.padding[currentDevice].right}px ${layer.padding[currentDevice].bottom}px ${layer.padding[currentDevice].left}px;
-                          background-color: ${layer.bgColor};">
-                ${layer.content}
-              </div>
-            </div>
-          `;
-        } else if (layer.type === 'button') {
-          sliderHtml += `
-            <div class="slide-layer" style="${position}">
-              <div style="font-size: ${layer.font.size[currentDevice].value}${layer.font.size[currentDevice].unit};
-                          font-weight: ${layer.font.weight};
-                          line-height: ${layer.font.lineHeight?.value}${layer.font.lineHeight?.unit};
-                          color: ${layer.font.color};
-                          padding: ${layer.padding[currentDevice].top}px ${layer.padding[currentDevice].right}px ${layer.padding[currentDevice].bottom}px ${layer.padding[currentDevice].left}px;
-                          background-color: ${layer.bgColor};
-                          border-radius: ${layer.borderRadius.value}${layer.borderRadius.unit};
-                          cursor: pointer;"
-                    data-link="${layer.link}">
-                ${layer.content}
-              </div>
-            </div>
-          `;
-        } else if (layer.type === 'image') {
-          sliderHtml += `
-            <div class="slide-layer" style="${position}">
-              <img src="${layer.imageUrl}" 
-                   alt="" 
-                   style="width: ${layer.width[currentDevice].value}${layer.width[currentDevice].unit};"
-                   data-link="${layer.link}" />
-            </div>
+        let layerStyles = `
+          transform: ${layer.position[currentDevice].horizontal === 'center' ? 'translateX(-50%)' : ''} ${layer.position[currentDevice].vertical === 'middle' ? 'translateY(-50%)' : ''} translate(${layer.offset[currentDevice].x}px, ${layer.offset[currentDevice].y}px);
+          display: ${layer.isVisible[currentDevice] ? 'block' : 'none'};
+          ${layer.zIndex ? `z-index: ${layer.zIndex};` : ''}
+        `;
+
+        if (layer.type === 'text' || layer.type === 'button') {
+          layerStyles += `
+            font-size: ${layer.font.size[currentDevice].value}${layer.font.size[currentDevice].unit};
+            font-weight: ${layer.font.weight};
+            line-height: ${layer.font.lineHeight?.value}${layer.font.lineHeight?.unit};
+            color: ${layer.font.color};
+            padding-top: ${layer.padding[currentDevice].top}px;
+            padding-right: ${layer.padding[currentDevice].right}px;
+            padding-bottom: ${layer.padding[currentDevice].bottom}px;
+            padding-left: ${layer.padding[currentDevice].left}px;
+            ${layer.bgColor ? `background-color: ${layer.bgColor};` : ''}
           `;
         }
+        if (layer.type === 'button') {
+          layerStyles += `
+            border-radius: ${layer.borderRadius.value}${layer.borderRadius.unit};
+          `;
+        }
+        if (layer.type === 'image' || layer.type === 'box') {
+          layerStyles += `
+            width: ${layer.width[currentDevice].value}${layer.width[currentDevice].unit};
+            height: ${layer.height[currentDevice].value}${layer.height[currentDevice].unit};
+          `;
+        }
+        if (layer.type === 'box') {
+          layerStyles += `
+            ${layer.bgColor ? `background-color: ${layer.bgColor};` : ''}
+          `;
+        }
+
+        sliderHtml += `<div
+          class="slide-layer ${layer.type}-layer alignX-${layer.position[currentDevice].horizontal} alignY-${layer.position[currentDevice].vertical}"
+          style="${layerStyles}">`;
+
+        if (layer.type === 'text') sliderHtml += `${layer.content}`;
+        
+        if (layer.type === 'button') sliderHtml += `<div ${layer.link ? `data-link="${layer.link}"` : ''}>${layer.content}</div>`;
+
+        if (layer.type === 'image') {
+          sliderHtml += `
+              <img
+                src="${layer.imageUrl}"
+                ${layer.link ? `data-link="${layer.link}"` : ''}
+                style="object-fit: ${layer.objectFit[currentDevice]};"
+              />
+          `;
+        }
+
+        sliderHtml += `</div>`;
       });
 
       sliderHtml += `
@@ -207,7 +234,7 @@ jQuery(document).ready(function($) {
     });
 
     // Handle click events
-    $('.item').on('click', function() {
+    $('.slide-item').on('click', function() {
       const link = $(this).data('link');
       if (link) openLink(link);
     });
@@ -222,7 +249,7 @@ jQuery(document).ready(function($) {
   function openLink(link) {
     if (link) {
       if (link.startsWith('http')) {
-        window.location.href = link;
+        window.open(link, '_blank');
       } else {
         window.location.href = link; // For internal links
       }

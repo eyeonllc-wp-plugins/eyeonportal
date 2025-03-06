@@ -87,7 +87,7 @@ function generateScreenResponsivePaddingValues(values) {
   return newValues;
 };
 
-function generateScreenResponsivePositionValues(values) {
+function generateScreenResponsiveOffsetValues(values) {
   const newValues = { ...values };
 
   const defaultXRatio = Number(values.default?.x) / DefaultDeviceWidths.default;
@@ -115,6 +115,52 @@ function generateScreenResponsivePositionValues(values) {
       y: defaultYRatio * DefaultDeviceWidths.tablet,
     };
   }
+  return newValues;
+}
+
+function generateScreenResponsivePositionValues(values) {
+  const newValues = values || {
+    default: { horizontal: 'left', vertical: 'top' }
+  };
+
+  if (!values.mobile) {
+    if (!values.tablet) {
+      newValues.mobile = {
+        horizontal: values.default?.horizontal || 'left',
+        vertical: values.default?.vertical || 'top'
+      };
+    } else {
+      newValues.mobile = {
+        horizontal: values.tablet?.horizontal || 'left',
+        vertical: values.tablet?.vertical || 'top'
+      };
+    }
+  }
+
+  if (!values.tablet) {
+    newValues.tablet = {
+      horizontal: values.default?.horizontal || 'left',
+      vertical: values.default?.vertical || 'top'
+    };
+  }
+
+  return newValues;
+}
+
+function generateScreenResponsiveValues(values) {
+  const newValues = { ...values };
+
+  if (values.mobile === undefined) {
+    if (values.tablet === undefined) {
+      newValues.mobile = values.default;
+    } else {
+      newValues.mobile = values.tablet;
+    }
+  }
+  if (values.tablet === undefined) {
+    newValues.tablet = values.default;
+  }
+
   return newValues;
 }
 
