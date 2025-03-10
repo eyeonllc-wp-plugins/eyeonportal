@@ -66,7 +66,6 @@ class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
         'options' => $this->get_categories_from_api(),
         'default' => 0,
         'label_block' => false,
-        'frontend_available' => true,
       ]
     );
 
