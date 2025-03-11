@@ -32,10 +32,10 @@ class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
     ];
   }
 
-  private function get_categories_from_api() {
+  private function get_sliders_from_api() {
     $slidersResp = mcd_api_data(MCD_API_SLIDERS);
     $options = array();
-    if( isset($slidersResp['items']) & count($slidersResp['items'])>0 ) {
+    if(isset($slidersResp) && isset($slidersResp['items']) & count($slidersResp['items'])>0 ) {
       foreach( $slidersResp['items'] as $slider ) {
         $options[$slider['id']] = $slider['name'];
       }
@@ -63,7 +63,7 @@ class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
       [
         'label' => __( 'Slider', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
-        'options' => $this->get_categories_from_api(),
+        'options' => $this->get_sliders_from_api(),
         'default' => 0,
         'label_block' => false,
       ]

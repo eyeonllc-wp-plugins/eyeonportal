@@ -68,6 +68,9 @@ jQuery(document).ready(function($) {
         });
         
         calculateResizeValues();
+      },
+      error: function(xhr, status, error) {
+        eyeonSlider.removeClass('eyeon-loader').html('Slider not found.');
       }
     });
   }
