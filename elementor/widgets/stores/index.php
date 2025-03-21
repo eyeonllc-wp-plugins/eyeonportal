@@ -128,11 +128,13 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       'categories_sidebar',
       [
         'label' => __( 'Categories', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => __( 'Show', EYEON_NAMESPACE ),
-        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => 'show',
+        'type' => \Elementor\Controls_Manager::SELECT,
+        'options' => [
+          'hide' => __( 'Hide', EYEON_NAMESPACE ),
+          'show' => __( 'Sidebar', EYEON_NAMESPACE ),
+          'dropdown' => __( 'Dropdown', EYEON_NAMESPACE ),
+        ],
+        'default' => 'hide',
         'condition' => [
           'view_mode' => 'grid',
         ],
@@ -396,7 +398,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'categories_style_settings',
       [
-        'label' => __( 'Categories', EYEON_NAMESPACE ),
+        'label' => __( 'Categories Sidebar', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
         'condition' => [
           'view_mode' => 'grid',

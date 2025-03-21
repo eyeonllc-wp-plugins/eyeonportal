@@ -6,6 +6,7 @@ $fields = [
   'fetch_limit',
   'deal_flag',
   'custom_flags',
+  'categories_sidebar',
   'retailer_categories',
   'retailer_tags',
   'featured_image',
@@ -31,7 +32,46 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
     <?php if( $settings['view_mode'] === 'grid' ) : ?>
       <div class="stores-header">
         <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
-          <div class="categories-sidebar-placeholder"></div>
+          <div class="categories-sidebar-placeholder hide-on-mob"></div>
+          <div class="stores-categories-select show-on-mob">
+            <div class="custom-select-wrapper">
+              <div class="custom-select">
+                <div class="custom-select__trigger">
+                  <span><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></span>
+                </div>
+                <div class="custom-options">
+                  <span class="custom-option selected" data-value="all">
+                    <?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?>
+                  </span>
+                  <!-- Other options will be populated via JavaScript -->
+                </div>
+              </div>
+              <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select">
+                <option value="all" selected><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></option>
+              </select>
+            </div>
+          </div>
+        <?php endif; ?>
+
+        <?php if( $settings['categories_sidebar'] === 'dropdown' ) : ?>
+          <div class="stores-categories-select">
+            <div class="custom-select-wrapper">
+              <div class="custom-select">
+                <div class="custom-select__trigger">
+                  <span><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></span>
+                </div>
+                <div class="custom-options">
+                  <span class="custom-option selected" data-value="all">
+                    <?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?>
+                  </span>
+                  <!-- Other options will be populated via JavaScript -->
+                </div>
+              </div>
+              <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select">
+                <option value="all" selected><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></option>
+              </select>
+            </div>
+          </div>
         <?php endif; ?>
         
         <div class="search-bar">
@@ -43,12 +83,9 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
     <?php endif; ?>
 
     <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
-      <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
-      <div class="stores-categories">
-        <select id="stores-categories-dropdown-<?= $unique_id ?>" class="show-on-mob">
-          <option value="all" selected><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></option>
-        </select>
-        <ul id="stores-categories-<?= $unique_id ?>" class="hide-on-mob">
+      <?php if( @$settings['categories_sidebar'] === 'show' ) : ?>
+      <div class="stores-categories hide-on-mob">
+        <ul id="stores-categories-<?= $unique_id ?>">
           <li data-value="all" class="active"><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></li>
         </ul>
       </div>
@@ -195,18 +232,27 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         });
       });
 
-      <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
-      categories.forEach(category => {
-        if( category.display ) {
-          categoryDropdownList.append(`
-            <option value="${category.name.toLowerCase()}">${category.name}</option>
-          `);
-          categoryList.append(`
-            <li data-value="${category.name.toLowerCase()}">${category.name}</li>
-          `);
-        }
-      });
-      <?php endif; ?>
+      if( categoryDropdownList.length > 0 ) {
+        categories.forEach(category => {
+          if( category.display ) {
+            categoryDropdownList.append(`
+              <option value="${category.name.toLowerCase()}">${category.name}</option>
+            `);
+
+            // Add to custom select options
+            const customOptions = document.querySelector('.custom-options');
+            customOptions.insertAdjacentHTML('beforeend', `
+              <span class="custom-option" data-value="${category.name.toLowerCase()}">
+                ${category.name}
+              </span>
+            `);
+
+            categoryList.append(`
+              <li data-value="${category.name.toLowerCase()}">${category.name}</li>
+            `);
+          }
+        });
+      }
 
       eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
       renderRetailers();
@@ -330,8 +376,49 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
       filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
 
+    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+      const select = wrapper.querySelector('select');
+      const customSelect = wrapper.querySelector('.custom-select');
+      const customTrigger = wrapper.querySelector('.custom-select__trigger');
+      const customOptions = wrapper.querySelector('.custom-options');
+
+      // Toggle custom select
+      customTrigger.addEventListener('click', () => {
+        customSelect.classList.toggle('open');
+      });
+
+      // Close when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!wrapper.contains(e.target)) {
+          customSelect.classList.remove('open');
+        }
+      });
+
+      // Handle option selection
+      customOptions.addEventListener('click', (e) => {
+        const option = e.target.closest('.custom-option');
+        if (!option) return;
+
+        // Update selected option
+        wrapper.querySelectorAll('.custom-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        option.classList.add('selected');
+
+        // Update trigger text
+        customTrigger.querySelector('span').textContent = option.textContent;
+
+        // Update hidden select
+        select.value = option.dataset.value;
+        select.dispatchEvent(new Event('change'));
+
+        // Close dropdown
+        customSelect.classList.remove('open');
+      });
+    });
+
     searchInput.on('input', function() {
-      const selectedCategory = categoryList.find('li.active:first').attr('data-value');
+      const selectedCategory = categoryDropdownList.val();
       const search = $(this).val().toLowerCase();
       filterRetailersByCategoryAndSearch(selectedCategory, search);
     });
