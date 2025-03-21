@@ -42,7 +42,7 @@ Redux::set_section(
       array(
 				'id' => 'map_page',
 				'type' => 'select',
-				'title' => __( 'Choose Map Page', 'redux-framework-demo' ),
+				'title' => __( 'Map Page', 'redux-framework-demo' ),
 				'desc' => __( 'Choose the page where Map widget is added.<br>It will help plugin to use "Find IT" button on single retailer pages to open Map page and select the retailer on Floor Map.<br>If this is not set then "Find IT" button won\'t show up on Store popup.', 'redux-framework-demo' ),
 				'options' => $page_list,
 			),
