@@ -1,5 +1,95 @@
 <?php
+require(MCD_PLUGIN_PATH.'assets/php/php-rrule-master/vendor/autoload.php');
+use RRule\RRule;
+
 $mycenterevent = $this->mcd_settings['mycenterevent'];
+
+function parseAndFindUpcoming($event) {
+    $upcomingOccurrence = null;
+    $tempStartDate = new DateTime($event['start_date'] . ' ' . ($event['is_all_day_event'] ? '00:00:00' : $event['start_time']));
+    $todayDate = new DateTime();
+
+    if (($event['event_type'] === "recurring" || $event['event_type'] === "ongoing") && !empty($event['repeat_rrule'])) {
+        
+        // Create RRule instance
+        $rule = new RRule($event['repeat_rrule']);
+        
+        // Get occurrences within a certain time range
+        $startRange = (new DateTime())->modify('-2 days');
+        $endRange = (new DateTime())->modify('+365 days');
+        
+        // Use getOccurrencesBetween() to handle infinite recurrence rules
+        $occurrences = $rule->getOccurrencesBetween($startRange, $endRange);
+        
+        $event_duration_in_minutes = 0;
+        if (!$event['is_all_day_event']) {
+            $event_duration_in_minutes = get_minutes_between($event['end_time'], $event['start_time']);
+        } else {
+            $event_duration_in_minutes = 60 * 24 - 1;
+        }
+
+        // Find the next occurrence after the current date
+        foreach ($occurrences as $occurrence) {
+            $occurrenceWithDuration = clone $occurrence;
+            $occurrenceWithDuration->modify("+{$event_duration_in_minutes} minutes");
+            
+            if ($occurrenceWithDuration >= $todayDate) {
+                $upcomingOccurrence = $occurrenceWithDuration;
+                break;
+            }
+        }
+
+        if ($upcomingOccurrence) {
+            $event['upcoming_date'] = $tempStartDate > $upcomingOccurrence ? 
+                $tempStartDate->format('Y-m-d H:i:s') : 
+                $upcomingOccurrence->format('Y-m-d H:i:s');
+        }
+    }
+
+    if ($event['event_type'] === "onetime") {
+        $event['upcoming_date'] = ($tempStartDate > $todayDate ? $tempStartDate : $todayDate)->format('Y-m-d H:i:s');
+    }
+
+    if ($event['event_type'] === "custom") {
+        $customDates = isset($event['custom_dates']) ? $event['custom_dates'] : [];
+        $nextCustomDate = null;
+        $nextCustomDateObj = null;
+
+        foreach ($customDates as $customDate) {
+            $customDateTime = new DateTime($customDate['date'] . ' ' . $customDate['start_time']);
+            if ($customDateTime >= $todayDate) {
+                if (!$nextCustomDate || $customDateTime < $nextCustomDate) {
+                    $nextCustomDate = $customDateTime;
+                    $nextCustomDateObj = $customDate;
+                }
+            }
+        }
+
+        if ($nextCustomDate) {
+            $event['upcoming_date'] = $nextCustomDate->format('Y-m-d H:i:s');
+            $event['start_time'] = $nextCustomDateObj['start_time'];
+            $event['end_time'] = $nextCustomDateObj['end_time'];
+        }
+    }
+
+    $event['datesStr'] = eyeon_format_date($event['upcoming_date']);
+    $event['formatted_start_date'] = eyeon_format_date($event['start_date']);
+    $event['formatted_end_date'] = eyeon_format_date($event['end_date']);
+
+    return $event;
+}
+
+// Helper function to calculate minutes between times
+function get_minutes_between($end_time, $start_time) {
+    $start = new DateTime("2000-01-01 " . $start_time);
+    $end = new DateTime("2000-01-01 " . $end_time);
+    
+    $interval = $start->diff($end);
+    return $interval->h * 60 + $interval->i;
+}
+
+$mycenterevent = parseAndFindUpcoming($mycenterevent);
+
 $mycenterevent['start_time'] = eyeon_format_time($mycenterevent['start_time']);
 $mycenterevent['end_time'] = eyeon_format_time($mycenterevent['end_time']);
 
@@ -62,16 +152,23 @@ if( isset($mycenterevent['next']) ) {
 				<div class="mcd-event-details-col">
 					<div class="mcd-event-name"><?= $mycenterevent['title'] ?></div>
 
-          <?php if( !$mycenterevent['ongoing_event'] ) : ?>
+          <?php if( isset($mycenterevent['show_event_date']) || $mycenterevent['show_event_time'] ) : ?>
             <div class="mcd-event-date-time">
-              <div class="mcd-event-dates">
-                <i class="far fa-calendar-alt"></i>&nbsp;
-                <?= (!empty($rdate) ? $rdate : $event_dates) ?>
-              </div>
-              <?php if( !empty($mycenterevent['start_time']) && !$mycenterevent['is_all_day_event'] ) : ?>
+              <?php if( isset($mycenterevent['show_event_date']) ) : ?>
+                <div class="mcd-event-dates">
+                  <i class="far fa-calendar-alt"></i>&nbsp;
+                  <?php if( $mycenterevent['show_event_date'] === 'upcoming' || $mycenterevent['show_event_date'] === 'date' ) : ?>
+                    <?= $mycenterevent['datesStr'] ?>
+                  <?php elseif( $mycenterevent['show_event_date'] === 'range' ) : ?>
+                    <?= $mycenterevent['formatted_start_date'] ?> - <?= $mycenterevent['formatted_end_date'] ?>
+                  <?php endif; ?>
+                </div>
+              <?php endif; ?>
+              
+              <?php if( isset($mycenterevent['show_event_time']) && !$mycenterevent['is_all_day_event'] ) : ?>
                 <div class="mcd-event-times">
                   <i class="far fa-clock"></i>&nbsp;
-                  <?= $mycenterevent['start_time'] ?> - <?= $mycenterevent['end_time'] ?>
+                  <?= eyeon_format_time($mycenterevent['start_time']) ?> - <?= eyeon_format_time($mycenterevent['end_time']) ?>
                 </div>
               <?php endif; ?>
             </div>
@@ -120,13 +217,13 @@ if( isset($mycenterevent['next']) ) {
 
 <script type="text/javascript">
 window.addeventasync = function(){
-    addeventatc.settings({
-        appleical  : {show:true, text:"Apple Calendar"},
-        google     : {show:true, text:"Google Calendar"},
-        outlook    : {show:false, text:"Outlook"},
-        outlookcom : {show:false, text:"Outlook.com <em>(online)</em>"},
-        yahoo      : {show:false, text:"Yahoo <em>(online)</em>"}
-    });
+  addeventatc.settings({
+    appleical  : {show:true, text:"Apple Calendar"},
+    google     : {show:true, text:"Google Calendar"},
+    outlook    : {show:false, text:"Outlook"},
+    outlookcom : {show:false, text:"Outlook.com <em>(online)</em>"},
+    yahoo      : {show:false, text:"Yahoo <em>(online)</em>"}
+  });
 };
 </script>
 
