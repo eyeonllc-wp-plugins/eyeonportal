@@ -13,7 +13,8 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
 $mapboxProps = array(
   'config' => Array(
     'CENTER_ID' => intval($center_id),
-    'ROLE' => 'WP_SITE'
+    'ROLE' => 'WP_SITE',
+    'IMAGE_PROXY_URL' => site_url().'/index.php?eyeonmedia=',
   ),
   'webApiURI' => API_BASE_URL,
 );
