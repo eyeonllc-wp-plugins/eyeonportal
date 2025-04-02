@@ -3,13 +3,13 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from mycenterportal.com portal.
-Version: 0.1.33
+Version: 0.1.34
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
 */
 
-define('THREEJS_MAP_VERSION', '0.1.29');
+define('THREEJS_MAP_VERSION', '0.1.31');
 
 require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;

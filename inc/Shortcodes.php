@@ -27,6 +27,8 @@ if( !class_exists('MCDShortcodes') ) {
 			add_filter( 'query_vars', array( $this, 'add_rewrite_vars' ) );
 			add_action( 'template_redirect', array( $this, 'single_page_rewrite_catch' ) );
 			add_action( 'redux/options/'.MCD_REDUX_OPT_NAME.'/settings/change', array( $this, 'redux_options_saved') );
+      
+      add_action( 'parse_request', array($this, 'handle_image_proxy_request') );
 
 			add_filter( 'body_class', array( $this, 'add_plugin_body_class') );
 			add_filter( 'wp_head', array( $this, 'dynamic_styles_scripts') );
@@ -82,6 +84,54 @@ if( !class_exists('MCDShortcodes') ) {
 			$vars[] = 'mcdmapretailer';
 			return $vars;
 		}
+
+    function handle_image_proxy_request() {
+      if (isset($_GET['eyeonmedia'])) {
+        $image_url = urldecode($_GET['eyeonmedia']);
+
+        // Security check - you might want to add more validation here
+        $allowed_domains = array(
+          'eyeon-media-development.eyeondev1.com',
+          'eyeon-media-staging.eyeondev1.com',
+          'eyeon-media-production.eyeondev1.com',
+        );
+
+        $parsed_url = parse_url($image_url);
+        if (!in_array($parsed_url['host'], $allowed_domains)) {
+          status_header(403);
+          die('Domain not allowed');
+        }
+        
+        // Fetch the image
+        $response = wp_remote_get($image_url, array(
+          'timeout' => 10,
+          'sslverify' => false
+        ));
+
+        if (is_wp_error($response)) {
+          status_header(404);
+          die('Failed to fetch image');
+        }
+
+        $content_type = wp_remote_retrieve_header($response, 'content-type');
+        $image_data = wp_remote_retrieve_body($response);
+
+        // Verify it's an image
+        if (!strpos($content_type, 'image/') === 0) {
+          status_header(400);
+          die('Invalid image type');
+        }
+
+        // Set headers
+        nocache_headers();
+        header('Content-Type: ' . $content_type);
+        header('Content-Length: ' . strlen($image_data));
+
+        // Output image
+        echo $image_data;
+        exit;
+      }
+    }
 
 		function add_rewrite_rules($saved_options) {
 			add_rewrite_tag( '%mycenterdeal%', '([^&]+)' );
