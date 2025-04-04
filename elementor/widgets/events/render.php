@@ -6,10 +6,6 @@ $fields = [
   'external_event_new_tab',
   'event_title',
   'event_excerpt',
-  'event_date',
-  'event_display_date',
-  'event_time',
-  'event_ongoing_dates',
   'event_category',
   'no_results_found_text',
 ];
@@ -212,9 +208,9 @@ $unique_id = uniqid();
     function parseAndFindUpcoming(event) {
       var upcomingOccurrence = null;
       var tempStartDate = new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time));
-      if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
+
+      if ((event.event_type === "recurring" || event.event_type === "ongoing") && event.repeat_rrule && event.repeat_rrule !== '') {
         var rule = rrule.RRule.fromString(event.repeat_rrule);
-        // console.log('%c'+event.title+' - %c'+rule.toText(), 'font-size: 14px; font-family: system-ui;', 'font-size: 14px; font-weight: bold; font-style: italic; border: 1px solid rgba(255,255,255,0.5); padding: 3px 6px; background-color: rgba(255,255,255,0.1); border-radius: 4px; font-family: system-ui;');
 
         // Get occurrences within a certain time range (adjust as needed)
         var occurrences = rule.between(
@@ -237,18 +233,42 @@ $unique_id = uniqid();
         upcomingOccurrence = occurrencesInTimezone.find(function (occurrence) {
           return occurrence >= todayDate;
         });
+
+        if (upcomingOccurrence) {  
+          event.upcoming_date = tempStartDate > upcomingOccurrence ? tempStartDate : upcomingOccurrence;
+        }
       }
 
+      if (event.event_type === "onetime") {
+        event.upcoming_date = tempStartDate > todayDate ? tempStartDate : todayDate;
+      }
 
-      if (upcomingOccurrence) {  
-        event.upcoming_date = tempStartDate > upcomingOccurrence ? tempStartDate : upcomingOccurrence;
-      } else {
-        event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
+      if (event.event_type === "custom") {
+        const customDates = event.custom_dates || [];
+        let nextCustomDate = null;
+        let nextCustomDateObj = null;
+
+        for (const customDate of customDates) {
+          const customDateTime = new Date(customDate.date + ' ' + customDate.start_time);
+          if (customDateTime >= todayDate) {
+            if (!nextCustomDate || customDateTime < nextCustomDate) {
+              nextCustomDate = customDateTime;
+              nextCustomDateObj = customDate;
+            }
+          }
+        }
+
+        if (nextCustomDate) {
+          event.upcoming_date = nextCustomDate;
+          event.start_time = nextCustomDateObj.start_time;
+          event.end_time = nextCustomDateObj.end_time;
+        }
       }
 
       event.datesStr = eyeonFormatDate(event.upcoming_date);
       event.formatted_start_date = eyeonFormatDate(event.start_date);
       event.formatted_end_date = eyeonFormatDate(event.end_date);
+
       return event;
     }
 
@@ -265,29 +285,26 @@ $unique_id = uniqid();
                 <img src="${event.media.url}" alt="${event.title}" />
               </div>
               <div class="event-content">
-                ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
-                ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
-                ${ (settings.event_date === 'show' || settings.event_time === 'show') ? `
+                ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : ``}
+                ${ settings.event_excerpt ? `<p class="event-excerpt">${event.short_description}</p>` : ``}
+                ${ (event.show_event_date || event.show_event_time) ? `
                   <div class="metadata">
-                    ${ settings.event_date && (!event.ongoing_event || (event.ongoing_event && settings.event_ongoing_dates)) ? `
+                    ${ event.show_event_date ? `
                       <div class="date">
                         <i class="far fa-calendar"></i>
-                        ${ settings.event_display_date == 'upcoming' ? `
-                          <span>${event.datesStr}</span>
-                        ` : `
-                          <span>${event.formatted_start_date} - ${event.formatted_end_date}</span>
-                        `}
+                        ${ event.show_event_date === 'upcoming' || event.show_event_date === 'date' ? `<span>${event.datesStr}</span>` : ``}
+                        ${ event.show_event_date === 'range' ? `<span>${event.formatted_start_date} - ${event.formatted_end_date}</span>` : ``}
                       </div>
-                    `: '' }
-                    ${(settings.event_time && !event.is_all_day_event) ? `
+                    `:``}
+                    ${ event.show_event_time && !event.is_all_day_event ? `
                       <div class="time">
                         <i class="far fa-clock"></i>
                         <span>${eyeonFormatTime(event.start_time)} - ${eyeonFormatTime(event.end_time)}</span>
                       </div>
-                    ` : '' }
+                    `:``}
                   </div>
-                  `: '' }
-                </div>
+                `:``}
+              </div>
             </a>
           `);
           eventsList.append(eventItem);
