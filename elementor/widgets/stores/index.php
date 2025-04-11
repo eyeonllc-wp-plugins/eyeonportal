@@ -231,6 +231,171 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
 
     // ================================================================
+    // HEADER STYLES
+    // ================================================================
+
+    $this->start_controls_section(
+      'header_style_settings',
+      [
+        'label' => __( 'Header', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'view_mode' => 'grid',
+          'categories_sidebar' => 'dropdown',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'stores_header_gap',
+      [
+        'label' => __( 'Gap', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 60,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 30,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown' => 'gap: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'stores_header_margin_bottom',
+      [
+        'label' => __( 'Margin Bottom', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 60,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 30,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
+    // HEADER CATEGORIES DROPDOWN STYLES
+    // ================================================================
+
+    $this->start_controls_section(
+      'categories_dropdown_style_settings',
+      [
+        'label' => __( 'Categories Dropdown', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'view_mode' => 'grid',
+          'categories_sidebar' => 'dropdown',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'categories_dropdown_bg_color',
+      [
+        'label' => __( 'Background Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#a9dfe9',
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger' => 'background-color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'categories_dropdown_text_color',
+      [
+        'label' => __( 'Text Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#666',
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger:after' => 'border-top-color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'categories_dropdown_typography',
+        'selector' => '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
+    // HEADER HEADING STYLES
+    // ================================================================
+
+    $this->start_controls_section(
+      'header_heading_style_settings',
+      [
+        'label' => __( 'Heading', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'view_mode' => 'grid',
+          'categories_sidebar' => 'dropdown',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'header_heading_bg_color',
+      [
+        'label' => __( 'Background Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#a9dfe9',
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading' => 'background-color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'header_heading_text_color',
+      [
+        'label' => __( 'Text Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'default' => '#666',
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading' => 'color: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'header_heading_typography',
+        'selector' => '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading',
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
     // GRID SETTINGS
     // ================================================================
 
@@ -326,70 +491,6 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     );
 
     $this->end_controls_section();
-
-    // ================================================================
-    // SEARCH STYLE
-    // ================================================================
-
-    // $this->start_controls_section(
-    //   'search_style_settings',
-    //   [
-    //     'label' => __( 'Search', EYEON_NAMESPACE ),
-    //     'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-    //     'condition' => [
-    //       'view_mode' => 'grid',
-    //       'stores_search' => 'show',
-    //     ],
-    //   ]
-    // );
-
-    // $this->add_responsive_control(
-    //   'search_width',
-    //   [
-    //     'label' => __( 'Width', EYEON_NAMESPACE ),
-    //     'type' => \Elementor\Controls_Manager::SLIDER,
-    //     'range' => [
-    //       'px' => [
-    //         'min' => 150,
-    //         'max' => 500,
-    //         'step' => 1
-    //       ],
-    //     ],
-    //     'size_units' => ['px'],
-    //     'default' => [
-    //       'unit' => 'px',
-    //       'size' => 220,
-    //     ],
-    //     'selectors' => [
-    //       '{{WRAPPER}} .eyeon-stores .stores-header .search-bar .stores-search' => 'width: {{SIZE}}{{UNIT}};',
-    //     ],
-    //   ]
-    // );
-
-    // $this->add_responsive_control(
-    //   'stores_header_margin_bottom',
-    //   [
-    //     'label' => __( 'Margin Bottom', EYEON_NAMESPACE ),
-    //     'type' => \Elementor\Controls_Manager::SLIDER,
-    //     'range' => [
-    //       'px' => [
-    //         'min' => 0,
-    //         'max' => 60,
-    //         'step' => 1
-    //       ],
-    //     ],
-    //     'size_units' => ['px'],
-    //     'default' => [
-    //       'unit' => 'px',
-    //       'size' => 15,
-    //     ],
-    //     'selectors' => [
-    //       '{{WRAPPER}} .eyeon-stores .stores-header' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-    //     ],
-    //   ]
-    // );
-
-    // $this->end_controls_section();
 
     // ================================================================
     // CATEGORIES STYLE
