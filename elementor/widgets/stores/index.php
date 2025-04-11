@@ -331,65 +331,65 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     // SEARCH STYLE
     // ================================================================
 
-    $this->start_controls_section(
-      'search_style_settings',
-      [
-        'label' => __( 'Search', EYEON_NAMESPACE ),
-        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-        'condition' => [
-          'view_mode' => 'grid',
-          'stores_search' => 'show',
-        ],
-      ]
-    );
+    // $this->start_controls_section(
+    //   'search_style_settings',
+    //   [
+    //     'label' => __( 'Search', EYEON_NAMESPACE ),
+    //     'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+    //     'condition' => [
+    //       'view_mode' => 'grid',
+    //       'stores_search' => 'show',
+    //     ],
+    //   ]
+    // );
 
-    $this->add_responsive_control(
-      'search_width',
-      [
-        'label' => __( 'Width', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SLIDER,
-        'range' => [
-          'px' => [
-            'min' => 150,
-            'max' => 500,
-            'step' => 1
-          ],
-        ],
-        'size_units' => ['px'],
-        'default' => [
-          'unit' => 'px',
-          'size' => 220,
-        ],
-        'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-header .search-bar .stores-search' => 'width: {{SIZE}}{{UNIT}};',
-        ],
-      ]
-    );
+    // $this->add_responsive_control(
+    //   'search_width',
+    //   [
+    //     'label' => __( 'Width', EYEON_NAMESPACE ),
+    //     'type' => \Elementor\Controls_Manager::SLIDER,
+    //     'range' => [
+    //       'px' => [
+    //         'min' => 150,
+    //         'max' => 500,
+    //         'step' => 1
+    //       ],
+    //     ],
+    //     'size_units' => ['px'],
+    //     'default' => [
+    //       'unit' => 'px',
+    //       'size' => 220,
+    //     ],
+    //     'selectors' => [
+    //       '{{WRAPPER}} .eyeon-stores .stores-header .search-bar .stores-search' => 'width: {{SIZE}}{{UNIT}};',
+    //     ],
+    //   ]
+    // );
 
-    $this->add_responsive_control(
-      'stores_header_margin_bottom',
-      [
-        'label' => __( 'Margin Bottom', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SLIDER,
-        'range' => [
-          'px' => [
-            'min' => 0,
-            'max' => 60,
-            'step' => 1
-          ],
-        ],
-        'size_units' => ['px'],
-        'default' => [
-          'unit' => 'px',
-          'size' => 15,
-        ],
-        'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .stores-header' => 'margin-bottom: {{SIZE}}{{UNIT}};',
-        ],
-      ]
-    );
+    // $this->add_responsive_control(
+    //   'stores_header_margin_bottom',
+    //   [
+    //     'label' => __( 'Margin Bottom', EYEON_NAMESPACE ),
+    //     'type' => \Elementor\Controls_Manager::SLIDER,
+    //     'range' => [
+    //       'px' => [
+    //         'min' => 0,
+    //         'max' => 60,
+    //         'step' => 1
+    //       ],
+    //     ],
+    //     'size_units' => ['px'],
+    //     'default' => [
+    //       'unit' => 'px',
+    //       'size' => 15,
+    //     ],
+    //     'selectors' => [
+    //       '{{WRAPPER}} .eyeon-stores .stores-header' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+    //     ],
+    //   ]
+    // );
 
-    $this->end_controls_section();
+    // $this->end_controls_section();
 
     // ================================================================
     // CATEGORIES STYLE

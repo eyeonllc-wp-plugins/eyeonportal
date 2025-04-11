@@ -229,9 +229,7 @@
           flex: 0 0 220px;
 }
 .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select {
-  -webkit-box-flex: 0;
-      -ms-flex: 0 0 220px;
-          flex: 0 0 220px;
+  height: 100%;
 }
 .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select select {
   -webkit-appearance: none;
@@ -245,26 +243,156 @@
   font-size: 14px;
   outline: none;
 }
-.eyeon-stores .eyeon-wrapper .stores-header .search-bar {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper {
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  width: 100%;
+  margin: 0 auto;
+  height: 100%;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  border-radius: 3px;
+  height: 100%;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #444;
+  background-color: #a9dfe9;
+  cursor: pointer;
+  height: 100%;
+  gap: 10px;
 }
-.eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search {
-  width: 240px;
-  border: 1px solid #AAA;
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger:after {
+  content: "";
+  width: 0;
+  height: 0;
+  -webkit-transform: translateY(3px);
+          transform: translateY(3px);
+  border: 6px solid transparent;
+  border-top-color: #444;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-options {
+  position: absolute;
+  display: block;
+  top: calc(100% + 1px);
+  left: 0;
+  border: 1px solid #e8e8e8;
+  border-top: 0;
+  background: #fff;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 4;
+  border-radius: 0 0 8px 8px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  min-width: 100%;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-options .custom-option {
+  position: relative;
+  display: block;
   padding: 5px 12px;
   font-size: 14px;
+  color: #444;
+  cursor: pointer;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-options .custom-option:hover {
+  background-color: #f8f8f8;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-options .custom-option.selected {
+  color: #333;
+  background-color: #f8f8f8;
+  font-weight: 500;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select.open .custom-options {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .hidden-select {
+  display: none;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading {
+  background-color: #f5e8e3;
+  color: #444;
+  margin: 0;
+  font-size: 22px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 12px 20px;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .search-bar {
+  width: 240px;
+  background-color: #f3f6f1;
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .search-bar .eicon-search-bold {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  color: #888;
+  font-size: 20px;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search {
+  width: 100%;
+  padding: 6px 15px 6px 42px;
   outline: none;
+  background-color: transparent;
+  text-transform: uppercase;
+  font-size: 18px;
+  border: none;
+}
+.eyeon-stores .eyeon-wrapper .stores-header.with-dropdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 30px;
+}
+.eyeon-stores .eyeon-wrapper .stores-header.with-dropdown .search-bar {
+  width: auto;
 }
 .eyeon-stores .eyeon-wrapper .content-cols {
   display: -webkit-box;
@@ -409,6 +537,25 @@
   .eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search {
     width: 100% !important;
   }
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 15px;
+  }
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(1) {
+    -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+            order: 2;
+  }
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(2) {
+    -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+            order: 1;
+  }
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(3) {
+    -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+            order: 3;
+  }
   .eyeon-stores .eyeon-wrapper .content-cols {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -422,111 +569,6 @@
     border-right: none;
     position: relative;
   }
-}
-.eyeon-stores .custom-select-wrapper {
-  position: relative;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  width: 100%;
-  max-width: 220px;
-  margin: 0 auto;
-}
-.eyeon-stores .custom-select {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  background-color: #fff;
-  border-radius: 3px;
-  border: 1px solid #aaa;
-}
-.eyeon-stores .custom-select .custom-select__trigger {
-  position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  padding: 5px 25px 5px 10px;
-  font-size: 14px;
-  color: #444;
-  cursor: pointer;
-}
-.eyeon-stores .custom-select .custom-select__trigger span {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  padding-right: 10px;
-}
-.eyeon-stores .custom-select .custom-select__trigger:after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: calc(50% + 3px);
-  right: 10px;
-  -webkit-transform: translateY(-50%);
-          transform: translateY(-50%);
-  border: 6px solid transparent;
-  border-top-color: #888;
-}
-.eyeon-stores .custom-select .custom-options {
-  position: absolute;
-  display: block;
-  top: calc(100% + 1px);
-  left: 0;
-  border: 1px solid #e8e8e8;
-  border-top: 0;
-  background: #fff;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  z-index: 2;
-  border-radius: 0 0 8px 8px;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-}
-.eyeon-stores .custom-select .custom-options .custom-option {
-  position: relative;
-  display: block;
-  padding: 5px 12px;
-  font-size: 14px;
-  color: #444;
-  cursor: pointer;
-  -webkit-transition: all 0.2s;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.eyeon-stores .custom-select .custom-options .custom-option:hover {
-  background-color: #f8f8f8;
-}
-.eyeon-stores .custom-select .custom-options .custom-option.selected {
-  color: #333;
-  background-color: #f8f8f8;
-  font-weight: 500;
-}
-.eyeon-stores .custom-select.open .custom-options {
-  opacity: 1;
-  visibility: visible;
-  pointer-events: all;
-  -webkit-transform: translateY(0);
-          transform: translateY(0);
-}
-.eyeon-stores .hidden-select {
-  display: none;
 }
 
 #eyeonstore-single .eyeon-store {

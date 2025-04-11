@@ -10,7 +10,7 @@
       }
 
       .stores-categories-select {
-        flex: 0 0 220px;
+        height: 100%;
 
         select {
           appearance: none;
@@ -22,20 +22,153 @@
           font-size: 14px;
           outline: none;
         }
+
+        .custom-select-wrapper {
+          position: relative;
+          user-select: none;
+          width: 100%;
+          margin: 0 auto;
+          height: 100%;
+
+          .custom-select {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border-radius: 3px;
+            height: 100%;
+
+            .custom-select__trigger {
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              padding: 6px 12px;
+              font-size: 14px;
+              color: #444;
+              background-color: #a9dfe9;
+              cursor: pointer;
+              height: 100%;
+              gap: 10px;
+
+              span {
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                font-size: 18px;
+                text-transform: uppercase;
+              }
+
+
+              &:after {
+                content: "";
+                width: 0;
+                height: 0;
+                transform: translateY(3px);
+                border: 6px solid transparent;
+                border-top-color: #444;
+              }
+            }
+
+            .custom-options {
+              position: absolute;
+              display: block;
+              top: calc(100% + 1px);
+              left: 0;
+              border: 1px solid #e8e8e8;
+              border-top: 0;
+              background: #fff;
+              opacity: 0;
+              visibility: hidden;
+              pointer-events: none;
+              z-index: 4;
+              border-radius: 0 0 8px 8px;
+              transition: all 0.2s;
+              min-width: 100%;
+
+              .custom-option {
+                position: relative;
+                display: block;
+                padding: 5px 12px;
+                font-size: 14px;
+                color: #444;
+                cursor: pointer;
+                transition: all 0.2s;
+                white-space: nowrap;
+
+                &:hover {
+                  background-color: #f8f8f8;
+                }
+
+                &.selected {
+                  color: #333;
+                  background-color: #f8f8f8;
+                  font-weight: 500;
+                }
+              }
+            }
+
+            &.open {
+              .custom-options {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: all;
+                transform: translateY(0);
+              }
+            }
+          }
+
+          .hidden-select {
+            display: none;
+          }
+        }
+      }
+
+      .stores-directory-heading {
+        background-color: #f5e8e3;
+        color: #444;
+        margin: 0;
+        font-size: 22px;
+        text-transform: uppercase;
+        text-align: center;
+        padding: 12px 20px;
       }
 
       .search-bar {
-        flex: 1;
+        width: 240px;
+        background-color: #f3f6f1;
+        height: 100%;
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        position: relative;
+
+        .eicon-search-bold {
+          position: absolute;
+          left: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #888;
+          font-size: 20px;
+        }
 
         .stores-search {
-          width: 240px;
-          border: 1px solid #AAA;
-          padding: 5px 12px;
-          font-size: 14px;
+          width: 100%;
+          padding: 6px 15px 6px 42px;
           outline: none;
+          background-color: transparent;
+          text-transform: uppercase;
+          font-size: 18px;
+          border: none;
+        }
+      }
+
+      &.with-dropdown {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .search-bar {
+          width: auto;
         }
       }
     }
@@ -197,6 +330,23 @@
         .search-bar .stores-search {
           width: 100% !important;
         }
+
+        &.with-dropdown {
+          grid-template-columns: repeat(1, 1fr);
+          gap: 15px;
+
+          >*:nth-child(1) {
+            order: 2;
+          }
+
+          >*:nth-child(2) {
+            order: 1;
+          }
+
+          >*:nth-child(3) {
+            order: 3;
+          }
+        }
       }
 
       .content-cols {
@@ -211,102 +361,4 @@
     }
   }
 
-  .custom-select-wrapper {
-    position: relative;
-    user-select: none;
-    width: 100%;
-    max-width: 220px;
-    margin: 0 auto;
-  }
-
-  .custom-select {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: 3px;
-    border: 1px solid #aaa;
-
-    .custom-select__trigger {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 5px 25px 5px 10px;
-      font-size: 14px;
-      color: #444;
-      cursor: pointer;
-
-      span {
-        flex: 1;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        padding-right: 10px;
-      }
-
-
-      &:after {
-        content: "";
-        position: absolute;
-        width: 0;
-        height: 0;
-        top: calc(50% + 3px);
-        right: 10px;
-        transform: translateY(-50%);
-        border: 6px solid transparent;
-        border-top-color: #888;
-      }
-    }
-
-    .custom-options {
-      position: absolute;
-      display: block;
-      top: calc(100% + 1px);
-      left: 0;
-      border: 1px solid #e8e8e8;
-      border-top: 0;
-      background: #fff;
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      z-index: 2;
-      border-radius: 0 0 8px 8px;
-      transition: all 0.2s;
-
-      .custom-option {
-        position: relative;
-        display: block;
-        padding: 5px 12px;
-        font-size: 14px;
-        color: #444;
-        cursor: pointer;
-        transition: all 0.2s;
-        white-space: nowrap;
-
-        &:hover {
-          background-color: #f8f8f8;
-        }
-
-        &.selected {
-          color: #333;
-          background-color: #f8f8f8;
-          font-weight: 500;
-        }
-      }
-    }
-
-    &.open {
-      .custom-options {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: all;
-        transform: translateY(0);
-      }
-    }
-  }
-
-  .hidden-select {
-    display: none;
-  }
 }

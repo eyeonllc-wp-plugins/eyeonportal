@@ -30,10 +30,13 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
   <div class="eyeon-wrapper" style="display:none;">
 
     <?php if( $settings['view_mode'] === 'grid' ) : ?>
-      <div class="stores-header">
+      <div class="stores-header <?= $settings['categories_sidebar'] === 'dropdown'?'with-dropdown':'' ?>">
         <?php if( $settings['categories_sidebar'] === 'show' ) : ?>
           <div class="categories-sidebar-placeholder hide-on-mob"></div>
-          <div class="stores-categories-select show-on-mob">
+        <?php endif; ?>
+
+        <?php if( $settings['categories_sidebar'] === 'show' || $settings['categories_sidebar'] === 'dropdown' ) : ?>
+          <div class="stores-categories-select <?= $settings['categories_sidebar'] === 'show'?'show-on-mob':'' ?>">
             <div class="custom-select-wrapper">
               <div class="custom-select">
                 <div class="custom-select__trigger">
@@ -43,7 +46,6 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
                   <span class="custom-option selected" data-value="all">
                     <?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?>
                   </span>
-                  <!-- Other options will be populated via JavaScript -->
                 </div>
               </div>
               <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select">
@@ -54,28 +56,12 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         <?php endif; ?>
 
         <?php if( $settings['categories_sidebar'] === 'dropdown' ) : ?>
-          <div class="stores-categories-select">
-            <div class="custom-select-wrapper">
-              <div class="custom-select">
-                <div class="custom-select__trigger">
-                  <span><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></span>
-                </div>
-                <div class="custom-options">
-                  <span class="custom-option selected" data-value="all">
-                    <?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?>
-                  </span>
-                  <!-- Other options will be populated via JavaScript -->
-                </div>
-              </div>
-              <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select">
-                <option value="all" selected><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></option>
-              </select>
-            </div>
-          </div>
+          <h2 class="stores-directory-heading">Directory</h2>
         <?php endif; ?>
         
         <div class="search-bar">
           <?php if( $settings['stores_search'] === 'show' ) : ?>
+            <i class="eicon-search-bold" aria-hidden="true"></i>
             <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
           <?php endif; ?>
         </div>
