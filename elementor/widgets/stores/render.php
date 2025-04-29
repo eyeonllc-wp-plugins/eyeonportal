@@ -22,8 +22,6 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
   $center_id = $settings['custom_center_id'];
   $custom_center_id = $center_id;
 }
-
-// eyeon_debug($filtered_settings, false);
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
@@ -56,7 +54,15 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         <?php endif; ?>
 
         <?php if( $settings['categories_sidebar'] === 'dropdown' ) : ?>
-          <h2 class="stores-directory-heading">Directory</h2>
+          <h2 class="stores-directory-heading">
+            <?php if( !empty($settings['header_heading_link']['url']) ) : ?>
+              <a href="<?= $settings['header_heading_link']['url'] ?>" target="<?= $settings['header_heading_link']['is_external']?'_blank':'_self' ?>" <?= $settings['header_heading_link']['nofollow']?'rel="nofollow"':'' ?>>
+                <span><?= $settings['header_heading_text'] ?></span>
+              </a>
+            <?php else : ?>
+              <span><?= $settings['header_heading_text'] ?></span>
+            <?php endif; ?>
+          </h2>
         <?php endif; ?>
         
         <div class="search-bar">

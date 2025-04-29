@@ -231,6 +231,44 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
 
     // ================================================================
+    // HEADER HEADING CONTENT
+    // ================================================================
+
+    $this->start_controls_section(
+      'header_heading_content_settings',
+      [
+        'label' => __( 'Header Content', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+        'condition' => [
+          'view_mode' => 'grid',
+          'categories_sidebar' => 'dropdown',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'header_heading_text',
+      [
+        'label' => __( 'Text', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::TEXT,
+        'default' => 'Directory',
+      ]
+    );
+
+    $this->add_control(
+      'header_heading_link',
+      [
+        'label' => __( 'Link', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::URL,
+        // 'dynamic' => [
+        //   'active' => true,
+        // ],
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
     // HEADER STYLES
     // ================================================================
 
@@ -242,6 +280,31 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'condition' => [
           'view_mode' => 'grid',
           'categories_sidebar' => 'dropdown',
+        ],
+      ]
+    );
+
+    $this->add_responsive_control(
+      'stores_header_height',
+      [
+        'label' => __( 'Height', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 60,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 48,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger' => 'height: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading span' => 'height: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search' => 'height: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
@@ -339,7 +402,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       \Elementor\Group_Control_Typography::get_type(),
       [
         'name' => 'categories_dropdown_typography',
-        'selector' => '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger',
+        'selector' => '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger span',
       ]
     );
 
@@ -380,7 +443,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::COLOR,
         'default' => '#666',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading span' => 'color: {{VALUE}}',
         ],
       ]
     );
@@ -389,7 +452,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
       \Elementor\Group_Control_Typography::get_type(),
       [
         'name' => 'header_heading_typography',
-        'selector' => '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading',
+        'selector' => '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading span',
       ]
     );
 
