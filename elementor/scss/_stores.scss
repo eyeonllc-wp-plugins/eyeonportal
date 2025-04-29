@@ -17,11 +17,11 @@
         select {
           appearance: none;
           border: 1px solid #AAA;
-          font-weight: 500;
           background-color: rgba(0, 0, 0, 0.05);
           width: 100%;
           padding: 5px 12px;
-          font-size: 14px;
+          font-size: 22px;
+          font-weight: 600;
           outline: none;
         }
 
@@ -136,6 +136,7 @@
 
         span {
           font-size: 22px;
+          font-weight: 600;
           display: block;
           color: #444;
           text-transform: uppercase;
@@ -333,7 +334,6 @@
     .eyeon-wrapper {
       .stores-header {
         flex-direction: column;
-        align-items: stretch;
         gap: 15px;
 
         .stores-categories-select {
@@ -350,6 +350,7 @@
 
         &.with-dropdown {
           flex-direction: column;
+          align-items: stretch;
           gap: 15px;
 
           >*:nth-child(1) {

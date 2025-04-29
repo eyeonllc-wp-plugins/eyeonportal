@@ -239,11 +239,11 @@
      -moz-appearance: none;
           appearance: none;
   border: 1px solid #AAA;
-  font-weight: 500;
   background-color: rgba(0, 0, 0, 0.05);
   width: 100%;
   padding: 5px 12px;
-  font-size: 14px;
+  font-size: 22px;
+  font-weight: 600;
   outline: none;
 }
 .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper {
@@ -365,6 +365,7 @@
 }
 .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading span {
   font-size: 22px;
+  font-weight: 600;
   display: block;
   color: #444;
   text-transform: uppercase;
@@ -557,9 +558,6 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    -webkit-box-align: stretch;
-        -ms-flex-align: stretch;
-            align-items: stretch;
     gap: 15px;
   }
   .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select {
@@ -578,6 +576,9 @@
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
+    -webkit-box-align: stretch;
+        -ms-flex-align: stretch;
+            align-items: stretch;
     gap: 15px;
   }
   .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(1) {
