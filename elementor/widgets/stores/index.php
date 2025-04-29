@@ -237,12 +237,24 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'header_heading_content_settings',
       [
-        'label' => __( 'Header Content', EYEON_NAMESPACE ),
+        'label' => __( 'Header', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
         'condition' => [
           'view_mode' => 'grid',
           'categories_sidebar' => 'dropdown',
         ],
+      ]
+    );
+
+    $this->add_control(
+      'header_heading_show',
+      [
+        'label' => __( 'Heading', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => __( 'Show', EYEON_NAMESPACE ),
+        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
+        'return_value' => 'show',
+        'default' => 'show',
       ]
     );
 
@@ -393,7 +405,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'default' => '#666',
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger' => 'color: {{VALUE}}',
-          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger:after' => 'border-top-color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger svg' => 'fill: {{VALUE}}',
         ],
       ]
     );

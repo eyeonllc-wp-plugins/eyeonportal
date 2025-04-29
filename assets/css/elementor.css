@@ -292,14 +292,9 @@
   font-size: 18px;
   text-transform: uppercase;
 }
-.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger:after {
-  content: "";
-  width: 0;
-  height: 0;
-  -webkit-transform: translateY(3px);
-          transform: translateY(3px);
-  border: 6px solid transparent;
-  border-top-color: #444;
+.eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger svg {
+  fill: #444;
+  width: 1em;
 }
 .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-options {
   position: absolute;
@@ -411,6 +406,11 @@
   font-size: 18px;
   border: none;
   height: 48px;
+}
+.eyeon-stores .eyeon-wrapper .stores-header .heading-heading-placeholder {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
 }
 .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown {
   display: -webkit-box;
@@ -571,6 +571,9 @@
   .eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search {
     width: 100% !important;
   }
+  .eyeon-stores .eyeon-wrapper .stores-header .heading-heading-placeholder {
+    display: none;
+  }
   .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -581,17 +584,17 @@
             align-items: stretch;
     gap: 15px;
   }
-  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(1) {
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown .stores-categories-select {
     -webkit-box-ordinal-group: 3;
         -ms-flex-order: 2;
             order: 2;
   }
-  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(2) {
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown .stores-directory-heading {
     -webkit-box-ordinal-group: 2;
         -ms-flex-order: 1;
             order: 1;
   }
-  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown > *:nth-child(3) {
+  .eyeon-stores .eyeon-wrapper .stores-header.with-dropdown .search-bar {
     -webkit-box-ordinal-group: 4;
         -ms-flex-order: 3;
             order: 3;

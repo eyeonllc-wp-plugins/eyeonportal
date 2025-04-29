@@ -11,7 +11,7 @@ $fields = [
   'retailer_tags',
   'featured_image',
   'no_results_found_text',
-  // 'retailer_location_position',
+  'header_heading_show',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
@@ -38,22 +38,24 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
             <div class="custom-select-wrapper">
               <div class="custom-select">
                 <div class="custom-select__trigger">
-                  <span><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></span>
+                  <!-- <span><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></span> -->
+                  <span>Categories</span>
+                  <svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-down" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path></svg>
                 </div>
                 <div class="custom-options">
                   <span class="custom-option selected" data-value="all">
-                    <?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?>
+                    Categories
                   </span>
                 </div>
               </div>
               <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select">
-                <option value="all" selected><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></option>
+                <option value="all" selected>Categories</option>
               </select>
             </div>
           </div>
         <?php endif; ?>
 
-        <?php if( $settings['categories_sidebar'] === 'dropdown' ) : ?>
+        <?php if( $settings['categories_sidebar'] === 'dropdown' && $settings['header_heading_show'] === 'show' ) : ?>
           <h2 class="stores-directory-heading">
             <?php if( !empty($settings['header_heading_link']['url']) ) : ?>
               <a href="<?= $settings['header_heading_link']['url'] ?>" target="<?= $settings['header_heading_link']['is_external']?'_blank':'_self' ?>" <?= $settings['header_heading_link']['nofollow']?'rel="nofollow"':'' ?>>
@@ -71,6 +73,10 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
             <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
           <?php endif; ?>
         </div>
+
+        <?php if( $settings['categories_sidebar'] === 'dropdown' && !$settings['header_heading_show'] ) : ?>
+          <div class="heading-heading-placeholder"></div>
+        <?php endif; ?>
       </div>
     <?php endif; ?>
 
@@ -78,7 +84,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
       <?php if( @$settings['categories_sidebar'] === 'show' ) : ?>
       <div class="stores-categories hide-on-mob">
         <ul id="stores-categories-<?= $unique_id ?>">
-          <li data-value="all" class="active"><?= in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories'])?'All Restaurants':'All Stores' ?></li>
+          <li data-value="all" class="active">Categories</li>
         </ul>
       </div>
       <?php endif; ?>
