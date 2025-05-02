@@ -339,7 +339,9 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
       retailers.forEach(retailer => {
         retailersList.find('.store.store-'+retailer.id).addClass('eyeon-hide');
         if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
-          if (search === '' || retailer.name.toLowerCase().includes(search)) {
+          if (search === '' || 
+              retailer.name.toLowerCase().includes(search) || 
+              retailer.tags.some(tag => tag.name.toLowerCase().includes(search))) {
             retailersList.find('.store.store-'+retailer.id).removeClass('eyeon-hide');
           }
         }
