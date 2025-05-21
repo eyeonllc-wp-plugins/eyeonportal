@@ -1,13 +1,3 @@
-@font-face {
-  font-family: "Avenir-Pro";
-  font-weight: normal;
-  src: url("../fonts/Avenir-Next-Pro.otf");
-}
-@font-face {
-  font-family: "Avenir-Pro";
-  font-weight: bold;
-  src: url("../fonts/Avenir-Next-Pro-SemiBold.otf");
-}
 html.noscrollbar,
 html.noscrollbar body {
   overflow-y: hidden;

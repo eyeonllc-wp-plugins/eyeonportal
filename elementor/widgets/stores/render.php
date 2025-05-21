@@ -69,7 +69,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         
         <div class="search-bar">
           <?php if( $settings['stores_search'] === 'show' ) : ?>
-            <i class="eicon-search-bold" aria-hidden="true"></i>
+            <span class="icon icon-search"></span>
             <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
           <?php endif; ?>
         </div>
@@ -341,7 +341,9 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         if (category === 'all' || retailer.categories.some(cat => cat.name.toLowerCase() === category)) {
           if (search === '' || 
               retailer.name.toLowerCase().includes(search) || 
-              retailer.tags.some(tag => tag.name.toLowerCase().includes(search))) {
+              retailer.tags.some(tag => tag.name.toLowerCase().includes(search)) ||
+              retailer.categories.some(cat => cat.name.toLowerCase().includes(search)) ||
+              (retailer.description && retailer.description.toLowerCase().includes(search))) {
             retailersList.find('.store.store-'+retailer.id).removeClass('eyeon-hide');
           }
         }
