@@ -10,7 +10,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-calendar';
   }
 
   public function get_categories() {

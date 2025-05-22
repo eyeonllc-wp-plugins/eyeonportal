@@ -10,7 +10,7 @@ class EyeOn_Map_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-map-pin';
   }
 
   public function get_categories() {

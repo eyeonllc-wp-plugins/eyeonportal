@@ -10,7 +10,7 @@ class EyeOn_Careers_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-person';
   }
 
   public function get_categories() {

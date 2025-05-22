@@ -10,7 +10,7 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-clock-o';
   }
 
   public function get_categories() {

@@ -10,7 +10,7 @@ class EyeOn_Deals_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-tags';
   }
 
   public function get_categories() {

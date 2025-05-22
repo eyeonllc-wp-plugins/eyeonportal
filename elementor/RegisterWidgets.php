@@ -100,6 +100,9 @@ function register_eyeon_widgets( $widgets_manager ) {
 
   require_once plugin_dir_path( __FILE__).'widgets/slider/index.php';
   $widgets_manager->register( new \EyeOn_Slider_Widget() );
+
+  require_once plugin_dir_path( __FILE__).'widgets/search/index.php';
+  $widgets_manager->register( new \EyeOn_Search_Widget() );
 }  
 add_action('elementor/widgets/register', 'register_eyeon_widgets');
 

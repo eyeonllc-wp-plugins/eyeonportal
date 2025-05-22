@@ -10,7 +10,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-cart-medium';
   }
 
   public function get_categories() {

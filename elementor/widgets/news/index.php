@@ -10,7 +10,7 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-posts-grid';
   }
 
   public function get_categories() {

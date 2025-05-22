@@ -10,7 +10,7 @@ class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
   }
 
   public function get_icon() {
-      return 'eicon-wordpress';
+      return 'eicon-slider-device';
   }
 
   public function get_categories() {
