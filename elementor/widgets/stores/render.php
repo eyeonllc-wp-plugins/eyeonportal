@@ -56,7 +56,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         <?php endif; ?>
 
         <?php if( $settings['categories_sidebar'] === 'dropdown' && $settings['header_heading_show'] === 'show' ) : ?>
-          <h2 class="stores-directory-heading">
+          <span class="stores-directory-heading">
             <?php if( !empty($settings['header_heading_link']['url']) ) : ?>
               <a href="<?= $settings['header_heading_link']['url'] ?>" target="<?= $settings['header_heading_link']['is_external']?'_blank':'_self' ?>" <?= $settings['header_heading_link']['nofollow']?'rel="nofollow"':'' ?>>
                 <span><?= $settings['header_heading_text'] ?></span>
@@ -64,7 +64,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
             <?php else : ?>
               <span><?= $settings['header_heading_text'] ?></span>
             <?php endif; ?>
-          </h2>
+            </span>
         <?php endif; ?>
         
         <div class="search-bar">
