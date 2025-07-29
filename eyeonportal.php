@@ -57,7 +57,7 @@ defined('MCD_API_DEALS')			      OR define( 'MCD_API_DEALS', API_BASE_URL . 'v1/
 defined('MCD_API_EVENTS')			      OR define( 'MCD_API_EVENTS', API_BASE_URL . 'v1/events' );
 defined('MCD_API_CAREERS')		      OR define( 'MCD_API_CAREERS', API_BASE_URL . 'v1/careers' );
 defined('MCD_API_NEWS')	            OR define( 'MCD_API_NEWS', API_BASE_URL . 'v1/blogs' );
-defined('MCD_API_SLIDERS')	        OR define( 'MCD_API_SLIDERS', API_BASE_URL . 'v1/web_slider' );
+defined('MCD_API_BANNERS')	        OR define( 'MCD_API_BANNERS', API_BASE_URL . 'v1/web_slider' );
 
 defined('MCD_API_CENTER_HOURS')	    OR define( 'MCD_API_CENTER_HOURS', API_BASE_URL . 'v1/opening_hours' );
 defined('MCP_API_LINKS')			      OR define( 'MCP_API_LINKS', API_BASE_URL.'v1/links' );

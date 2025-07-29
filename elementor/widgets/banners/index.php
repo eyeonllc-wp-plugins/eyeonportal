@@ -1,12 +1,12 @@
 <?php
 
-class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
+class EyeOn_Banner_Widget extends \Elementor\Widget_Base {
   public function get_name() {
-      return 'eyeon_slider_widget';
+      return 'eyeon_banner_widget';
   }
 
   public function get_title() {
-      return __( 'EyeOn Slider', EYEON_NAMESPACE );
+      return __( 'EyeOn Banner', EYEON_NAMESPACE );
   }
 
   public function get_icon() {
@@ -32,12 +32,12 @@ class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
     ];
   }
 
-  private function get_sliders_from_api() {
-    $slidersResp = mcd_api_data(MCD_API_SLIDERS);
+  private function get_banners_from_api() {
+    $bannersResp = mcd_api_data(MCD_API_BANNERS);
     $options = array();
-    if(isset($slidersResp) && isset($slidersResp['items']) & count($slidersResp['items'])>0 ) {
-      foreach( $slidersResp['items'] as $slider ) {
-        $options[$slider['id']] = $slider['name'];
+    if(isset($bannersResp) && isset($bannersResp['items']) & count($bannersResp['items'])>0 ) {
+      foreach( $bannersResp['items'] as $banner ) {
+        $options[$banner['id']] = $banner['name'];
       }
     }
     return $options;
@@ -59,11 +59,11 @@ class EyeOn_Slider_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'slider_id',
+      'banner_id',
       [
-        'label' => __( 'Slider', EYEON_NAMESPACE ),
+        'label' => __( 'Select Banner', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SELECT,
-        'options' => $this->get_sliders_from_api(),
+        'options' => $this->get_banners_from_api(),
         'default' => 0,
         'label_block' => false,
       ]

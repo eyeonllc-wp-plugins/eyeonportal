@@ -1,7 +1,7 @@
 <?php
 $settings = $this->get_settings_for_display();
 $fields = [
-  'slider_id',
+  'banner_id',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip($fields));
 $unique_id = uniqid();
@@ -26,13 +26,13 @@ jQuery(document).ready(function($) {
   fetch_slider();
 
   function fetch_slider() {
-    const slider_id = settings.slider_id;
+    const banner_id = settings.banner_id;
     const ajaxData = {
-      slider_id,
+      banner_id,
     };
 
     $.ajax({
-      url: "<?= MCD_API_SLIDERS ?>/" + slider_id,
+      url: "<?= MCD_API_BANNERS ?>/" + banner_id,
       data: ajaxData,
       method: 'GET',
       dataType: 'json',
@@ -41,28 +41,31 @@ jQuery(document).ready(function($) {
       },
       success: function(response) {
         defaultSliderSettings = response.settings.settings;
-        defaultSlides = response.settings.slides;
+        defaultSlides = response.settings.slides.filter(slide => slide.active);
 
         defaultSliderSettings.height = generateScreenResponsiveNumberUnitValues(defaultSliderSettings.height);
 
         defaultSlides.forEach((slide) => {
           slide.layers.forEach((layer) => {
-            layer.offset = generateScreenResponsiveOffsetValues(layer.offset);
-            layer.position = generateScreenResponsivePositionValues(layer.position);
+            console.log('layer', JSON.parse(JSON.stringify(layer)));
+
             layer.isVisible = generateScreenResponsiveValues(layer.isVisible);
 
+            layer.positionGroup.offset = generateScreenResponsiveOffsetValues(layer.positionGroup.offset);
+            layer.positionGroup.position = generateScreenResponsivePositionValues(layer.positionGroup.position);
+            
             if (layer.type === 'text' || layer.type === 'button') {
-              layer.font.size = generateScreenResponsiveNumberUnitValues(layer.font.size);
-              layer.padding = generateScreenResponsivePaddingValues(layer.padding);
+              if(layer.width) layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
+              layer.fontGroup.font.alignment = generateScreenResponsiveValues(layer.fontGroup.font.alignment);
+              layer.fontGroup.font.size = generateScreenResponsiveNumberUnitValues(layer.fontGroup.font.size);
+              layer.styleGroup.padding = generateScreenResponsivePaddingValues(layer.styleGroup.padding);
+            }
+            if (layer.type === 'image' ||layer.type === 'box') {
+              layer.sizeGroup.width = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.width);
+              layer.sizeGroup.height = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.height);
             }
             if (layer.type === 'image') {
-              layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
-              layer.height = generateScreenResponsiveNumberUnitValues(layer.height);
-              layer.objectFit = generateScreenResponsiveValues(layer.objectFit);
-            }
-            if (layer.type === 'box') {
-              layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
-              layer.height = generateScreenResponsiveNumberUnitValues(layer.height);
+              layer.sizeGroup.objectFit = generateScreenResponsiveValues(layer.sizeGroup.objectFit);
             }
           });
         });
@@ -70,7 +73,8 @@ jQuery(document).ready(function($) {
         calculateResizeValues();
       },
       error: function(xhr, status, error) {
-        eyeonSlider.removeClass('eyeon-loader').html('Slider not found.');
+        console.log('error', error);
+        eyeonSlider.removeClass('eyeon-loader').html('Banner not found.');
       }
     });
   }
@@ -88,8 +92,8 @@ jQuery(document).ready(function($) {
       slidesCopy.forEach((slide) => {
         slide.layers.forEach((layer) => {
           // Update position
-          layer.offset[currentDevice].x = (Number(layer.offset[currentDevice]?.x) / DefaultDeviceWidths[currentDevice]) * width;
-          layer.offset[currentDevice].y = (Number(layer.offset[currentDevice]?.y) / DefaultDeviceWidths[currentDevice]) * width;
+          layer.positionGroup.offset[currentDevice].x = (Number(layer.positionGroup.offset[currentDevice]?.x) / DefaultDeviceWidths[currentDevice]) * width;
+          layer.positionGroup.offset[currentDevice].y = (Number(layer.positionGroup.offset[currentDevice]?.y) / DefaultDeviceWidths[currentDevice]) * width;
 
           if (layer.type === 'text' || layer.type === 'button') {
             layer.font.size[currentDevice].value = (Number(layer.font.size[currentDevice].value) / DefaultDeviceWidths[currentDevice]) * width;
@@ -151,43 +155,44 @@ jQuery(document).ready(function($) {
       // Add layers with device-specific values
       slide.layers.forEach(layer => {
         let layerStyles = `
-          transform: ${layer.position[currentDevice].horizontal === 'center' ? 'translateX(-50%)' : ''} ${layer.position[currentDevice].vertical === 'middle' ? 'translateY(-50%)' : ''} translate(${layer.offset[currentDevice].x}px, ${layer.offset[currentDevice].y}px);
+          transform: ${layer.positionGroup.position[currentDevice].horizontal === 'center' ? 'translateX(-50%)' : ''} ${layer.positionGroup.position[currentDevice].vertical === 'middle' ? 'translateY(-50%)' : ''} translate(${layer.positionGroup.offset[currentDevice].x}px, ${layer.positionGroup.offset[currentDevice].y}px);
           display: ${layer.isVisible[currentDevice] ? 'block' : 'none'};
           ${layer.zIndex ? `z-index: ${layer.zIndex};` : ''}
         `;
 
         if (layer.type === 'text' || layer.type === 'button') {
           layerStyles += `
-            font-size: ${layer.font.size[currentDevice].value}${layer.font.size[currentDevice].unit};
-            font-weight: ${layer.font.weight};
-            line-height: ${layer.font.lineHeight?.value}${layer.font.lineHeight?.unit};
-            color: ${layer.font.color};
-            padding-top: ${layer.padding[currentDevice].top}px;
-            padding-right: ${layer.padding[currentDevice].right}px;
-            padding-bottom: ${layer.padding[currentDevice].bottom}px;
-            padding-left: ${layer.padding[currentDevice].left}px;
-            ${layer.bgColor ? `background-color: ${layer.bgColor};` : ''}
+            font-size: ${layer.fontGroup.font.size[currentDevice].value}${layer.fontGroup.font.size[currentDevice].unit};
+            font-weight: ${layer.fontGroup.font.weight};
+            line-height: ${layer.fontGroup.font.lineHeight?.value}${layer.fontGroup.font.lineHeight?.unit};
+            letter-spacing: ${layer.fontGroup.font.letterSpacing?.value}${layer.fontGroup.font.letterSpacing?.unit};
+            color: ${layer.styleGroup.color};
+            padding-top: ${layer.styleGroup.padding[currentDevice].top}px;
+            padding-right: ${layer.styleGroup.padding[currentDevice].right}px;
+            padding-bottom: ${layer.styleGroup.padding[currentDevice].bottom}px;
+            padding-left: ${layer.styleGroup.padding[currentDevice].left}px;
+            ${layer.styleGroup.bgColor ? `background-color: ${layer.styleGroup.bgColor};` : ''}
           `;
         }
         if (layer.type === 'button') {
           layerStyles += `
-            border-radius: ${layer.borderRadius.value}${layer.borderRadius.unit};
+            border-radius: ${layer.styleGroup.borderRadius.value}${layer.styleGroup.borderRadius.unit};
           `;
         }
         if (layer.type === 'image' || layer.type === 'box') {
           layerStyles += `
-            width: ${layer.width[currentDevice].value}${layer.width[currentDevice].unit};
-            height: ${layer.height[currentDevice].value}${layer.height[currentDevice].unit};
+            width: ${layer.sizeGroup.width[currentDevice].value}${layer.sizeGroup.width[currentDevice].unit};
+            height: ${layer.sizeGroup.height[currentDevice].value}${layer.sizeGroup.height[currentDevice].unit};
           `;
         }
         if (layer.type === 'box') {
           layerStyles += `
-            ${layer.bgColor ? `background-color: ${layer.bgColor};` : ''}
+            ${layer.styleGroup.bgColor ? `background-color: ${layer.styleGroup.bgColor};` : ''}
           `;
         }
 
         sliderHtml += `<div
-          class="slide-layer ${layer.type}-layer alignX-${layer.position[currentDevice].horizontal} alignY-${layer.position[currentDevice].vertical}"
+          class="slide-layer ${layer.type}-layer alignX-${layer.positionGroup.position[currentDevice].horizontal} alignY-${layer.positionGroup.position[currentDevice].vertical}"
           style="${layerStyles}">`;
 
         if (layer.type === 'text') sliderHtml += `${layer.content}`;
@@ -199,7 +204,7 @@ jQuery(document).ready(function($) {
               <img
                 src="${layer.imageUrl}"
                 ${layer.link ? `data-link="${layer.link}"` : ''}
-                style="object-fit: ${layer.objectFit[currentDevice]};"
+                style="object-fit: ${layer.sizeGroup.objectFit[currentDevice]};"
               />
           `;
         }
@@ -228,8 +233,8 @@ jQuery(document).ready(function($) {
       loop: sliderSettings.loop || false,
       autoplay: sliderSettings.autoPlay || false,
       autoplayTimeout: sliderSettings.autoPlayDelay || 5000,
-      dots: sliderSettings.showDots || false,
-      nav: sliderSettings.showNav || false,
+      dots: (sliderSettings.showDots && defaultSlides.length > 1) || false,
+      nav: (sliderSettings.showNav && defaultSlides.length > 1) || false,
       // navText: [
       //   '<div class="owl-prev"><i class="fa fa-angle-left" aria-hidden="true"></i></div>',
       //   '<div class="owl-next"><i class="fa fa-angle-right" aria-hidden="true"></i></div>'

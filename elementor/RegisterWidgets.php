@@ -98,8 +98,8 @@ function register_eyeon_widgets( $widgets_manager ) {
   require_once plugin_dir_path( __FILE__).'widgets/center-hours/index.php';
   $widgets_manager->register( new \EyeOn_Center_Hours_Widget() );
 
-  require_once plugin_dir_path( __FILE__).'widgets/slider/index.php';
-  $widgets_manager->register( new \EyeOn_Slider_Widget() );
+  require_once plugin_dir_path( __FILE__).'widgets/banners/index.php';
+  $widgets_manager->register( new \EyeOn_Banner_Widget() );
 
   require_once plugin_dir_path( __FILE__).'widgets/search/index.php';
   $widgets_manager->register( new \EyeOn_Search_Widget() );
