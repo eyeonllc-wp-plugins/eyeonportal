@@ -262,7 +262,7 @@ $unique_id = uniqid();
           const eventItem = $(`
             <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event event-${event.id}" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
               <div class="image">
-                <img src="${event.media.url}" alt="${event.title}" />
+                <img src="${event.media?.url}" alt="${event.title}" />
               </div>
               <div class="event-content">
                 ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
