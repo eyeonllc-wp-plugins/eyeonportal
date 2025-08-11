@@ -3,7 +3,6 @@ $settings = $this->get_settings_for_display();
 $filtered_settings = array_intersect_key($settings, array_flip([
   'fetch_all',
   'fetch_limit',
-  'career_excerpt',
   'expiry_date',
   'career_expiry_prefix',
   'career_expiry_suffix',
@@ -81,7 +80,6 @@ $unique_id = uniqid();
               </div>
               <div class="career-content">
                 <h3 class="career-title">${career.title}</h3>
-                ${ settings.career_excerpt ? `<div class="career-excerpt">${career.short_description}</div>` : '' }
                 ${ (settings.expiry_date && career.end_date) ? `<div class="career-expiry">${settings.career_expiry_prefix?settings.career_expiry_prefix+' ':''}${eyeonFormatDate(career.end_date)}${settings.career_expiry_suffix?' '+settings.career_expiry_suffix:''}</div>` : '' }
               </div>
             </a>

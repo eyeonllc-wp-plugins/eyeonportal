@@ -4,7 +4,6 @@ $fields = [
   'fetch_all',
   'fetch_limit',
   'show_post_date',
-  'show_excerpt',
   'news_category',
   'no_results_found_text',
 ];
@@ -162,9 +161,6 @@ $unique_id = uniqid();
                     </div>
                   `: '' }
                   <div class="news-title">${item.title}</div>
-                  ${ settings.show_excerpt === 'show' ? `
-                    <div class="news-excerpt">${item.short_description}</div>
-                  `: '' }
                 </div>
                 <div class="readmore">
                   <span>Read More</span>

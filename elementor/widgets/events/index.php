@@ -158,18 +158,6 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'event_excerpt',
-      [
-        'label' => esc_html__( 'Excerpt', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => '',
-      ]
-    );
-
-    $this->add_control(
       'event_date',
       [
         'label' => esc_html__( 'Event Date', EYEON_NAMESPACE ),
@@ -552,46 +540,6 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
         'size_units' => ['px'],
         'selectors' => [
           '{{WRAPPER}} .eyeon-events .events-list .event .event-title' => 'margin-top: {{SIZE}}{{UNIT}};',
-        ],
-      ]
-    );
-
-    $this->end_controls_section();
-
-    $this->start_controls_section(
-      'event_excerpt_style_settings',
-      [
-        'label' => esc_html__( 'Excerpt', EYEON_NAMESPACE ),
-        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-        'condition' => [
-          'event_excerpt' => 'show',
-        ],
-      ]
-    );
-
-    $this->add_group_control(
-      \Elementor\Group_Control_Typography::get_type(),
-      [
-        'name' => 'event_excerpt_typography',
-        'selector' => '{{WRAPPER}} .eyeon-events .events-list .event .event-excerpt',
-      ]
-    );
-
-    $this->add_responsive_control(
-      'event_excerpt_spacing',
-      [
-        'label' => esc_html__( 'Spacing', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SLIDER,
-        'range' => [
-          'px' => [
-            'min' => 0,
-            'max' => 20,
-            'step' => 1,
-          ],
-        ],
-        'size_units' => ['px'],
-        'selectors' => [
-          '{{WRAPPER}} .eyeon-events .events-list .event .event-excerpt' => 'margin-top: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
