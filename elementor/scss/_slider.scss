@@ -99,6 +99,7 @@
             background: var(--dot-color);
             border-radius: var(--dot-border-radius);
             margin: 0 var(--dot-spacing) !important;
+            outline: none;
 
             &.active {
               background: var(--dot-active-color);
@@ -108,4 +109,113 @@
       }
     }
   }
+}
+
+/* Animation CSS */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
+.animation-wrapper {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  width: 100%;
+  height: 100%;
+}
+
+.animation-wrapper.animate-entry {
+  opacity: 1;
+}
+
+.animation-wrapper.animate-exit {
+  opacity: 0;
+}
+
+/* Animation classes */
+.animation-wrapper.animate-fadeIn {
+  animation: fadeIn 1s ease forwards;
+}
+
+.animation-wrapper.animate-fadeOut {
+  animation: fadeOut 1s ease forwards;
+}
+
+.animation-wrapper.animate-slideInLeft {
+  animation: slideInLeft 1s ease forwards;
+}
+
+.animation-wrapper.animate-slideInRight {
+  animation: slideInRight 1s ease forwards;
+}
+
+.animation-wrapper.animate-slideOutLeft {
+  animation: slideOutLeft 1s ease forwards;
+}
+
+.animation-wrapper.animate-slideOutRight {
+  animation: slideOutRight 1s ease forwards;
 }

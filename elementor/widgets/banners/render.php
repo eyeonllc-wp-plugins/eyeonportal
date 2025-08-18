@@ -131,15 +131,29 @@ jQuery(document).ready(function($) {
 
     // Create slider HTML structure
     let sliderHtml = `
-      <div class="slider-wrapper" style="--dot-color: ${sliderSettings.dotSettings.defaultColor};--dot-active-color: ${sliderSettings.dotSettings.activeColor};--dot-width: ${sliderSettings.dotSettings.width.value}${sliderSettings.dotSettings.width.unit};--dot-height: ${sliderSettings.dotSettings.height.value}${sliderSettings.dotSettings.height.unit};--dot-border-radius: ${sliderSettings.dotSettings.borderRadius.value}${sliderSettings.dotSettings.borderRadius.unit};--dot-spacing: ${Number(sliderSettings.dotSettings.spacing.value) * 0.5}${sliderSettings.dotSettings.spacing.unit};--dot-bottom: ${sliderSettings.dotSettings.bottom.value}${sliderSettings.dotSettings.bottom.unit};--nav-color: ${sliderSettings.navSettings.color};--nav-size: ${sliderSettings.navSettings.size.value*2}${sliderSettings.navSettings.size.unit};--nav-position: ${sliderSettings.navSettings.position.value}${sliderSettings.navSettings.position.unit};">
+      <div class="slider-wrapper"
+        style="
+          --dot-color: ${sliderSettings.dotSettings.defaultColor};
+          --dot-active-color: ${sliderSettings.dotSettings.activeColor};
+          --dot-width: ${sliderSettings.dotSettings.width.value}${sliderSettings.dotSettings.width.unit};
+          --dot-height: ${sliderSettings.dotSettings.height.value}${sliderSettings.dotSettings.height.unit};
+          --dot-border-radius: ${sliderSettings.dotSettings.borderRadius.value}${sliderSettings.dotSettings.borderRadius.unit};
+          --dot-spacing: ${Number(sliderSettings.dotSettings.spacing.value) * 0.5}${sliderSettings.dotSettings.spacing.unit};
+          --dot-bottom: ${sliderSettings.dotSettings.bottom.value}${sliderSettings.dotSettings.bottom.unit};
+          --nav-color: ${sliderSettings.navSettings.color};
+          --nav-size: ${sliderSettings.navSettings.size.value*2}${sliderSettings.navSettings.size.unit};
+          --nav-position: ${sliderSettings.navSettings.position.value}${sliderSettings.navSettings.position.unit};
+          background-color: ${sliderSettings.bgColor};
+        ">
         <div class="owl-carousel" style="height: ${sliderSettings.height[currentDevice].value}${sliderSettings.height[currentDevice].unit};">
     `;
 
     // Add slides
-    slides.forEach(slide => {
+    slides.forEach((slide, slideIndex) => {
       sliderHtml += `
         <div
           class="slide-item"
+          data-slide-index="${slideIndex}"
           style="
             height: ${sliderSettings.height[currentDevice].value}${sliderSettings.height[currentDevice].unit};
             background-image: url('${slide.bgImageUrl || ''}'); 
@@ -147,21 +161,28 @@ jQuery(document).ready(function($) {
             ${slide.link ? 'cursor: pointer;' : ''}
           "
           ${slide.link ? `data-link="${slide.link}"` : ''}
-        ">
+        >
           <div class="slider-container" style="max-width: ${sliderSettings.width.value}${sliderSettings.width.unit}">
             <div class="slide-container" style="max-width: ${DefaultDeviceWidths[currentDevice]}px">
       `;
 
       // Add layers with device-specific values
-      slide.layers.forEach(layer => {
+      slide.layers.forEach((layer, layerIndex) => {
+        // Get animation settings from layer if available
+        const animationSettings = (layer.animation && layer.animation !== "") ? layer.animation : null;
+
+        // Positioning styles (stay on slide-layer)
         let layerStyles = `
           transform: ${layer.positionGroup.position[currentDevice].horizontal === 'center' ? 'translateX(-50%)' : ''} ${layer.positionGroup.position[currentDevice].vertical === 'middle' ? 'translateY(-50%)' : ''} translate(${layer.positionGroup.offset[currentDevice].x}px, ${layer.positionGroup.offset[currentDevice].y}px);
-          display: ${layer.isVisible[currentDevice] ? 'block' : 'none'};
+          display: ${layer.isVisible[currentDevice] && layer.active ? 'block' : 'none'};
           ${layer.zIndex ? `z-index: ${layer.zIndex};` : ''}
         `;
 
+        // Content styles (move to animation-wrapper)
+        let contentStyles = '';
+
         if (layer.type === 'text' || layer.type === 'button') {
-          layerStyles += `
+          contentStyles += `
             font-size: ${layer.fontGroup.font.size[currentDevice].value}${layer.fontGroup.font.size[currentDevice].unit};
             font-weight: ${layer.fontGroup.font.weight};
             line-height: ${layer.fontGroup.font.lineHeight?.value}${layer.fontGroup.font.lineHeight?.unit};
@@ -171,29 +192,58 @@ jQuery(document).ready(function($) {
             padding-right: ${layer.styleGroup.padding[currentDevice].right}px;
             padding-bottom: ${layer.styleGroup.padding[currentDevice].bottom}px;
             padding-left: ${layer.styleGroup.padding[currentDevice].left}px;
+            width: ${layer?.width?.[currentDevice]?.value ? `${layer?.width?.[currentDevice]?.value}${layer?.width?.[currentDevice]?.unit}` : 'auto'};
+            text-align: ${layer?.fontGroup?.font?.alignment?.[currentDevice] || 'left'};
             ${layer.styleGroup.bgColor ? `background-color: ${layer.styleGroup.bgColor};` : ''}
           `;
         }
+
+        if (layer.type === 'text') {
+          contentStyles += `
+            ${layer.styleGroup.textStyle?.italic ? `font-style: italic;` : ''}
+            ${layer.styleGroup.textStyle?.uppercase ? `text-transform: uppercase;` : ''}
+            ${layer.styleGroup.textStyle?.underline ? `text-decoration: underline;` : ''}
+          `;
+        }
+
         if (layer.type === 'button') {
-          layerStyles += `
+          contentStyles += `
             border-radius: ${layer.styleGroup.borderRadius.value}${layer.styleGroup.borderRadius.unit};
           `;
         }
+
         if (layer.type === 'image' || layer.type === 'box') {
-          layerStyles += `
+          contentStyles += `
             width: ${layer.sizeGroup.width[currentDevice].value}${layer.sizeGroup.width[currentDevice].unit};
             height: ${layer.sizeGroup.height[currentDevice].value}${layer.sizeGroup.height[currentDevice].unit};
           `;
         }
+
+        if (layer.type === 'image') {
+          contentStyles += `
+            object-fit: ${layer.sizeGroup.objectFit[currentDevice]};
+          `;
+        }
+
         if (layer.type === 'box') {
-          layerStyles += `
+          contentStyles += `
             ${layer.styleGroup.bgColor ? `background-color: ${layer.styleGroup.bgColor};` : ''}
           `;
         }
 
         sliderHtml += `<div
           class="slide-layer ${layer.type}-layer alignX-${layer.positionGroup.position[currentDevice].horizontal} alignY-${layer.positionGroup.position[currentDevice].vertical}"
-          style="${layerStyles}">`;
+          data-layer-index="${layerIndex}"
+          style="${layerStyles}">
+          <div class="animation-wrapper"
+            style="${contentStyles}"
+            ${animationSettings ? `
+            data-animation-entry="${animationSettings.animationEntry || ''}"
+            data-animation-exit="${animationSettings.animationExit || ''}"
+            data-animation-duration="${animationSettings.animationDuration || 1000}"
+            data-animation-entry-delay="${animationSettings.animationEntryDelay || 0}"
+            ` : ''}
+          >`;
 
         if (layer.type === 'text') sliderHtml += `${layer.content}`;
         
@@ -209,7 +259,7 @@ jQuery(document).ready(function($) {
           `;
         }
 
-        sliderHtml += `</div>`;
+        sliderHtml += `</div></div>`;
       });
 
       sliderHtml += `
@@ -252,7 +302,78 @@ jQuery(document).ready(function($) {
       const link = $(this).data('link');
       if (link) openLink(link);
     });
+
+    // Initialize animations for first slide
+    setTimeout(() => {
+      triggerSlideAnimations(0);
+    }, 100);
   }
+
+  function triggerSlideAnimations(slideIndex) {
+    const currentSlide = $(`.slide-item[data-slide-index="${slideIndex}"]`);
+    const layers = currentSlide.find('.slide-layer');
+    
+    layers.each(function() {
+      const layer = $(this);
+      const animationWrapper = layer.find('.animation-wrapper');
+      const animationEntry = animationWrapper.data('animation-entry');
+      const animationDuration = animationWrapper.data('animation-duration');
+      const animationEntryDelay = animationWrapper.data('animation-entry-delay');
+      
+      if (animationEntry && animationEntry !== '' && animationEntry !== 'none') {
+        setTimeout(() => {
+          animationWrapper.addClass(`animate-${animationEntry}`);
+          animationWrapper.css('animation-duration', `${animationDuration}ms`);
+        }, animationEntryDelay);
+      } else {
+        // If no animation, just make the layer visible immediately
+        animationWrapper.css('opacity', '1');
+      }
+    });
+  }
+
+  function triggerSlideExitAnimations(slideIndex) {
+    const currentSlide = $(`.slide-item[data-slide-index="${slideIndex}"]`);
+    const layers = currentSlide.find('.slide-layer');
+    
+    layers.each(function() {
+      const layer = $(this);
+      const animationWrapper = layer.find('.animation-wrapper');
+      const animationExit = animationWrapper.data('animation-exit');
+      const animationDuration = animationWrapper.data('animation-duration');
+      
+      if (animationExit && animationExit !== '' && animationExit !== 'none') {
+        animationWrapper.addClass(`animate-${animationExit}`);
+        animationWrapper.css('animation-duration', `${animationDuration}ms`);
+      } else {
+        // If no exit animation, just hide the layer immediately
+        animationWrapper.css('opacity', '0');
+      }
+    });
+  }
+
+  // Add Owl Carousel event handlers for animations
+  let currentSlideIndex = 0;
+  
+  // Trigger exit animations before slide changes
+  $('.owl-carousel').on('before.owl.carousel', function(event) {
+    if (event.type === 'before.owl.carousel') {
+      triggerSlideExitAnimations(currentSlideIndex);
+    }
+  });
+  
+  // Handle slide changes and trigger entry animations
+  $('.owl-carousel').on('changed.owl.carousel', function(event) {
+    currentSlideIndex = event.item.index;
+    
+    // Reset all layers to initial state
+    $('.animation-wrapper').removeClass('animate-fadeIn animate-fadeOut animate-slideInLeft animate-slideInRight animate-slideOutLeft animate-slideOutRight');
+    
+    // Trigger animations for current slide
+    setTimeout(() => {
+      triggerSlideAnimations(currentSlideIndex);
+    }, 100);
+  });
 
   function openLink(link) {
     if (link) {
