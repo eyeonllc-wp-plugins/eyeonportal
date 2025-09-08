@@ -1281,6 +1281,8 @@
   left: 0;
   border: none;
   cursor: pointer;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 #eyeoncareer-single .eyeon-career .mcd-career-details {
   padding-left: 30px;
