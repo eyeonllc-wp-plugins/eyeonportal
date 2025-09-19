@@ -74,7 +74,7 @@ if( isset($mycenterdeal['next']) ) {
             <ul class="mcd-social-icons">
               <li class="twitter"><a href="http://twitter.com/share?text=<?= urlencode($mycenterdeal['title']) ?>&url=<?= get_current_url() ?>" target="_blank">Twitter</a></li>
               <li class="facebook"><a href="http://www.facebook.com/sharer.php?u=<?= get_current_url() ?>&quote=<?= urlencode($mycenterdeal['title']) ?>" target="_blank">Facebook</a></li>
-              <li class="email"><a href="mailto:?subject=<?= $mycenterdeal['retailers'][0]['name'] ?> - <?= $mycenterdeal['title'] ?>&body=Hi,%0D%0A%0D%0ACheckout this Deal! - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterdeal['title'] ?>%0D%0A%0D%0A<?= strip_tags($mycenterdeal['short_description']) ?>%0D%0A%0D%0AValid Until: <?= $mycenterdeal['end_date'] ?>%0D%0A%0D%0AStore: <?= $mycenterdeal['retailers'][0]['name'].', '.$mycenterdeal['center']['name'] ?>%0D%0APhone: <?= eyeon_format_phone($retailer_phone) ?>%0D%0A%0D%0A">Email</a></li>
+              <li class="email"><a href="mailto:?subject=<?= $mycenterdeal['retailers'][0]['name'] ?> - <?= $mycenterdeal['title'] ?>&body=Hi,%0D%0A%0D%0ACheckout this Deal! - <?= urlencode(get_current_url()) ?>%0D%0A%0D%0A<?= $mycenterdeal['title'] ?>%0D%0A%0D%0AValid Until: <?= $mycenterdeal['end_date'] ?>%0D%0A%0D%0AStore: <?= $mycenterdeal['retailers'][0]['name'].', '.$mycenterdeal['center']['name'] ?>%0D%0APhone: <?= eyeon_format_phone($retailer_phone) ?>%0D%0A%0D%0A">Email</a></li>
             </ul>
           </div>
           <?php endif; ?>

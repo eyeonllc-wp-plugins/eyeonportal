@@ -101,7 +101,7 @@ if( isset($mycenterevent['next']) ) {
                 <span class="recurring"><?= $mycenterevent['repeat_rrule'] ?></span>
 							<?php endif; ?>
 							<span class="title"><?= $mycenterevent['title'] ?></span>
-							<span class="description"><?= $mycenterevent['short_description'] ?></span>
+							<span class="description"><?= $mycenterevent['description'] ?></span>
 							<span class="location"><?= $mycenterevent['center']['name'] ?></span>
 						</div>
 					</div>

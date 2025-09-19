@@ -151,18 +151,6 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'show_excerpt',
-      [
-        'label' => __( 'Excerpt', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => __( 'Show', EYEON_NAMESPACE ),
-        'label_off' => __( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => 'show',
-      ]
-    );
-
-    $this->add_control(
       'hr_1',
       [
         'type' => \Elementor\Controls_Manager::DIVIDER,
@@ -593,81 +581,6 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
         ],
         'selectors' => [
           '{{WRAPPER}} .eyeon-news .news-list .news .news-item .news-details .news-content .news-title' => 'margin-top: {{SIZE}}{{UNIT}};',
-        ],
-      ]
-    );
-
-    $this->end_controls_section();
-
-    // ================================================================
-    // NEWS EXCERPT
-    // ================================================================
-
-    $this->start_controls_section(
-      'news_excerpt_style',
-      [
-        'label' => __( 'Excerpt', EYEON_NAMESPACE ),
-        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-        'condition' => [
-          'show_excerpt' => 'show',
-        ],
-      ]
-    );
-
-    $this->add_group_control(
-      \Elementor\Group_Control_Typography::get_type(),
-      [
-        'name' => 'news_excerpt_typography',
-        'selector' => '{{WRAPPER}} .eyeon-news .news-list .news .news-item .news-details .news-content .news-excerpt',
-      ]
-    );
-
-    $this->add_responsive_control(
-			'news_excerpt_align',
-			[
-				'label' => __( 'Alignment', EYEON_NAMESPACE ),
-				'type' => \Elementor\Controls_Manager::CHOOSE,
-				'options' => [
-					'left' => [
-						'title' => __( 'Left', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-left',
-					],
-					'center' => [
-						'title' => __( 'Center', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-center',
-					],
-					'right' => [
-						'title' => __( 'Right', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-right',
-					],
-				],
-				'default' => 'center',
-				'toggle' => true,
-				'selectors' => [
-					'{{WRAPPER}} .eyeon-news .news-list .news .news-item .news-details .news-content .news-excerpt' => 'text-align: {{VALUE}};',
-				],
-			]
-		);
-      
-    $this->add_responsive_control(
-      'news_excerpt_margin_top',
-      [
-        'label' => esc_html__( 'Margin Top', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SLIDER,
-        'range' => [
-          'px' => [
-            'min' => 0,
-            'max' => 30,
-            'step' => 1,
-          ],
-        ],
-        'size_units' => ['px'],
-        'default' => [
-          'unit' => 'px',
-          'size' => 8,
-        ],
-        'selectors' => [
-          '{{WRAPPER}} .eyeon-news .news-list .news .news-item .news-details .news-content .news-excerpt' => 'margin-top: {{SIZE}}{{UNIT}};',
         ],
       ]
     );

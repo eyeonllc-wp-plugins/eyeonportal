@@ -5,7 +5,6 @@ $fields = [
   'fetch_limit',
   'external_event_new_tab',
   'event_title',
-  'event_excerpt',
   'event_date',
   'event_display_date',
   'event_time',
@@ -262,11 +261,10 @@ $unique_id = uniqid();
           const eventItem = $(`
             <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event event-${event.id}" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
               <div class="image">
-                <img src="${event.media.url}" alt="${event.title}" />
+                <img src="${event.media?.url}" alt="${event.title}" />
               </div>
               <div class="event-content">
                 ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
-                ${ settings.event_excerpt? `<p class="event-excerpt">${event.short_description}</p>` : '' }
                 ${ (settings.event_date === 'show' || settings.event_time === 'show') ? `
                   <div class="metadata">
                     ${ settings.event_date && (!event.ongoing_event || (event.ongoing_event && settings.event_ongoing_dates)) ? `

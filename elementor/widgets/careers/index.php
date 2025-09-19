@@ -93,18 +93,6 @@ class EyeOn_Careers_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'career_excerpt',
-      [
-        'label' => esc_html__( 'Excerpt', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => 'show',
-      ]
-    );
-
-    $this->add_control(
       'expiry_date',
       [
         'label' => esc_html__( 'Expiry Date', EYEON_NAMESPACE ),
@@ -321,112 +309,6 @@ class EyeOn_Careers_Widget extends \Elementor\Widget_Base {
         'selectors' => [
 					'{{WRAPPER}} .eyeon-careers .careers-list .career .career-content .career-title' => '-webkit-line-clamp: {{VALUE}};',
 				],
-      ]
-    );
-
-    $this->end_controls_section();
-
-    $this->start_controls_section(
-      'career_excerpt_style_settings',
-      [
-        'label' => esc_html__( 'Excerpt', EYEON_NAMESPACE ),
-        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-        'condition' => [
-          'career_excerpt' => 'show',
-        ],
-      ]
-    );
-
-    $this->add_group_control(
-      \Elementor\Group_Control_Typography::get_type(),
-      [
-        'name' => 'career_excerpt_typography',
-        'selector' => '{{WRAPPER}} .eyeon-careers .careers-list .career .career-content .career-excerpt',
-      ]
-    );
-
-    $this->add_control(
-			'career_excerpt_text_color',
-			[
-				'label' => esc_html__( 'Text Color', EYEON_NAMESPACE ),
-				'type' => \Elementor\Controls_Manager::COLOR,
-        'render_type' => 'ui',
-				'selectors' => [
-					'{{WRAPPER}} .eyeon-careers .careers-list .career .career-content .career-excerpt' => 'color: {{VALUE}}',
-				],
-			]
-		);
-
-    $this->add_responsive_control(
-			'career_excerpt_text_align',
-			[
-				'label' => __( 'Alignment', EYEON_NAMESPACE ),
-				'type' => \Elementor\Controls_Manager::CHOOSE,
-				'options' => [
-					'left' => [
-						'title' => __( 'Left', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-left',
-					],
-					'center' => [
-						'title' => __( 'Center', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-center',
-					],
-					'right' => [
-						'title' => __( 'Right', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-right',
-					],
-					'justify' => [
-						'title' => __( 'Justify', EYEON_NAMESPACE ),
-						'icon' => 'eicon-text-align-justify',
-					],
-				],
-				'default' => 'center',
-				'toggle' => true,
-				'selectors' => [
-					'{{WRAPPER}} .eyeon-careers .careers-list .career .career-content .career-excerpt' => 'text-align: {{VALUE}};',
-				],
-			]
-		);
-
-    $this->add_control(
-      'career_excerpt_max_lines',
-      [
-        'label' => __( 'Max Lines', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SELECT,
-        'options' => [
-          '1' => __( '1', EYEON_NAMESPACE ),
-          '2' => __( '2', EYEON_NAMESPACE ),
-          '3' => __( '3', EYEON_NAMESPACE ),
-          '4' => __( '4', EYEON_NAMESPACE ),
-          '5' => __( '5', EYEON_NAMESPACE ),
-        ],
-        'default' => '2',
-        'selectors' => [
-					'{{WRAPPER}} .eyeon-careers .careers-list .career .career-content .career-excerpt' => '-webkit-line-clamp: {{VALUE}};',
-				],
-      ]
-    );
-
-    $this->add_responsive_control(
-      'deal_title_margin_top',
-      [
-        'label' => esc_html__( 'Margin Top', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SLIDER,
-        'range' => [
-          'px' => [
-            'min' => 0,
-            'max' => 20,
-            'step' => 1,
-          ],
-        ],
-        'size_units' => ['px'],
-        'default' => [
-          'unit' => 'px',
-          'size' => 8,
-        ],
-        'selectors' => [
-          '{{WRAPPER}} .eyeon-careers .careers-list .career .career-content .career-excerpt' => 'margin-top: {{SIZE}}{{UNIT}};',
-        ],
       ]
     );
 

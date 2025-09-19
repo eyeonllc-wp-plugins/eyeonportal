@@ -86,7 +86,7 @@ jQuery(document).ready(function($) {
   var postsDiv = $('.mcd-latest-posts .mcd-posts');
 
   $.ajax({
-    url: "<?= MCD_API_NEWS.'?limit=6&page=1' ?>",
+    url: "<?= MCD_API_NEWS.'?limit=6&page=1&sortColumn=post_date&sortOrder=desc' ?>",
     method: 'GET',
     dataType: 'json',
     headers: {
