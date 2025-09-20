@@ -41,14 +41,15 @@ jQuery(document).ready(function($) {
       },
       success: function(response) {
         defaultSliderSettings = response.settings.settings;
-        defaultSlides = response.settings.slides.filter(slide => slide.active);
+        defaultSlides = response.settings.slides.filter(slide => slide.active).map(slide => ({
+          ...slide,
+          layers: slide.layers.filter(layer => layer.active)
+        }));
 
         defaultSliderSettings.height = generateScreenResponsiveNumberUnitValues(defaultSliderSettings.height);
 
         defaultSlides.forEach((slide) => {
           slide.layers.forEach((layer) => {
-            console.log('layer', JSON.parse(JSON.stringify(layer)));
-
             layer.isVisible = generateScreenResponsiveValues(layer.isVisible);
 
             layer.positionGroup.offset = generateScreenResponsiveOffsetValues(layer.positionGroup.offset);
@@ -239,7 +240,6 @@ jQuery(document).ready(function($) {
             style="${contentStyles}"
             ${animationSettings ? `
             data-animation-entry="${animationSettings.animationEntry || ''}"
-            data-animation-exit="${animationSettings.animationExit || ''}"
             data-animation-duration="${animationSettings.animationDuration || 1000}"
             data-animation-entry-delay="${animationSettings.animationEntryDelay || 0}"
             ` : ''}
@@ -332,49 +332,18 @@ jQuery(document).ready(function($) {
     });
   }
 
-  function triggerSlideExitAnimations(slideIndex) {
-    const currentSlide = $(`.slide-item[data-slide-index="${slideIndex}"]`);
-    const layers = currentSlide.find('.slide-layer');
-    
-    layers.each(function() {
-      const layer = $(this);
-      const animationWrapper = layer.find('.animation-wrapper');
-      const animationExit = animationWrapper.data('animation-exit');
-      const animationDuration = animationWrapper.data('animation-duration');
-      
-      if (animationExit && animationExit !== '' && animationExit !== 'none') {
-        animationWrapper.addClass(`animate-${animationExit}`);
-        animationWrapper.css('animation-duration', `${animationDuration}ms`);
-      } else {
-        // If no exit animation, just hide the layer immediately
-        animationWrapper.css('opacity', '0');
-      }
-    });
-  }
-
   // Add Owl Carousel event handlers for animations
   let currentSlideIndex = 0;
   
-  // Trigger exit animations before slide changes
-  $('.owl-carousel').on('before.owl.carousel', function(event) {
-    if (event.type === 'before.owl.carousel') {
-      triggerSlideExitAnimations(currentSlideIndex);
+  $(document).on('changed.owl.carousel', function(event) {
+    if(event.page.index>=0) {
+      $('.animation-wrapper').removeClass('animate-fadeIn animate-slideInLeft animate-slideInRight animate-slideInTop animate-slideInBottom');
+      setTimeout(() => {
+        triggerSlideAnimations(event.page.index);
+      }, 100);
     }
   });
   
-  // Handle slide changes and trigger entry animations
-  $('.owl-carousel').on('changed.owl.carousel', function(event) {
-    currentSlideIndex = event.item.index;
-    
-    // Reset all layers to initial state
-    $('.animation-wrapper').removeClass('animate-fadeIn animate-fadeOut animate-slideInLeft animate-slideInRight animate-slideOutLeft animate-slideOutRight');
-    
-    // Trigger animations for current slide
-    setTimeout(() => {
-      triggerSlideAnimations(currentSlideIndex);
-    }, 100);
-  });
-
   function openLink(link) {
     if (link) {
       if (link.startsWith('http')) {
@@ -390,11 +359,6 @@ jQuery(document).ready(function($) {
     currentDevice = getCurrentDevice();
     const width = window.innerWidth;
     calculateResizeValues();
-    // currentDevice = getCurrentDevice();
-    // if (oldDevice !== currentDevice) {
-    //   sliderSettings = result.settings;
-    //   slides = result.slides;
-    // }
   });
 });
 </script>
