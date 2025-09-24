@@ -1160,7 +1160,11 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
 }
 #eyeondeal-single .eyeon-deal .mcd-deal-cols .eyeon-deal-details .eyeon-retailer-location-phone-section .eyeon-retailer-phone-locations .eyeon-retailer-phone-location:not(:last-child) {
   padding-right: 12px;

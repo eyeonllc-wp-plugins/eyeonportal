@@ -67,7 +67,8 @@
 
           .eyeon-retailer-phone-locations {
             display: flex;
-            gap: 12px;
+            gap: 10px;
+            flex-direction: column;
 
             .eyeon-retailer-phone-location {
               &:not(:last-child) {
