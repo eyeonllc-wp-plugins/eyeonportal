@@ -269,22 +269,22 @@ function get_carousel_fields() {
 
 function eyeon_format_phone($phoneNumber) {
   // Extract the last 10 digits from the phone number
-    $last10Digits = substr(preg_replace('/[^0-9]/', '', $phoneNumber), -10);
+  $last10Digits = substr(preg_replace('/[^0-9]/', '', $phoneNumber), -10);
 
-    // Check if the last 10 digits form a valid US number
-    if (strlen($last10Digits) === 10) {
-        // Format the phone number: +1 (XXX) XXX-XXXX
-        $formattedNumber = sprintf(
-            "%s.%s.%s",
-            substr($last10Digits, 0, 3),
-            substr($last10Digits, 3, 3),
-            substr($last10Digits, 6)
-        );
+  // Check if the last 10 digits form a valid US number
+  if (strlen($last10Digits) === 10) {
+    // Format the phone number: +1 (XXX) XXX-XXXX
+    $formattedNumber = sprintf(
+      "%s.%s.%s",
+      substr($last10Digits, 0, 3),
+      substr($last10Digits, 3, 3),
+      substr($last10Digits, 6)
+    );
 
-        return $formattedNumber;
-    } else {
-        // If not valid, return the original number
-        return $phoneNumber;
-    }
+    return $formattedNumber;
+  } else {
+    // If not valid, return the original number
+    return $phoneNumber;
+  }
 }
 

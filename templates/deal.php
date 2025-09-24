@@ -48,25 +48,37 @@ if( isset($mycenterdeal['next']) ) {
           <div class="mcd-deal-until"><span class="mcd-label">Valid Until:</span> <?= eyeon_format_date($mycenterdeal['end_date']) ?></div>
           <div class="mcd-deal-message editor_output"><?= get_editor_output($mycenterdeal['description']) ?></div>
 
-          <div class="eyeon-retailer-phone-locations">
-            <?php foreach( $mycenterdeal['retailers'] as $retailer ) : ?>
-              <?php
-              $retailer_phone = @$retailer['phone'];
-              $retailer_location = get_retailer_location($retailer['location']);
-              ?>
+          <?php
+          $locationPhones = array();
+          foreach( $mycenterdeal['retailers'] as $retailer ) {
+            $retailer_phone = @$retailer['phone'];
+            $retailer_location = get_retailer_location($retailer['location']);
+            $locationPhones[] = array(
+              'location' => $retailer_location,
+              'phone' => $retailer_phone
+            );
+          }
+          ?>
 
-              <?php if( !empty($retailer_phone) || !empty($retailer_location) ) : ?>
-                <div class="eyeon-retailer-phone-location">
-                  <?php if( !empty($retailer_location) ) : ?>
-                    <div class="mcd-retailer-location"><span class="mcd-label">Location:</span> <?= $retailer_location ?></div>
+          <?php if( count($locationPhones) > 0 ) : ?>
+            <div class="eyeon-retailer-location-phone-section">
+              <div class="mcd-label">Location<?= (count($locationPhones) > 1 ? 's' : '') ?>:</div>
+              <div class="eyeon-retailer-phone-locations">
+                <?php foreach( $locationPhones as $locationPhone ) : ?>
+                  <?php if( !empty($locationPhone['phone']) || !empty($locationPhone['location']) ) : ?>
+                    <div class="eyeon-retailer-phone-location">
+                      <?php if( !empty($locationPhone['location']) ) : ?>
+                        <div class="mcd-retailer-location"><?= $locationPhone['location'] ?></div>
+                      <?php endif; ?>
+                      <?php if( !empty($locationPhone['phone']) ) : ?>
+                        <div class="mcd-retailer-phone"><a href="tel:<?= $locationPhone['phone'] ?>"><?= eyeon_format_phone($locationPhone['phone']) ?></a></div>
+                      <?php endif; ?>
+                    </div>
                   <?php endif; ?>
-                  <?php if( !empty($retailer_phone) ) : ?>
-                    <div class="mcd-retailer-phone"><span class="mcd-label">Phone:</span> <?= eyeon_format_phone($retailer_phone) ?></div>
-                  <?php endif; ?>
-                </div>
-              <?php endif; ?>
-            <?php endforeach; ?>
-          </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php endif; ?>
           
           <?php if( $this->mcd_settings['deals_single_social_share'] ) : ?>
           <div class="mcd-deal-share clearfix">
