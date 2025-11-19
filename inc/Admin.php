@@ -5,11 +5,6 @@ function on_mcd_plugin_page() {
 	return isset($_GET['page']) && $_GET['page']===MCD_PLUGIN_NAME;
 }
 
-function eyeon_get_center() {
-	$center = mcd_api_data( MCD_API_CENTER );
-  return $center;
-}
-
 function mcd_page_widths() {
 	return array(
 		'default' => 'Default',

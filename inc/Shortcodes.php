@@ -43,6 +43,9 @@ if( !class_exists('MCDShortcodes') ) {
 
       add_action('wp_ajax_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
       add_action('wp_ajax_nopriv_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
+
+      // Register REST API proxy endpoint
+      add_action('rest_api_init', array( $this, 'register_rest_api_proxy' ) );
     }
 
 		function mcd_init() {
@@ -367,6 +370,59 @@ if( !class_exists('MCDShortcodes') ) {
       $params = isset($_POST['params']) ? $_POST['params'] : array();
       $data = mcd_api_data($apiUrl.'?'.http_build_query($params));
       wp_send_json($data);
+    }
+
+    /**
+     * Register REST API proxy endpoint
+     * This allows libraries to send requests directly to WordPress which then proxies to the API
+     * Usage: /wp-json/eyeon-portal/map/v1/retailers?limit=10&page=1
+     */
+    function register_rest_api_proxy() {
+      register_rest_route('eyeon-portal', '/map/(?P<path>.*)', array(
+        'methods' => 'GET',
+        'callback' => array($this, 'handle_rest_api_proxy'),
+        'permission_callback' => '__return_true', // We'll handle auth in the callback
+      ));
+    }
+
+    /**
+     * Handle REST API proxy requests
+     */
+    function handle_rest_api_proxy($request) {
+      // Validate session token
+      $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? '';
+      if (! $token || ! get_transient("eyeon_api_session_$token")) {
+        return new WP_Error('unauthorized', "You're not authorized to access this resource.", array('status' => 403));
+      }
+
+      // Get the API path from the route parameter
+      $api_path = $request->get_param('path');
+      if (empty($api_path)) {
+        return new WP_Error('bad_request', 'API path is required.', array('status' => 400));
+      }
+
+      // Ensure path starts with /
+      if (strpos($api_path, '/') !== 0) {
+        $api_path = '/' . $api_path;
+      }
+
+      // Get query parameters from the request (GET only)
+      $query_params = $request->get_query_params();
+      // Remove 'path' from query params as it's a route parameter
+      unset($query_params['path']);
+
+      // Build the full API URL with query parameters
+      // Note: mcd_api_data will prepend API_BASE_URL and add time parameter
+      $api_url = $api_path;
+      if (!empty($query_params)) {
+        $api_url .= '?' . http_build_query($query_params);
+      }
+
+      // Call the API using mcd_api_data
+      $data = mcd_api_data($api_url);
+
+      // Return the response
+      return rest_ensure_response($data);
     }
 	}
 

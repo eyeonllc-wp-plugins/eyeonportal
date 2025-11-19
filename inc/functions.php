@@ -67,6 +67,11 @@ function mcd_api_data($url) {
 	return $data;
 }
 
+function eyeon_get_center() {
+	$center = mcd_api_data( MCD_API_CENTER );
+  return $center;
+}
+
 function mcd_get_file_content($file_path) {
 	$output = '';
 	$handle = @fopen($file_path, "r");

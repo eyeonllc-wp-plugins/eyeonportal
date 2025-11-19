@@ -5,18 +5,15 @@ $filtered_settings = array_intersect_key($settings, array_flip([
 ]));
 $unique_id = uniqid();
 
-$center_id = $mcd_settings['center_id'];
-if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']) ) {
-  $center_id = $settings['custom_center_id'];
-}
+$center = eyeon_get_center();
 
 $mapboxProps = array(
   'config' => Array(
-    'CENTER_ID' => intval($center_id),
+    'CENTER_ID' => intval($center['id']),
     'ROLE' => 'WP_SITE',
     'IMAGE_PROXY_URL' => site_url().'/index.php?eyeonmedia=',
   ),
-  'webApiURI' => API_BASE_URL,
+  'webApiURI' => rest_url('eyeon-portal/map'),
 );
 
 // $selected_store_slug = get_query_var('mcdmapretailer', '');
