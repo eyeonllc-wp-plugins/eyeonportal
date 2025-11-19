@@ -70,7 +70,7 @@ if( isset($mycenterevent['next']) ) {
 				<div class="mcd-event-details-col">
 					<div class="mcd-event-name"><?= $mycenterevent['title'] ?></div>
 
-          <?php if( !$mycenterevent['ongoing_event'] ) : ?>
+          <?php if( !@$mycenterevent['ongoing_event'] ) : ?>
             <div class="mcd-event-date-time">
               <div class="mcd-event-dates">
                 <i class="far fa-calendar-alt"></i>&nbsp;

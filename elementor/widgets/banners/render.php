@@ -27,17 +27,21 @@ jQuery(document).ready(function($) {
 
   function fetch_slider() {
     const banner_id = settings.banner_id;
-    const ajaxData = {
+    const ajaxReqParams = {
       banner_id,
     };
 
     $.ajax({
-      url: "<?= MCD_API_BANNERS ?>/" + banner_id,
-      data: ajaxData,
-      method: 'GET',
+      url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>',
+      data: {
+        action: 'eyeon_api_request',
+        apiUrl: "<?= MCD_API_BANNERS ?>",
+        params: ajaxReqParams
+      },
+      method: "POST",
       dataType: 'json',
-      headers: {
-        center_id: '<?= $mcd_settings['center_id'] ?>'
+      xhrFields: {
+        withCredentials: true
       },
       success: function(response) {
         defaultSliderSettings = response.settings.settings;

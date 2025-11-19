@@ -16,12 +16,6 @@ $fields = [
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
 $unique_id = uniqid();
 
-$custom_center_id = null;
-$center_id = $mcd_settings['center_id'];
-if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']) ) {
-  $center_id = $settings['custom_center_id'];
-  $custom_center_id = $center_id;
-}
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
@@ -67,12 +61,12 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
             </span>
         <?php endif; ?>
         
-        <div class="search-bar">
-          <?php if( $settings['stores_search'] === 'show' ) : ?>
+        <?php if( $settings['stores_search'] === 'show' ) : ?>
+          <div class="search-bar">
             <span class="icon icon-search"></span>
             <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
-          <?php endif; ?>
-        </div>
+          </div>
+        <?php endif; ?>
 
         <?php if( $settings['categories_sidebar'] === 'dropdown' && !$settings['header_heading_show'] ) : ?>
           <div class="heading-heading-placeholder"></div>
@@ -139,27 +133,31 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
         var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
         limit = Math.min(remainingLimit, defaultLimit);
       }
-      const ajaxData = {
+      const ajaxReqParams = {
         limit,
         page,
         category_ids: [],
         tag_ids: [],
       };
       $.each(settings.retailer_categories, function(index, category) {
-        ajaxData.category_ids.push(category);
-      });
+        ajaxReqParams.category_ids.push(category);
+      }); 
       $.each(settings.retailer_tags, function(index, tag) {
         const parseTag = JSON.parse(tag);
-        ajaxData.tag_ids.push(parseTag.id);
+        ajaxReqParams.tag_ids.push(parseTag.id);
       });
 
       $.ajax({
-        url: "<?= MCD_API_STORES ?>",
-        data: ajaxData,
-        method: 'GET',
-        dataType: 'json',
-        headers: {
-          center_id: '<?= $center_id ?>'
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES ?>',
+        data: {
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_STORES ?>",
+          params: ajaxReqParams
+        },
+        method: "POST",
+        dataType: "json",
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {
@@ -185,16 +183,20 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
 
     function fetch_categories() {
       $.ajax({
-        url: "<?= MCD_API_STORES.'/categories' ?>",
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES.'/categories' ?>',
         data: {
-          limit: 100,
-          page: 1,
-          group: true
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_STORES.'/categories' ?>",
+          params: {
+            limit: 100,
+            page: 1,
+            group: true
+          }
         },
-        method: 'GET',
+        method: "POST",
         dataType: 'json',
-        headers: {
-          center_id: '<?= $center_id ?>'
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {
@@ -278,9 +280,7 @@ if( isset($settings['custom_center_id']) && !empty($settings['custom_center_id']
     function getRetailerUrl(retailer, multipleLocationRetailer) {
       let retailer_url = `<?= mcd_single_page_url('mycenterstore') ?>${retailer.slug}`;
       let queryString = '';
-      const params = {
-        <?= ($custom_center_id!==null?'c:'.$custom_center_id:'') ?>
-      };
+      const params = {};
       if(multipleLocationRetailer) params.r = retailer.id;
       if (Object.keys(params).length > 0) {
         queryString = Object.entries(params)

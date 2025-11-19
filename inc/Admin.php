@@ -5,19 +5,9 @@ function on_mcd_plugin_page() {
 	return isset($_GET['page']) && $_GET['page']===MCD_PLUGIN_NAME;
 }
 
-function mcd_centers_dropdown_values() {
-	if( !on_mcd_plugin_page() ) return array();
-
-	$values = array();
-
-	$centers = mcd_api_data( MCD_API_CENTERS );
-
-	if( $centers && $centers['items'] && is_array($centers['items']) && count($centers['items']) > 0 ) {
-		foreach ( $centers['items'] as $center ) {
-			$values[$center['id']] = $center['name'];
-		}
-	}
-	return $values;
+function eyeon_get_center() {
+	$center = mcd_api_data( MCD_API_CENTER );
+  return $center;
 }
 
 function mcd_page_widths() {

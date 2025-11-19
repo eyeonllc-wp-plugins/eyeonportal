@@ -20,18 +20,37 @@ jQuery(function ($) {
 
       tagsSelect2.select2({
         ajax: {
-          url: tagsCustomData.api_endpoint,
-          dataType: 'json',
-          delay: 250,
-          headers: {
-            center_id: tagsCustomData.center_id
-          },
+          // url: tagsCustomData.api_endpoint,
+          // dataType: 'json',
+          // delay: 250,
+          // headers: {
+          //   center_id: tagsCustomData.center_id
+          // },
+          // data: function (params) {
+          //   return {
+          //     limit: 100,
+          //     page: 1,
+          //     search: params.term,
+          //   };
+          // },
+
+          url: tagsCustomData.ajaxurl + '?api=' + tagsCustomData.api_endpoint,
           data: function (params) {
             return {
-              limit: 100,
-              page: 1,
-              search: params.term,
-            };
+              action: 'eyeon_api_request',
+              apiUrl: tagsCustomData.api_endpoint,
+              params: {
+                limit: 100,
+                page: 1,
+                search: params.term,
+              }
+            }
+          },
+          method: 'POST',
+          dataType: 'json',
+          delay: 250,
+          xhrFields: {
+            withCredentials: true
           },
           processResults: function (data) {
             const options = [];

@@ -50,13 +50,14 @@ function mcd_image_url($url = '') {
 	return MCD_PLUGIN_URL.'assets/img/blank.gif';
 }
 
-function mcd_api_data($url, $center_id = null) {
+function mcd_api_data($url) {
   global $mcd_settings;
+  $url = API_BASE_URL.$url;
 	$url .= (strpos($url, '?')?'&':'?').'time='.time();
 	$args = array(
 		'sslverify' => false,
     'headers' => array(
-      'center_id' => $center_id===null ? $mcd_settings['center_id']: $center_id,
+      'Cookie' => 'webAppApiToken='.$mcd_settings['api_access_token'],
       'Origin' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
     ),
 	);

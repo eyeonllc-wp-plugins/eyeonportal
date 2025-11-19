@@ -38,12 +38,19 @@ $unique_id = uniqid();
         limit = Math.min(remainingLimit, defaultLimit);
       }
       $.ajax({
-        url: "<?= MCD_API_CAREERS ?>",
-        data: { limit, page },
-        method: 'GET',
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_CAREERS ?>',
+        data: {
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_CAREERS ?>",
+          params: {
+            limit,
+            page,
+          }
+        },
+        method: "POST",
         dataType: 'json',
-        headers: {
-          center_id: '<?= $mcd_settings['center_id'] ?>'
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {

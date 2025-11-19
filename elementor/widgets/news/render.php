@@ -64,7 +64,7 @@ $unique_id = uniqid();
       }
 
       const news_category = parseInt(settings.news_category);
-      const ajaxData = {
+      const ajaxReqParams = {
         limit,
         page,
         category_ids: (news_category > 0 ) ? [news_category]: [],
@@ -74,12 +74,16 @@ $unique_id = uniqid();
       };
 
       $.ajax({
-        url: "<?= MCD_API_NEWS ?>",
-        data: ajaxData,
-        method: 'GET',
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_NEWS ?>',
+        data: {
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_NEWS ?>",
+          params: ajaxReqParams
+        },
+        method: "POST",
         dataType: 'json',
-        headers: {
-          center_id: '<?= $mcd_settings['center_id'] ?>'
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {

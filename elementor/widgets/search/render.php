@@ -9,8 +9,6 @@ $fields = [
 ];
 $filtered_settings = array_intersect_key($settings, array_flip($fields));
 $unique_id = uniqid();
-
-$center_id = $mcd_settings['center_id'];
 ?>
 
 <div id="eyeon-search-<?= $unique_id ?>" class="eyeon-search">
@@ -39,27 +37,31 @@ $center_id = $mcd_settings['center_id'];
     fetch_retailers();
 
     function fetch_retailers() {
-      const ajaxData = {
+      const ajaxReqParams = {
         limit,
         page,
         category_ids: [],
         tag_ids: [],
       };
       $.each(settings.retailer_categories, function(index, category) {
-        ajaxData.category_ids.push(category);
+        ajaxReqParams.category_ids.push(category);
       });
       $.each(settings.retailer_tags, function(index, tag) {
         const parseTag = JSON.parse(tag);
-        ajaxData.tag_ids.push(parseTag.id);
+        ajaxReqParams.tag_ids.push(parseTag.id);
       });
 
       $.ajax({
-        url: "<?= MCD_API_STORES ?>",
-        data: ajaxData,
-        method: 'GET',
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES ?>',
+        data: {
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_STORES ?>",
+          params: ajaxReqParams
+        },
+        method: "POST",
         dataType: 'json',
-        headers: {
-          center_id: '<?= $center_id ?>'
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {

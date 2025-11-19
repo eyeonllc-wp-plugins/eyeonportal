@@ -98,12 +98,16 @@ $unique_id = uniqid();
       }
 
       $.ajax({
-        url: "<?= MCD_API_EVENTS ?>",
-        data: apiParams,
-        method: 'GET',
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_EVENTS ?>',
+        data: {
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_EVENTS ?>",
+          params: apiParams
+        },
+        method: "POST",
         dataType: 'json',
-        headers: {
-          center_id: '<?= $mcd_settings['center_id'] ?>'
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {

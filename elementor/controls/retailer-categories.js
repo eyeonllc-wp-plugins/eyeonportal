@@ -10,16 +10,20 @@ jQuery(function ($) {
       });
 
       $.ajax({
-        url: categoriesCustomData.api_endpoint,
+        url: categoriesCustomData.ajaxurl + '?api=' + categoriesCustomData.api_endpoint,
         data: {
-          limit: 100,
-          page: 1,
-          group: true
+          action: 'eyeon_api_request',
+          apiUrl: categoriesCustomData.api_endpoint,  
+          params: {
+            limit: 100,
+            page: 1,
+            group: true
+          }
         },
-        method: 'GET',
+        method: 'POST',
         dataType: 'json',
-        headers: {
-          center_id: categoriesCustomData.center_id
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.items) {

@@ -1,5 +1,7 @@
 <?php defined( 'ABSPATH' ) || exit;
 
+$center = eyeon_get_center();
+
 Redux::set_section(
 	$opt_name,
 	array(
@@ -8,24 +10,12 @@ Redux::set_section(
 		'icon' => 'el el-home',
 		'fields' => array(
 			array(
-				'id' => 'mcd_site_mode',
-				'type' => 'button_set',
-				'title' => __( 'Plugin Mode', 'redux-framework-demo' ),
-				'options' => array(
-					'development' => 'Development',
-					'staging' => 'Staging',
-					'prod' => 'Production',
-				),
-				'ajax_save' => false,
-				'default' => isset($mcd_settings['mcd_site_mode']) ? $mcd_settings['mcd_site_mode'] : 'live',
-			),
-			array(
-				'id' => 'center_id',
-				'type' => 'select',
-				'title' => __( 'Choose Center', 'redux-framework-demo' ),
-				'options' => mcd_centers_dropdown_values(),
-				'default' => isset($mcd_settings['center_id']) ? $mcd_settings['center_id'] : 0,
-				'validate' => 'not_empty',
+				'id' => 'api_access_token',
+				'type' => 'text',
+				'title' => __( 'API Access Token', EYEON_NAMESPACE ),
+				'default' => isset($mcd_settings['api_access_token']) ? $mcd_settings['api_access_token'] : '',
+				'desc' => __( '#'.$center['id'].' - '.$center['name'], EYEON_NAMESPACE ),
+        'ajax_save' => false,
 			),
 			array(
 				'id' => 'default_page_width',

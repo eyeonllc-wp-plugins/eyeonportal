@@ -23,17 +23,16 @@ if( !class_exists('MyCenterPortal') ) {
 			array_push( $links, $settings_link );
 			return $links;
 		}
-
 	}
 
-	$myCenterDeals = new MyCenterPortal();
-	$myCenterDeals->register();
+	$eyeonPlugin = new MyCenterPortal();
+	$eyeonPlugin->register();
 
 	// activation
-	register_activation_hook( __FILE__, array( $myCenterDeals, 'activate' ) );
+	register_activation_hook( __FILE__, array( $eyeonPlugin, 'activate' ) );
 
 	// deactivation
-	register_deactivation_hook( __FILE__, array( $myCenterDeals, 'deactivate' ) );
+	register_deactivation_hook( __FILE__, array( $eyeonPlugin, 'deactivate' ) );
 
 }
 

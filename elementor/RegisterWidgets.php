@@ -45,9 +45,9 @@ function eyeon_elementor_editor_scripts() {
   global $mcd_settings;
 
   // Retailers Categories Select2
-  wp_register_script( 'eyeon-retailers-categories-script', mcd_version_url( 'elementor/controls/retailer-categories.js' ) );
+  wp_register_script( 'eyeon-retailers-categories-script', mcd_version_url( 'elementor/controls/retailer-categories.js' ), array('jquery') );
   $categoriesCustomData = array(
-    'center_id' => $mcd_settings['center_id'],
+    'ajaxurl' => admin_url('admin-ajax.php'),
     'api_endpoint' => MCD_API_STORES.'/categories'
   );
   wp_localize_script('eyeon-retailers-categories-script', 'categoriesCustomData', $categoriesCustomData);
@@ -56,7 +56,7 @@ function eyeon_elementor_editor_scripts() {
   // Retailers Tags Select2
   wp_register_script( 'eyeon-retailers-tags-script', mcd_version_url( 'elementor/controls/retailer-tags.js' ) );
   $tagsCustomData = array(
-    'center_id' => $mcd_settings['center_id'],
+    'ajaxurl' => admin_url('admin-ajax.php'),
     'api_endpoint' => MCD_API_STORES.'/tags',
   );
   wp_localize_script('eyeon-retailers-tags-script', 'tagsCustomData', $tagsCustomData);

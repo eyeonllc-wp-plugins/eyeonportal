@@ -16,9 +16,9 @@ if( !class_exists('MCDShortcodes') ) {
 		function register() {
 			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue') );
 
-      add_shortcode('mcd_search_form', function() { return ''; });
-      add_shortcode('mcd_opening_hours_week', function() { return ''; });
-      add_shortcode('mcd_opening_hours_today', function() { return ''; });
+      // add_shortcode('mcd_search_form', function() { return ''; });
+      // add_shortcode('mcd_opening_hours_week', function() { return ''; });
+      // add_shortcode('mcd_opening_hours_today', function() { return ''; });
 
       add_shortcode('mcp_site_name', function() { return get_bloginfo('name'); });
       add_shortcode('mcp_site_url', function() { return site_url(); });
@@ -32,7 +32,7 @@ if( !class_exists('MCDShortcodes') ) {
 
 			add_filter( 'body_class', array( $this, 'add_plugin_body_class') );
 			add_filter( 'wp_head', array( $this, 'dynamic_styles_scripts') );
-			add_action( 'init', array( $this, 'mcd_flush_rewrite_rules' ) );
+			add_action( 'init', array( $this, 'mcd_init' ) );
 
 			add_filter( 'theme_page_templates', array( $this, 'links_page_template' ) );
 			add_filter( 'template_include', array( $this, 'links_change_page_template' ) );
@@ -40,9 +40,13 @@ if( !class_exists('MCDShortcodes') ) {
 			add_filter( 'wp_title', array( $this, 'change_page_title' ), 999 );
 			add_filter( 'wpseo_title', array( $this, 'change_page_title' ), 999 );
 			add_filter( 'pre_get_document_title', array( $this, 'change_page_title' ) );
+
+      add_action('wp_ajax_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
+      add_action('wp_ajax_nopriv_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
     }
 
-		function mcd_flush_rewrite_rules() {
+		function mcd_init() {
+      // flush rewrite rules
 			global $wp_rewrite;
 
 			$db_mcd_plugin_version = get_option('mcd_plugin_version');
@@ -51,7 +55,15 @@ if( !class_exists('MCDShortcodes') ) {
 				$wp_rewrite->flush_rules(false);
 				update_option('mcd_plugin_version', MCD_PLUGIN_VERSION);
 			}
-		}
+
+      // generate session token
+      $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? null;
+      if (!$token || !get_transient("eyeon_api_session_$token")) {
+        $token = wp_hash( time() . rand() );
+        set_transient("eyeon_api_session_$token", true, EYEON_API_SESSION_TOKEN_EXPIRE);
+        setcookie(EYEON_API_SESSION_TOKEN, $token, time() + EYEON_API_SESSION_TOKEN_EXPIRE, "/", "", false, true);
+      }
+    }
 
 		function redux_options_saved($options) {
 			global $wp_rewrite;
@@ -215,17 +227,12 @@ if( !class_exists('MCDShortcodes') ) {
 				$this->template = 'templates/store.php';
         $multiple_location_retailer_id = (isset($_GET['r']) && !empty(['r'])) ? $_GET['r'] : null;
 				$req_url = MCD_API_STORES.'/'.get_query_var('mycenterstore', 0).($multiple_location_retailer_id?'/'.$multiple_location_retailer_id:'');
-        $custom_center_id = (isset($_GET['c']) && !empty(['c'])) ? $_GET['c'] : null;
-				$this->mcd_settings['mycenterstore'] = mcd_api_data($req_url, $custom_center_id);
+				$this->mcd_settings['mycenterstore'] = mcd_api_data($req_url);
 				if( $this->mcd_settings['stores_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['stores_single_page_custom_title'];
 				} else {
 					$this->page_title = @$this->mcd_settings['mycenterstore']['name'];
 				}
-
-				$req_url = MCD_API_MAP_CONFIG.'?center='.$this->mcd_settings['center_id'];
-				$map_config = mcd_api_data($req_url);
-				$this->mcd_settings['map_config'] = $map_config;
 			} elseif ( array_key_exists( 'mycenterevent', $wp_query->query_vars ) ) {
 				$this->template = 'templates/event.php';
 
@@ -315,6 +322,11 @@ if( !class_exists('MCDShortcodes') ) {
 				mcd_include_css('style', 'assets/css/style.min.css');
         wp_enqueue_style( 'eyeon-elementor-style' );
 			}
+
+      // Localize script to jQuery which is always available
+      wp_localize_script('jquery', 'EYEON', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+      ]);
 		}
 
 		function is_querystring_present() {
@@ -344,6 +356,18 @@ if( !class_exists('MCDShortcodes') ) {
 				include ( MCD_PLUGIN_PATH . 'assets/dynamic.php');
 			}
 		}
+
+    function eyeon_api_request() {
+      $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? '';
+      if (! $token || ! get_transient("eyeon_api_session_$token")) {
+        wp_send_json_error(['msg' => "You're not authorized to access this resource."], 403);
+      }
+
+      $apiUrl = isset($_POST['apiUrl']) ? $_POST['apiUrl'] : '';
+      $params = isset($_POST['params']) ? $_POST['params'] : array();
+      $data = mcd_api_data($apiUrl.'?'.http_build_query($params));
+      wp_send_json($data);
+    }
 	}
 
 	$mcd_shortcodes = new MCDShortcodes();

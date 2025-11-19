@@ -86,11 +86,21 @@ jQuery(document).ready(function($) {
   var postsDiv = $('.mcd-latest-posts .mcd-posts');
 
   $.ajax({
-    url: "<?= MCD_API_NEWS.'?limit=6&page=1&sortColumn=post_date&sortOrder=desc' ?>",
-    method: 'GET',
+    url: EYEON.ajaxurl+'?api=<?= MCD_API_NEWS ?>',
+    data: {
+      action: 'eyeon_api_request',
+      apiUrl: "<?= MCD_API_NEWS ?>",
+      params: {
+        limit: 6,
+        page: 1,
+        sortColumn: 'post_date',
+        sortOrder: 'desc'
+      },
+    },
+    method: "POST",
     dataType: 'json',
-    headers: {
-      center_id: '<?= $this->mcd_settings['center_id'] ?>'
+    xhrFields: {
+      withCredentials: true
     },
     success: function(response) {
       if( response.items ) {

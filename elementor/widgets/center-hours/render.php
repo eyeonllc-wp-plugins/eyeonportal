@@ -47,11 +47,20 @@ $unique_id = uniqid();
 
     function fetch_center_hours() {
       $.ajax({
-        url: "<?= MCD_API_CENTER_HOURS ?>",
-        method: 'GET',
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_CENTER_HOURS ?>', 
+        data: {
+          action: 'eyeon_api_request',
+          apiUrl: "<?= MCD_API_CENTER_HOURS ?>",
+          params: {
+            limit: 100,
+            page: 1,
+            group: true
+          }
+        },
+        method: "POST",
         dataType: 'json',
-        headers: {
-          center_id: '<?= $mcd_settings['center_id'] ?>'
+        xhrFields: {
+          withCredentials: true
         },
         success: function (response) {
           if (response.sets) {
