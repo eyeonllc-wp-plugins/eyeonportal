@@ -44,6 +44,8 @@ jQuery(document).ready(function($) {
         withCredentials: true
       },
       success: function(response) {
+        if(!response || !response.settings ) return false;
+        
         defaultSliderSettings = response.settings.settings;
         defaultSlides = response.settings.slides.filter(slide => slide.active).map(slide => ({
           ...slide,

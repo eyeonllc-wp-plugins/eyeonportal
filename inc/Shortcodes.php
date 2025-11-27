@@ -32,6 +32,7 @@ if( !class_exists('MCDShortcodes') ) {
 
 			add_filter( 'body_class', array( $this, 'add_plugin_body_class') );
 			add_filter( 'wp_head', array( $this, 'dynamic_styles_scripts') );
+			add_action( 'wp_head', array( $this, 'output_eyeon_script'), 1 );
 			add_action( 'init', array( $this, 'mcd_init' ) );
 
 			add_filter( 'theme_page_templates', array( $this, 'links_page_template' ) );
@@ -325,11 +326,15 @@ if( !class_exists('MCDShortcodes') ) {
 				mcd_include_css('style', 'assets/css/style.min.css');
         wp_enqueue_style( 'eyeon-elementor-style' );
 			}
+		}
 
-      // Localize script to jQuery which is always available
-      wp_localize_script('jquery', 'EYEON', [
-        'ajaxurl' => admin_url('admin-ajax.php'),
-      ]);
+		function output_eyeon_script() {
+			// Output EYEON variable directly in wp_head
+			// This ensures it's always available regardless of jQuery's enqueue state
+			$ajaxurl = admin_url('admin-ajax.php');
+			echo "<script type='text/javascript'>\n";
+			echo "var EYEON = " . wp_json_encode(['ajaxurl' => $ajaxurl]) . ";\n";
+			echo "</script>\n";
 		}
 
 		function is_querystring_present() {

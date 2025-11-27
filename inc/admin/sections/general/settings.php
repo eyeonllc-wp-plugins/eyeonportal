@@ -14,7 +14,7 @@ Redux::set_section(
 				'type' => 'text',
 				'title' => __( 'API Access Token', EYEON_NAMESPACE ),
 				'default' => isset($mcd_settings['api_access_token']) ? $mcd_settings['api_access_token'] : '',
-				'desc' => __( '#'.$center['id'].' - '.$center['name'], EYEON_NAMESPACE ),
+				'desc' => __( $center ? '#'.$center['id'].' - '.$center['name']: '', EYEON_NAMESPACE ),
         'ajax_save' => false,
 			),
 			array(
