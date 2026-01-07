@@ -45,6 +45,9 @@ if( !class_exists('MCDShortcodes') ) {
       add_action('wp_ajax_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
       add_action('wp_ajax_nopriv_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
 
+      add_action('wp_ajax_eyeon_save_map_response', array( $this, 'eyeon_save_map_response' ) );
+      add_action('wp_ajax_nopriv_eyeon_save_map_response', array( $this, 'eyeon_save_map_response' ) );
+
       // Register REST API proxy endpoint
       add_action('rest_api_init', array( $this, 'register_rest_api_proxy' ) );
     }
@@ -375,6 +378,46 @@ if( !class_exists('MCDShortcodes') ) {
       $params = isset($_POST['params']) ? $_POST['params'] : array();
       $data = mcd_api_data($apiUrl.'?'.http_build_query($params));
       wp_send_json($data);
+    }
+
+    /**
+     * Save map API response to wp_options
+     */
+    function eyeon_save_map_response() {
+      // Get the map API response data
+      // It's sent as a JSON string to avoid max_input_vars limits
+      $map_response_json = isset($_POST['mapResponse']) ? stripslashes($_POST['mapResponse']) : null;
+      $map_response = json_decode($map_response_json, true);
+      
+      if (empty($map_response)) {
+        // Fallback: try reading it directly if not JSON string (backward compatibility)
+        $map_response = isset($_POST['mapResponse']) ? $_POST['mapResponse'] : null;
+      }
+      
+      if (empty($map_response)) {
+        wp_send_json_error(['msg' => 'Map response data is required.'], 400);
+      }
+
+      // Save to wp_options (one website = one center data)
+      $saved = update_option(THREEJS_MAP_API_RESPONSE_KEY, $map_response);
+
+      if ($saved) {
+        wp_send_json_success([
+          'msg' => 'Map API response saved successfully.',
+          'option_name' => THREEJS_MAP_API_RESPONSE_KEY
+        ]);
+      } else {
+        // If data hasn't changed, update_option returns false. 
+        // We should check if option exists and matches to determine if it's an error or just no change.
+        if (get_option(THREEJS_MAP_API_RESPONSE_KEY) === $map_response) {
+             wp_send_json_success([
+              'msg' => 'Map API response already up to date.',
+              'option_name' => THREEJS_MAP_API_RESPONSE_KEY
+            ]);
+        } else {
+             wp_send_json_error(['msg' => 'Failed to save map API response.'], 500);
+        }
+      }
     }
 
     /**
