@@ -65,9 +65,9 @@ if( !class_exists('MCDShortcodes') ) {
 
       // generate session token
       $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? null;
-      if (!$token || !get_transient("eyeon_api_session_$token")) {
+      if (!$token) {
         $token = wp_hash( time() . rand() );
-        set_transient("eyeon_api_session_$token", true, EYEON_API_SESSION_TOKEN_EXPIRE);
+        // set_transient("eyeon_api_session_$token", true, EYEON_API_SESSION_TOKEN_EXPIRE);
         setcookie(EYEON_API_SESSION_TOKEN, $token, time() + EYEON_API_SESSION_TOKEN_EXPIRE, "/", "", false, true);
       }
     }
@@ -370,7 +370,7 @@ if( !class_exists('MCDShortcodes') ) {
 
     function eyeon_api_request() {
       $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? '';
-      if (! $token || ! get_transient("eyeon_api_session_$token")) {
+      if (! $token) {
         wp_send_json_error(['msg' => "You're not authorized to access this resource."], 403);
       }
 
@@ -439,7 +439,7 @@ if( !class_exists('MCDShortcodes') ) {
     function handle_rest_api_proxy($request) {
       // Validate session token
       $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? '';
-      if (! $token || ! get_transient("eyeon_api_session_$token")) {
+      if (! $token) {
         return new WP_Error('unauthorized', "You're not authorized to access this resource.", array('status' => 403));
       }
 
