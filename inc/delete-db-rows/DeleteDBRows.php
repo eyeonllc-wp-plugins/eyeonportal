@@ -262,7 +262,7 @@ class EyeOn_Delete_DB_Rows {
             
             <div class="card" style="max-width: 100%; padding: 20px; margin-top: 20px;">
                 <h2>Live Log</h2>
-                <div id="log-container" style="background: #1d2327; color: #00ff00; padding: 15px; width:400px; height: calc(100vh - 100px); overflow-y: auto; font-family: monospace; font-size: 12px; border-radius: 4px;">
+                <div id="log-container" style="background: #1d2327; color: #00ff00; padding: 15px; height: calc(100vh - 100px); overflow-y: auto; font-family: monospace; font-size: 12px; border-radius: 4px;">
                     <div id="log-output" style="white-space: nowrap; overflow-x: auto; height: 100%;">Waiting to start...</div>
                 </div>
             </div>
