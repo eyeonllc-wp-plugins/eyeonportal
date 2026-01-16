@@ -86,7 +86,7 @@ $args = array(
 	'opt_name'                  => MCD_PLUGIN_NAME,
 
 	// Name that appears at the top of your panel.
-	'display_name'              => esc_html__( 'EyeOn Portal - Settings', 'mycenterportal.com' ),
+	'display_name'              => esc_html__( 'EyeOn Portal - Settings', EYEON_NAMESPACE ),
 
 	// Version that appears at the top of your panel.
 	'display_version'           => MCD_PLUGIN_VERSION,
@@ -98,10 +98,10 @@ $args = array(
 	'allow_sub_menu'            => false,
 
 	// The text to appear in the admin menu.
-	'menu_title'                => esc_html__( 'EyeOn Portal', 'mycenterportal.com' ),
+	'menu_title'                => esc_html__( 'EyeOn Portal', EYEON_NAMESPACE ),
 
 	// The text to appear on the page title.
-	'page_title'                => esc_html__( 'My Center Portal', 'mycenterportal.com' ),
+	'page_title'                => esc_html__( 'My Center Portal', EYEON_NAMESPACE ),
 
 	// Enabled the Webfonts typography module to use asynchronous fonts.
 	'async_typography'          => false,
@@ -347,8 +347,8 @@ if ( ! function_exists( 'dynamic_section' ) ) {
 	 */
 	function dynamic_section( $sections ) {
 		$sections[] = array(
-			'title'  => esc_html__( 'Section via hook', 'mycenterportal.com' ),
-			'desc'   => '<p class="description">' . esc_html__( 'This is a section created by adding a filter to the sections array. Can be used by child themes to add/remove sections from the options.', 'mycenterportal.com' ) . '</p>',
+			'title'  => esc_html__( 'Section via hook', EYEON_NAMESPACE ),
+			'desc'   => '<p class="description">' . esc_html__( 'This is a section created by adding a filter to the sections array. Can be used by child themes to add/remove sections from the options.', EYEON_NAMESPACE ) . '</p>',
 			'icon'   => 'el el-paper-clip',
 
 			// Leave this as a blank section, no options just some intro text set above.
@@ -384,7 +384,7 @@ if ( ! function_exists( 'change_defaults' ) ) {
 	 * @return array
 	 */
 	function change_defaults( $defaults ) {
-		$defaults['str_replace'] = esc_html__( 'Testing filter hook!', 'mycenterportal.com' );
+		$defaults['str_replace'] = esc_html__( 'Testing filter hook!', EYEON_NAMESPACE );
 
 		return $defaults;
 	}

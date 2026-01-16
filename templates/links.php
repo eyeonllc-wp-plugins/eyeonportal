@@ -7,7 +7,7 @@ $links_data = mcd_api_data(MCP_API_LINKS);
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-	<link rel="shortcut icon" href="https://mycenterportal.com/assets/img/favicon.ico" type="image/x-icon" >
+	<link rel="shortcut icon" href="https://eyeonportal.com/assets/img/favicon.ico" type="image/x-icon" >
 	<title><?= $links_data['center']['name'] ?> - Links</title>
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">

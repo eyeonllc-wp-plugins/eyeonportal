@@ -5,7 +5,7 @@ $center = eyeon_get_center();
 Redux::set_section(
 	$opt_name,
 	array(
-		'title' => __( 'General Settings', 'mycenterportal.com' ),
+		'title' => __( 'General Settings', EYEON_NAMESPACE ),
 		'id' => 'general_settings',
 		'icon' => 'el el-home',
 		'fields' => array(

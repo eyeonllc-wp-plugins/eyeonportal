@@ -1,17 +1,17 @@
 === Plugin Name ===
 
-Stable tag:      0.1.59
+Stable tag:      0.1.60
 Tested up to:    6.3
 Licence:         GPLv2 or later
 Licence URI:     http://www.gnu.org/licenses/gpl-2.0.html
 
-Plugin will help your website to fetch the Center related content from MyCenterPortal.com.
+Plugin will help your website to fetch the Center related content from EyeOn Portal.
 
 == Description ==
 
-Plugin will help your wordpress website to show Deals Listing, Stores Listing & Events Calendar from MyCenterPortal.com Portal.
+Plugin will help your wordpress website to show Deals Listing, Stores Listing & Events Calendar from EyeOn Portal.
 
-Once you install this plugin you can choose a Center. You can manage all the Center content at [MyCenterPortal Portal](http://mycenterportal.com/admin).
+Once you install this plugin you can choose a Center. You can manage all the Center content at [EyeOn Portal](https://eyeonportal.com/).
 
 == Installation ==
 
