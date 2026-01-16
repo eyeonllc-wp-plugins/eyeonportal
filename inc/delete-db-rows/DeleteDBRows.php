@@ -8,12 +8,22 @@ class EyeOn_Delete_DB_Rows {
     
     private $progress_file;
     private $log_file;
+    private $storage_dir;
     private $batch_size = 100;
     private $grace_period = 1000;
     
     public function __construct() {
-        $this->progress_file = dirname(__FILE__) . '/progress.json';
-        $this->log_file = dirname(__FILE__) . '/deletion_log.txt';
+        // Store files in wp-content/uploads/eyeon-transient-cleanup/ to persist across plugin updates
+        $upload_dir = wp_upload_dir();
+        $this->storage_dir = $upload_dir['basedir'] . '/eyeon-transient-cleanup';
+        
+        // Create directory if it doesn't exist
+        if (!file_exists($this->storage_dir)) {
+            wp_mkdir_p($this->storage_dir);
+        }
+        
+        $this->progress_file = $this->storage_dir . '/progress.json';
+        $this->log_file = $this->storage_dir . '/deletion_log.txt';
         
         add_action('admin_menu', array($this, 'add_admin_menu'));
         add_action('wp_ajax_eyeon_delete_transients_batch', array($this, 'ajax_delete_batch'));
