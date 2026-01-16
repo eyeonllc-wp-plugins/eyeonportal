@@ -197,7 +197,7 @@ class EyeOn_Delete_DB_Rows {
         <div class="wrap">
             <h1>Delete EyeOn Session Transients</h1>
             
-            <div class="card" style="max-width: 800px; padding: 20px;">
+            <div class="card" style="max-width: 100%; padding: 20px;">
                 <h2>About</h2>
                 <p>This tool deletes old session transients from the <code>wp_options</code> table that match:</p>
                 <ul style="list-style: disc; margin-left: 20px;">
@@ -207,7 +207,7 @@ class EyeOn_Delete_DB_Rows {
                 <p>The process runs in configurable batches to prevent timeout issues. Adjust the settings below before starting.</p>
             </div>
             
-            <div class="card" style="max-width: 800px; padding: 20px; margin-top: 20px;">
+            <div class="card" style="max-width: 100%; padding: 20px; margin-top: 20px;">
                 <h2>Settings</h2>
                 <table class="form-table">
                     <tr>
@@ -234,7 +234,7 @@ class EyeOn_Delete_DB_Rows {
                 </p>
             </div>
             
-            <div class="card" style="max-width: 800px; padding: 20px; margin-top: 20px;">
+            <div class="card" style="max-width: 100%; padding: 20px; margin-top: 20px;">
                 <h2>Progress</h2>
                 <table class="widefat" style="max-width: 400px;">
                     <tr>
@@ -260,10 +260,10 @@ class EyeOn_Delete_DB_Rows {
                 </table>
             </div>
             
-            <div class="card" style="max-width: 800px; padding: 20px; margin-top: 20px;">
+            <div class="card" style="max-width: 100%; padding: 20px; margin-top: 20px;">
                 <h2>Live Log</h2>
-                <div id="log-container" style="background: #1d2327; color: #00ff00; padding: 15px; height: 400px; overflow-y: auto; font-family: monospace; font-size: 12px; border-radius: 4px;">
-                    <div id="log-output">Waiting to start...</div>
+                <div id="log-container" style="background: #1d2327; color: #00ff00; padding: 15px; width:400px; height: calc(100vh - 100px); overflow-y: auto; font-family: monospace; font-size: 12px; border-radius: 4px;">
+                    <div id="log-output" style="white-space: nowrap; overflow-x: auto; height: 100%;">Waiting to start...</div>
                 </div>
             </div>
         </div>
@@ -299,8 +299,8 @@ class EyeOn_Delete_DB_Rows {
                 $('#log-output').append(logLine);
                 
                 // Auto-scroll to bottom
-                var container = $('#log-container');
-                container.scrollTop(container[0].scrollHeight);
+                // var container = $('#log-container');
+                // container.scrollTop(container[0].scrollHeight);
             }
             
             function updateProgress(data) {
@@ -340,13 +340,13 @@ class EyeOn_Delete_DB_Rows {
                             
                             // Log the SELECT query
                             if (data.select_query) {
-                                log('SELECT: ' + data.select_query, 'info');
+                                log(data.select_query, 'info');
                             }
                             
                             if (data.deleted_in_batch > 0) {
                                 // Log the DELETE query
                                 if (data.delete_query) {
-                                    log('DELETE: ' + data.delete_query, 'warning');
+                                    log(data.delete_query, 'warning');
                                 }
                                 log('Deleted ' + data.deleted_in_batch + ' records.', 'success');
                             } else {
