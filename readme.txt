@@ -1,6 +1,6 @@
 === Plugin Name ===
 
-Stable tag:      0.1.62
+Stable tag:      0.1.63
 Tested up to:    6.3
 Licence:         GPLv2 or later
 Licence URI:     http://www.gnu.org/licenses/gpl-2.0.html

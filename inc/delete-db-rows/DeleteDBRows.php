@@ -114,9 +114,9 @@ class EyeOn_Delete_DB_Rows {
         
         // Get batch of records
         $query = $wpdb->prepare(
-            "SELECT option_id, option_name FROM {$wpdb->options} LIMIT %d OFFSET %d",
-            $batch_size,
-            $offset
+            "SELECT option_id, option_name FROM {$wpdb->options} ORDER BY option_id ASC LIMIT %d, %d",
+            $offset,
+            $batch_size
         );
         
         $results = $wpdb->get_results($query);
