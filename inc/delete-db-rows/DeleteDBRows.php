@@ -122,7 +122,8 @@ class EyeOn_Delete_DB_Rows {
                 'message' => 'All records processed',
                 'total_deleted' => $progress['total_deleted'],
                 'total_scanned' => $progress['total_scanned'],
-                'offset' => $offset
+                'offset' => $offset,
+                'select_query' => $query
             ));
             return;
         }
@@ -140,6 +141,7 @@ class EyeOn_Delete_DB_Rows {
         }
         
         $deleted_count = 0;
+        $delete_query = null;
         
         if (!empty($ids_to_delete)) {
             // Delete matching records
@@ -148,19 +150,14 @@ class EyeOn_Delete_DB_Rows {
             $deleted_count = $wpdb->query($delete_query);
             
             // Log deletion
-            $this->log_message("Deleted {$deleted_count} records: " . implode(', ', $names_to_delete));
+            // $this->log_message("Deleted {$deleted_count} records: " . implode(', ', $names_to_delete));
+            $this->log_message("Deleted {$deleted_count} records");
         }
         
         // Update progress
-        // Note: We don't increase offset by batch_size when we delete records
-        // because the remaining records shift down. We only advance if we didn't delete anything.
-        if ($deleted_count > 0) {
-            // Records were deleted, don't advance offset (records shifted)
-            $progress['total_deleted'] += $deleted_count;
-        } else {
-            // No deletions, advance offset
-            $progress['offset'] = $offset + $batch_size;
-        }
+        // Always advance offset - we've processed this batch regardless of deletions
+        $progress['offset'] = $offset + $batch_size;
+        $progress['total_deleted'] += $deleted_count;
         
         $progress['total_scanned'] += count($results);
         $progress['status'] = 'in_progress';
@@ -174,7 +171,9 @@ class EyeOn_Delete_DB_Rows {
             'deleted_names' => $names_to_delete,
             'total_deleted' => $progress['total_deleted'],
             'total_scanned' => $progress['total_scanned'],
-            'next_offset' => $progress['offset']
+            'next_offset' => $progress['offset'],
+            'select_query' => $query,
+            'delete_query' => $delete_query
         ));
     }
     
@@ -329,15 +328,19 @@ class EyeOn_Delete_DB_Rows {
                             var data = response.data;
                             updateProgress(data);
                             
+                            // Log the SELECT query
+                            if (data.select_query) {
+                                log('SELECT: ' + data.select_query, 'info');
+                            }
+                            
                             if (data.deleted_in_batch > 0) {
-                                log('Deleted ' + data.deleted_in_batch + ' records:', 'success');
-                                if (data.deleted_names && data.deleted_names.length > 0) {
-                                    data.deleted_names.forEach(function(name) {
-                                        log('  - ' + name, 'info');
-                                    });
+                                // Log the DELETE query
+                                if (data.delete_query) {
+                                    log('DELETE: ' + data.delete_query, 'warning');
                                 }
+                                log('Deleted ' + data.deleted_in_batch + ' records.', 'success');
                             } else {
-                                log('Scanned ' + data.batch_size + ' records at offset ' + (data.next_offset - batchSize) + ' - no matches found');
+                                log('Scanned ' + data.batch_size + ' records - no matches found');
                             }
                             
                             if (data.status === 'completed') {
