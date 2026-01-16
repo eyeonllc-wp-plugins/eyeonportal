@@ -166,8 +166,18 @@ class EyeOn_Delete_DB_Rows {
         
         // Update progress
         // Always advance offset - we've processed this batch regardless of deletions
-        $progress['offset'] = $offset + $batch_size;
-        $progress['total_deleted'] += $deleted_count;
+        // $progress['offset'] = $offset + $batch_size;
+        // $progress['total_deleted'] += $deleted_count;
+
+        // Note: We don't increase offset by batch_size when we delete records
+        // because the remaining records shift down. We only advance if we didn't delete anything.
+        if ($deleted_count > 0) {
+            // Records were deleted, don't advance offset (records shifted)
+            $progress['total_deleted'] += $deleted_count;
+        } else {
+            // No deletions, advance offset
+            $progress['offset'] = $offset + $this->batch_size;
+        }
         
         $progress['total_scanned'] += count($results);
         $progress['status'] = 'in_progress';
