@@ -384,6 +384,7 @@ class EyeOn_Delete_DB_Rows {
                         }
                     },
                     error: function(xhr, status, error) {
+                        alert('AJAX Error');
                         log('AJAX Error: ' + error, 'error');
                         isRunning = false;
                         $('#btn-start').prop('disabled', false);
@@ -449,6 +450,7 @@ class EyeOn_Delete_DB_Rows {
                         }
                     },
                     error: function(xhr, status, error) {
+                      alert('AJAX Error');
                         log('AJAX Error: ' + error, 'error');
                     }
                 });
