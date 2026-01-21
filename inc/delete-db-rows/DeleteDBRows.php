@@ -25,7 +25,7 @@ class EyeOn_Delete_DB_Rows {
         $this->progress_file = $this->storage_dir . '/progress.json';
         $this->log_file = $this->storage_dir . '/deletion_log.txt';
         
-        add_action('admin_menu', array($this, 'add_admin_menu'));
+        add_action('admin_menu', array($this, 'add_admin_menu'), 20);
         add_action('wp_ajax_eyeon_delete_transients_batch', array($this, 'ajax_delete_batch'));
         add_action('wp_ajax_eyeon_reset_progress', array($this, 'ajax_reset_progress'));
         add_action('wp_ajax_eyeon_get_progress', array($this, 'ajax_get_progress'));
@@ -33,7 +33,7 @@ class EyeOn_Delete_DB_Rows {
     
     public function add_admin_menu() {
         add_submenu_page(
-            'tools.php',
+            'eyeonportal',
             'Delete EyeOn Transients',
             'Delete EyeOn Transients',
             'manage_options',
@@ -67,7 +67,7 @@ class EyeOn_Delete_DB_Rows {
     public function log_message($message) {
         $timestamp = current_time('Y-m-d H:i:s');
         $log_entry = "[{$timestamp}] {$message}\n";
-        file_put_contents($this->log_file, $log_entry, FILE_APPEND);
+        // file_put_contents($this->log_file, $log_entry, FILE_APPEND);
     }
     
     public function ajax_get_progress() {
@@ -126,6 +126,13 @@ class EyeOn_Delete_DB_Rows {
             $progress['status'] = 'completed';
             $this->save_progress($progress);
             $this->log_message('Deletion process completed. Total deleted: ' . $progress['total_deleted'] . ', Total scanned: ' . $progress['total_scanned']);
+
+            if (file_exists($this->progress_file)) {
+              unlink($this->progress_file);
+            }
+            if (file_exists($this->log_file)) {
+              unlink($this->log_file);
+            }
             
             wp_send_json_success(array(
                 'status' => 'completed',
@@ -176,7 +183,7 @@ class EyeOn_Delete_DB_Rows {
             $progress['total_deleted'] += $deleted_count;
         } else {
             // No deletions, advance offset
-            $progress['offset'] = $offset + $this->batch_size;
+            $progress['offset'] = $offset + (count($results) === $batch_size ? $this->batch_size : count($results));
         }
         
         $progress['total_scanned'] += count($results);
@@ -306,7 +313,7 @@ class EyeOn_Delete_DB_Rows {
                 if (type === 'success') color = '#44ff44';
                 
                 var logLine = '<div style="color: ' + color + '">[' + timestamp + '] ' + message + '</div>';
-                $('#log-output').append(logLine);
+                $('#log-output').prepend(logLine);
                 
                 // Auto-scroll to bottom
                 // var container = $('#log-container');
@@ -360,9 +367,9 @@ class EyeOn_Delete_DB_Rows {
                                 }
                                 log('Deleted ' + data.deleted_in_batch + ' records.', 'success');
                             } else {
-                                log('Scanned ' + data.batch_size + ' records - no matches found');
+                                log('Scanned ' + (data.batch_size || 0) + ' records - no matches found');
                             }
-                            
+
                             if (data.status === 'completed') {
                                 isRunning = false;
                                 log('=== PROCESS COMPLETED ===', 'success');
