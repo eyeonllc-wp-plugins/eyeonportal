@@ -183,7 +183,7 @@ class EyeOn_Delete_DB_Rows {
             $progress['total_deleted'] += $deleted_count;
         } else {
             // No deletions, advance offset
-            $progress['offset'] = $offset + (count($results) === $batch_size ? $this->batch_size : count($results));
+            $progress['offset'] = $offset + $batch_size;
         }
         
         $progress['total_scanned'] += count($results);
