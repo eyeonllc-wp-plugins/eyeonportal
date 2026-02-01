@@ -30,33 +30,18 @@ $unique_id = uniqid();
     const searchResults = $('#search-results-dropdown-<?= $unique_id ?>');
 
     let retailers = [];
-    var page = 1;
-    var limit = 100;
     let retailersFetched = false;
 
     fetch_retailers();
 
-    function fetch_retailers() {
-      const ajaxReqParams = {
-        limit,
-        page,
-        category_ids: [],
-        tag_ids: [],
-      };
-      $.each(settings.retailer_categories, function(index, category) {
-        ajaxReqParams.category_ids.push(category);
-      });
-      $.each(settings.retailer_tags, function(index, tag) {
-        const parseTag = JSON.parse(tag);
-        ajaxReqParams.tag_ids.push(parseTag.id);
-      });
-
+    function fetch_retailers(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES ?>',
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_STORES ?>",
-          params: ajaxReqParams
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -64,21 +49,13 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
+          if( response.stale_data ) {
+            fetch_retailers(true);
+          }
           if (response.items) {
-            retailers = retailers.concat(response.items);
-            var fetchMore = false;
-            if( response.count > retailers.length ) fetchMore = true;
-            if( fetchMore ) {
-              page++;
-              fetch_retailers();
-            } else {
-              retailersFetched = true;
-              // Trigger search again if there's a search term
-              const currentSearch = searchInput.val().toLowerCase();
-              if (currentSearch) {
-                filterRetailersBySearch(currentSearch);
-              }
-            }
+            retailers = response.items;
+            retailersFetched = true;
+            filterRetailersBySearch(searchInput.val().toLowerCase());
           }
         }
       });

@@ -376,8 +376,75 @@ if( !class_exists('MCDShortcodes') ) {
 
       $apiUrl = isset($_POST['apiUrl']) ? $_POST['apiUrl'] : '';
       $params = isset($_POST['params']) ? $_POST['params'] : array();
-      $data = mcd_api_data($apiUrl.'?'.http_build_query($params));
-      wp_send_json($data);
+      $force_refresh = isset($_POST['force_refresh']) && $_POST['force_refresh']==='true' ? true : false;
+      $paginated_data = isset($_POST['paginated_data']) && $_POST['paginated_data']==='true' ? true : false;
+      $nocache = isset($_POST['nocache']) && $_POST['nocache']==='true' ? true : false;
+
+      if (!$apiUrl) {
+        wp_send_json_error(['msg' => "API URL missing"], 400);
+      }
+
+      // Generate unique cache key per API + params
+      $apiNameForCache = isset($_GET['api']) ? $_GET['api'] : $apiUrl;
+      $option_key = 'eyeon_api_cache_' . getFriendlyURL($apiNameForCache, '_');
+
+      // Read cached data
+      if(!$force_refresh && !$nocache) {
+        $cached = get_option($option_key);
+        $cached_data = $cached ? json_decode($cached, true) : null;
+        
+        // Send cached data immediately if available
+        if ($cached_data) {
+          $cached_data['stale_data'] = true;
+          wp_send_json($cached_data);
+        }
+      }
+
+      // If no cached data, fetch fresh (first load)
+      $fresh_data = null;
+      if($paginated_data) {
+        $fresh_data = $this->fetch_api_data_and_handle_pagination($apiUrl, $params);
+      } else {
+        $fresh_data = mcd_api_data($apiUrl.'?'.http_build_query($params));
+      }
+      
+      if(!$nocache) {
+        update_option($option_key, json_encode($fresh_data));
+      }
+      
+      $fresh_data['stale_data'] = false;
+      wp_send_json($fresh_data);
+    }
+
+    function fetch_api_data_and_handle_pagination($apiUrl, $params) {
+      $all_items = array();
+      $page = 1;
+      $limit = 100;
+
+      do {
+        $params['page'] = $page;
+        $params['limit'] = $limit;
+        
+        $response = mcd_api_data($apiUrl . '?' . http_build_query($params));
+        
+        if (!$response || !isset($response['items'])) {
+          break;
+        }
+
+        $all_items = array_merge($all_items, $response['items']);
+        $total_count = isset($response['count']) ? intval($response['count']) : 0;
+
+        if (count($all_items) < $total_count) {
+          $page++;
+        } else {
+          break;
+        }
+      } while (true);
+
+      return array(
+        'items' => $all_items,
+        'count' => $total_count
+      );
     }
 
     /**
@@ -410,12 +477,12 @@ if( !class_exists('MCDShortcodes') ) {
         // If data hasn't changed, update_option returns false. 
         // We should check if option exists and matches to determine if it's an error or just no change.
         if (get_option(THREEJS_MAP_API_RESPONSE_KEY) === $map_response) {
-             wp_send_json_success([
-              'msg' => 'Map API response already up to date.',
-              'option_name' => THREEJS_MAP_API_RESPONSE_KEY
-            ]);
+            wp_send_json_success([
+            'msg' => 'Map API response already up to date.',
+            'option_name' => THREEJS_MAP_API_RESPONSE_KEY
+          ]);
         } else {
-             wp_send_json_error(['msg' => 'Failed to save map API response.'], 500);
+            wp_send_json_error(['msg' => 'Failed to save map API response.'], 500);
         }
       }
     }

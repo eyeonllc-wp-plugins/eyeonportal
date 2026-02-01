@@ -17,7 +17,7 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-events-<?= $unique_id ?>" class="eyeon-events eyeon-loader">
-  <div class="eyeon-wrapper" style="display:none;">
+  <div class="eyeon-wrapper eyeon-hide">
     <?php if( $settings['categories_filters'] === 'show' ) : ?>
     <div class="categories">
       <select id="categories-dropdown-<?= $unique_id ?>" class="show-on-mob"></select>
@@ -55,9 +55,9 @@ $unique_id = uniqid();
     const eventsList = $('#events-list-<?= $unique_id ?>');
 
     let events = [];
-    var page = 1;
-    var defaultLimit = 100;
     let categories = [];
+
+    const ongoingEventCategoryId = <?= ONGOING_EVENT_CATEGORY_ID ?>;
 
     function getTimezoneDate(date = null) {
       const today = date ? date : new Date();
@@ -82,27 +82,16 @@ $unique_id = uniqid();
 
     fetch_events();
 
-    function fetch_events() {
-      var limit = defaultLimit;
-      if( settings.fetch_all !== 'yes' ) {
-        var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
-        limit = Math.min(remainingLimit, defaultLimit);
-      }
-
+    function fetch_events(force_refresh = false) {
       const event_category = parseInt(settings.event_category);
-      const apiParams = {limit, page};
-      if(event_category === 999999 ) {
-        apiParams.ongoing = true;
-      } else if(event_category > 0 ) {
-        apiParams.category_ids = [event_category];
-      }
 
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_EVENTS ?>',
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_EVENTS ?>",
-          params: apiParams
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -111,20 +100,36 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
-            events = events.concat(response.items);
-            var fetchMore = false;
-            if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
-              fetchMore = true;
+            let allEvents = response.items;
+            
+            // Filter by category (if specific category selected, not "all" or "ongoing")
+            if (event_category > 0 && event_category !== ongoingEventCategoryId) {
+              allEvents = allEvents.filter(function(event) {
+                if (!event.categories || event.categories.length === 0) return false;
+                return event.categories.some(function(cat) {
+                  return cat.id === event_category;
+                });
+              });
             }
-            if( settings.fetch_all === 'yes' && response.count > events.length ) {
-              fetchMore = true;
+            
+            // Filter for ongoing events only (event_category === ongoingEventCategoryId)
+            if (event_category === ongoingEventCategoryId) {
+              allEvents = allEvents.filter(function(event) {
+                return event.ongoing_event === true;
+              });
             }
-            if( fetchMore ) {
-              page++;
-              fetch_events();
-            } else {
-              setup_events();
+            
+            // Apply fetch_limit after filtering (if not fetching all)
+            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+              allEvents = allEvents.slice(0, settings.fetch_limit);
             }
+            
+            events = allEvents;
+            
+            if (response.stale_data) {
+              fetch_events(true);
+            }
+            setup_events();
           }
         }
       });
@@ -177,7 +182,7 @@ $unique_id = uniqid();
 
         if( item.ongoing_event ) {
           item.categories.push({
-            id: 999999,
+            id: ongoingEventCategoryId,
             title: 'On-Going'
           });
         }
@@ -201,6 +206,9 @@ $unique_id = uniqid();
       });
 
       categories = [{id: 0, name: 'All'}].concat(fetchedCategories);
+
+      categoryList.html('');
+      categoryDropdownList.html('');
 
       categories.forEach(category => {
         categoryList.append(`
@@ -256,9 +264,9 @@ $unique_id = uniqid();
     }
 
     function render_events() {
-      eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
-
-      eventsList.empty();
+      eyeonEvents.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      eyeonEvents.find('.no-items-found').remove();
+      eventsList.html('');
 
       if( events.length > 0 ) {
         events.forEach(event => {
@@ -295,13 +303,16 @@ $unique_id = uniqid();
           eventsList.append(eventItem);
         });
       } else {
-        eyeonEvents.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">${settings.no_results_found_text}</div>
-        `);
+        eyeonEvents.find('.eyeon-wrapper').addClass('eyeon-hide');
+        if(eyeonEvents.find('.no-items-found').length === 0) {
+          eyeonEvents.append(`
+            <div class="no-items-found">${settings.no_results_found_text}</div>
+          `);
+        }
       }
       
-      if( events.length > 0 && elementorFrontend.config.environmentMode.edit) {
-        eyeonEvents.find('.eyeon-wrapper').append(`
+      if( events.length > 0 && elementorFrontend.config.environmentMode.edit && eyeonEvents.find('.no-items-found').length === 0) {
+        eyeonEvents.append(`
           <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }

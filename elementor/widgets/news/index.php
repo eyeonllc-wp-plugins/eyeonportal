@@ -171,7 +171,7 @@ class EyeOn_News_Widget extends \Elementor\Widget_Base {
 
     $this->end_controls_section();
 
-    // include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
+    include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/controls.php');
 
     // ================================================================
     // FILTERS

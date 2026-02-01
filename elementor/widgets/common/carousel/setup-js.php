@@ -1,5 +1,14 @@
 <?php if ($settings['view_mode'] === 'carousel') : ?>
 const breakpoints = window.getResponsiveBreakpoints();
+const carouselEl = jQuery('.owl-carousel-<?= $unique_id ?>');
+
+// Destroy existing carousel if it exists (for re-initialization after data refresh)
+if (carouselEl.hasClass('owl-loaded')) {
+  carouselEl.trigger('destroy.owl.carousel');
+  carouselEl.removeClass('owl-loaded owl-drag owl-hidden');
+  carouselEl.find('.owl-stage-outer').children().unwrap();
+  carouselEl.find('.owl-nav, .owl-dots').remove();
+}
 
 var owl_options = {
   nav: settings.carousel_navigation === 'show',
@@ -34,7 +43,7 @@ var owl_options = {
     },
   }
 };
-jQuery('.owl-carousel-<?= $unique_id ?>').owlCarousel(owl_options);
+carouselEl.owlCarousel(owl_options);
 
 if (navigator.userAgent.toLowerCase().includes("firefox")) {
   const owlStage = document.querySelector(".owl-stage");

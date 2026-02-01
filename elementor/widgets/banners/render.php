@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
     };
 
     $.ajax({
-      url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>',
+      url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>/'+banner_id,
       data: {
         action: 'eyeon_api_request',
         apiUrl: "<?= MCD_API_BANNERS ?>",

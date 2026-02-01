@@ -90,12 +90,6 @@ jQuery(document).ready(function($) {
     data: {
       action: 'eyeon_api_request',
       apiUrl: "<?= MCD_API_NEWS ?>",
-      params: {
-        limit: 6,
-        page: 1,
-        sortColumn: 'post_date',
-        sortOrder: 'desc'
-      },
     },
     method: "POST",
     dataType: 'json',
@@ -104,7 +98,8 @@ jQuery(document).ready(function($) {
     },
     success: function(response) {
       if( response.items ) {
-        $.each(response.items, function(index, blog) {
+        const relatedBlogs = response.items.slice(0, 6);
+        $.each(relatedBlogs, function(index, blog) {
           postsDiv.removeClass('mcd_loading_div small');
 
           if( blog.id != '<?= $mycenterblogpost['id'] ?>' ) {

@@ -13,10 +13,10 @@ jQuery(function ($) {
         url: categoriesCustomData.ajaxurl + '?api=' + categoriesCustomData.api_endpoint,
         data: {
           action: 'eyeon_api_request',
-          apiUrl: categoriesCustomData.api_endpoint,  
+          apiUrl: categoriesCustomData.api_endpoint,
+          force_refresh: true,
+          paginated_data: true,
           params: {
-            limit: 100,
-            page: 1,
             group: true
           }
         },
@@ -26,6 +26,7 @@ jQuery(function ($) {
           withCredentials: true
         },
         success: function (response) {
+          console.log('response', response);
           if (response.items) {
             $.each(response.items, function (index, item) {
               const selected = selectedCategories.includes(item.id);

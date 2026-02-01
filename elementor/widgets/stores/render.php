@@ -19,7 +19,7 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-stores-<?= $unique_id ?>" class="eyeon-stores eyeon-loader">
-  <div class="eyeon-wrapper" style="display:none;">
+  <div class="eyeon-wrapper eyeon-hide">
 
     <?php if( $settings['view_mode'] === 'grid' ) : ?>
       <div class="stores-header <?= $settings['categories_sidebar'] === 'dropdown'?'with-dropdown':'' ?>">
@@ -36,15 +36,9 @@ $unique_id = uniqid();
                   <span>Categories</span>
                   <svg aria-hidden="true" class="e-font-icon-svg e-fas-angle-down" viewBox="0 0 320 512" xmlns="http://www.w3.org/2000/svg"><path d="M143 352.3L7 216.3c-9.4-9.4-9.4-24.6 0-33.9l22.6-22.6c9.4-9.4 24.6-9.4 33.9 0l96.4 96.4 96.4-96.4c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9l-136 136c-9.2 9.4-24.4 9.4-33.8 0z"></path></svg>
                 </div>
-                <div class="custom-options">
-                  <span class="custom-option selected" data-value="all">
-                    Categories
-                  </span>
-                </div>
+                <div class="custom-options"></div>
               </div>
-              <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select">
-                <option value="all" selected>Categories</option>
-              </select>
+              <select id="stores-categories-dropdown-<?= $unique_id ?>" class="hidden-select"></select>
             </div>
           </div>
         <?php endif; ?>
@@ -77,9 +71,7 @@ $unique_id = uniqid();
     <div class="<?= ($settings['view_mode']==='grid'?'content-cols':'') ?>">
       <?php if( @$settings['categories_sidebar'] === 'show' ) : ?>
       <div class="stores-categories hide-on-mob">
-        <ul id="stores-categories-<?= $unique_id ?>">
-          <li data-value="all" class="active">Categories</li>
-        </ul>
+        <ul id="stores-categories-<?= $unique_id ?>"></ul>
       </div>
       <?php endif; ?>
       
@@ -116,35 +108,27 @@ $unique_id = uniqid();
     const categoryDropdownList = $('#stores-categories-dropdown-<?= $unique_id ?>');
     const searchInput = $('#stores-search-<?= $unique_id ?>');
     const retailersList = $('#stores-list-<?= $unique_id ?>');
+    const customOptions = eyeonStores.find('.custom-options');
 
     let retailers = [];
-    var page = 1;
-    var defaultLimit = 100;
     let categories = [];
     let retailersFetched = false;
     let categoriesFetched = false;
+    const allCategoriesLabel = 'Categories';
 
     fetch_retailers();
     fetch_categories();
 
-    function fetch_retailers() {
-      var limit = defaultLimit;
-      if( settings.fetch_all !== 'yes' ) {
-        var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
-        limit = Math.min(remainingLimit, defaultLimit);
-      }
-      const ajaxReqParams = {
-        limit,
-        page,
-        category_ids: [],
-        tag_ids: [],
-      };
+    function fetch_retailers(force_refresh = false) {
+      // Build filter arrays from settings
+      const filterCategoryIds = [];
+      const filterTagIds = [];
       $.each(settings.retailer_categories, function(index, category) {
-        ajaxReqParams.category_ids.push(category);
+        filterCategoryIds.push(parseInt(category));
       }); 
-      $.each(settings.retailer_tags, function(index, tag) {
+      $.each(settings.retailer_tags || [], function(index, tag) {
         const parseTag = JSON.parse(tag);
-        ajaxReqParams.tag_ids.push(parseTag.id);
+        filterTagIds.push(parseTag.id);
       });
 
       $.ajax({
@@ -152,7 +136,8 @@ $unique_id = uniqid();
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_STORES ?>",
-          params: ajaxReqParams
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: "json",
@@ -161,37 +146,55 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
-            retailers = retailers.concat(response.items);
-            var fetchMore = false;
-            if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
-              fetchMore = true;
+            let allRetailers = response.items;
+            
+            // Filter by categories (if any specified)
+            if (filterCategoryIds.length > 0) {
+              allRetailers = allRetailers.filter(function(retailer) {
+                if (!retailer.categories || retailer.categories.length === 0) return false;
+                return retailer.categories.some(function(cat) {
+                  return filterCategoryIds.includes(cat.id);
+                });
+              });
             }
-            if( settings.fetch_all === 'yes' && response.count > retailers.length ) {
-              fetchMore = true;
+            
+            // Filter by tags (if any specified)
+            if (filterTagIds.length > 0) {
+              allRetailers = allRetailers.filter(function(retailer) {
+                if (!retailer.tags || retailer.tags.length === 0) return false;
+                return retailer.tags.some(function(tag) {
+                  return filterTagIds.includes(tag.id);
+                });
+              });
             }
-            if( fetchMore ) {
-              page++;
-              fetch_retailers();
-            } else {
-              retailersFetched = true;
-              setup_categories();
+            
+            // Apply fetch_limit after filtering (if not fetching all)
+            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+              allRetailers = allRetailers.slice(0, settings.fetch_limit);
             }
+            
+            retailers = allRetailers;
+            retailersFetched = true;
+            if( response.stale_data ) {
+              fetch_retailers(true);
+            }
+            renderCategories();
           }
         }
       });
     }
 
-    function fetch_categories() {
+    function fetch_categories(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES.'/categories' ?>',
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_STORES.'/categories' ?>",
           params: {
-            limit: 100,
-            page: 1,
             group: true
-          }
+          },
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -210,6 +213,8 @@ $unique_id = uniqid();
               });
             <?php endif; ?>
 
+            // Clear categories array before populating to prevent duplicates on refetch
+            categories = [];
             $.each(responseCategories, function (index, item) {
               categories.push({
                 id: item.id,
@@ -217,14 +222,23 @@ $unique_id = uniqid();
                 display: false,
               });
             });
-            setup_categories();
+            if( response.stale_data ) {
+              fetch_categories(true);
+            }
+
+            renderCategories();
           }
         }
       });
     }
 
-    function setup_categories() {
+    function renderCategories() {
       if( !retailersFetched || !categoriesFetched ) return false;
+
+      // Reset category display flags
+      categories.forEach(category => {
+        category.display = false;
+      });
 
       retailers.forEach(retailer => {
         retailer.categories.forEach(category => {
@@ -233,6 +247,21 @@ $unique_id = uniqid();
       });
 
       if( categoryDropdownList.length > 0 ) {
+        // Clear existing options except the first one (Categories)
+        categoryDropdownList.html(`
+          <option value="all" selected>${allCategoriesLabel}</option>
+        `);
+
+        categoryList.html(`
+          <li data-value="all" class="active">${allCategoriesLabel}</li>
+        `);
+        
+        customOptions.html(`
+          <span class="custom-option selected" data-value="all">
+            ${allCategoriesLabel}
+          </span>
+        `);
+
         categories.forEach(category => {
           if( category.display ) {
             categoryDropdownList.append(`
@@ -240,12 +269,13 @@ $unique_id = uniqid();
             `);
 
             // Add to custom select options
-            const customOptions = document.querySelector('.custom-options');
-            customOptions.insertAdjacentHTML('beforeend', `
-              <span class="custom-option" data-value="${category.name.toLowerCase()}">
-                ${category.name}
-              </span>
-            `);
+            if (customOptions.length > 0) {
+              customOptions.append(`
+                <span class="custom-option" data-value="${category.name.toLowerCase()}">
+                  ${category.name}
+                </span>
+              `);
+            }
 
             categoryList.append(`
               <li data-value="${category.name.toLowerCase()}">${category.name}</li>
@@ -254,7 +284,6 @@ $unique_id = uniqid();
         });
       }
 
-      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
       renderRetailers();
     }
 
@@ -293,7 +322,9 @@ $unique_id = uniqid();
     }
 
     function renderRetailers() {
-      retailersList.empty();
+      eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      eyeonCareers.find('.no-items-found').remove();
+      retailersList.html('');
 
       const multipleLocationsGlobalRetailerIds = getMultipleLocationsGlobalRetailerIds();
 
@@ -322,13 +353,16 @@ $unique_id = uniqid();
         
         <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
       } else {
-        eyeonStores.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">${settings.no_results_found_text}</div>
-        `);
+        eyeonStores.find('.eyeon-wrapper').addClass('eyeon-hide');
+        if(eyeonStores.find('.no-items-found').length === 0) {
+          eyeonStores.append(`
+            <div class="no-items-found">${settings.no_results_found_text}</div>
+          `);
+        }
       }
       
-      if( retailers.length > 0 && elementorFrontend.config.environmentMode.edit) {
-        eyeonStores.find('.eyeon-wrapper').append(`
+      if( retailers.length > 0 && elementorFrontend.config.environmentMode.edit && eyeonStores.find('.eyeon-wrapper .no-items-found').length === 0) {
+        eyeonStores.append(`
           <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }

@@ -20,25 +20,12 @@ jQuery(function ($) {
 
       tagsSelect2.select2({
         ajax: {
-          // url: tagsCustomData.api_endpoint,
-          // dataType: 'json',
-          // delay: 250,
-          // headers: {
-          //   center_id: tagsCustomData.center_id
-          // },
-          // data: function (params) {
-          //   return {
-          //     limit: 100,
-          //     page: 1,
-          //     search: params.term,
-          //   };
-          // },
-
           url: tagsCustomData.ajaxurl + '?api=' + tagsCustomData.api_endpoint,
           data: function (params) {
             return {
               action: 'eyeon_api_request',
               apiUrl: tagsCustomData.api_endpoint,
+              nocache: true,
               params: {
                 limit: 100,
                 page: 1,

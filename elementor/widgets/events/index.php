@@ -38,7 +38,7 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     $eventCategoriesResp = mcd_api_data(MCD_API_EVENTS.'/categories');
     $options = array(
       0 => 'All',
-      999999 => 'On-Going',
+      ONGOING_EVENT_CATEGORY_ID => 'On-Going',
     );
     if( isset($eventCategoriesResp['items']) & count($eventCategoriesResp['items'])>0 ) {
       foreach( $eventCategoriesResp['items'] as $category ) {

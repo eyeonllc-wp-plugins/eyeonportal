@@ -207,9 +207,9 @@ function getFriendlyURL($string, $separator='-') {
 	$string = strtolower($string); // convert to lower case
 	$string = preg_replace('/\'/', '', $string); // remove special chars
 	$string = preg_replace('/’/', '', $string); // remove special chars
-	$string = preg_replace('/[^a-z0-9\-]/', '-', $string); // remove special chars
-	$string = preg_replace('/-+/', '-', $string); // replace multiple hyphens with one hyphen
-	$string = trim($string, '-'); // trim hyphens
+	$string = preg_replace('/[^a-z0-9\-]/', $separator, $string); // remove special chars
+	$string = preg_replace('/-+/', $separator, $string); // replace multiple hyphens with one hyphen
+	$string = trim($string, $separator); // trim hyphens
 	return $string;
 }
 

@@ -26,26 +26,17 @@ $unique_id = uniqid();
     const careersList = $('#careers-list-<?= $unique_id ?>');
 
     let careers = [];
-    var page = 1;
-    var defaultLimit = 100;
 
     fetch_careers();
 
-    function fetch_careers() {
-      var limit = defaultLimit;
-      if( settings.fetch_all !== 'yes' ) {
-        var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
-        limit = Math.min(remainingLimit, defaultLimit);
-      }
+    function fetch_careers(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_CAREERS ?>',
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_CAREERS ?>",
-          params: {
-            limit,
-            page,
-          }
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -54,20 +45,19 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
-            careers = careers.concat(response.items);
-            var fetchMore = false;
-            if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
-              fetchMore = true;
+            let allCareers = response.items;
+            
+            // Apply fetch_limit after fetching (if not fetching all)
+            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+              allCareers = allCareers.slice(0, settings.fetch_limit);
             }
-            if( settings.fetch_all === 'yes' && response.count > careers.length ) {
-              fetchMore = true;
+            
+            careers = allCareers;
+            
+            if (response.stale_data) {
+              fetch_careers(true);
             }
-            if( fetchMore ) {
-              page++;
-              fetch_careers();
-            } else {
-              render();
-            }
+            render();
           }
         }
       });
@@ -75,8 +65,8 @@ $unique_id = uniqid();
 
     function render() {
       eyeonCareers.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
-
-      careersList.empty();
+      eyeonCareers.find('.no-items-found').remove();
+      careersList.html('');
 
       if( careers.length > 0 ) {
         careers.forEach(career => {
@@ -94,13 +84,16 @@ $unique_id = uniqid();
           careersList.append(careerItem);
         });
       } else {
-        eyeonCareers.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">${settings.no_results_found_text}</div>
-        `);
+        eyeonCareers.find('.eyeon-wrapper').addClass('eyeon-hide');
+        if(eyeonCareers.find('.no-items-found').length === 0) {
+          eyeonCareers.append(`
+            <div class="no-items-found">${settings.no_results_found_text}</div>
+          `);
+        }
       }
       
-      if( careers.length > 0 && elementorFrontend.config.environmentMode.edit) {
-        eyeonCareers.find('.eyeon-wrapper').append(`
+      if( careers.length > 0 && elementorFrontend.config.environmentMode.edit && eyeonCareers.find('.eyeon-wrapper .no-items-found').length === 0) {
+        eyeonCareers.append(`
           <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }

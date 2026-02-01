@@ -12,7 +12,7 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-news-<?= $unique_id ?>" class="eyeon-news eyeon-loader">
-  <div class="eyeon-wrapper" style="display:none;">
+  <div class="eyeon-wrapper eyeon-hide">
     <?php if( $settings['categories_filters'] === 'show' ) : ?>
     <div class="news-categories">
       <select id="news-categories-dropdown-<?= $unique_id ?>" class="show-on-mob"></select>
@@ -50,35 +50,20 @@ $unique_id = uniqid();
     const newsList = $('#news-list-<?= $unique_id ?>');
 
     let news = [];
-    var page = 1;
-    var defaultLimit = 100;
     let categories = [];
 
     fetch_news();
 
-    function fetch_news() {
-      var limit = defaultLimit;
-      if( settings.fetch_all !== 'yes' ) {
-        var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
-        limit = Math.min(remainingLimit, defaultLimit);
-      }
-
+    function fetch_news(force_refresh = false) {
       const news_category = parseInt(settings.news_category);
-      const ajaxReqParams = {
-        limit,
-        page,
-        category_ids: (news_category > 0 ) ? [news_category]: [],
-        tag_ids: [],
-        sortColumn: 'post_date',
-        sortOrder: 'DESC',
-      };
 
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_NEWS ?>',
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_NEWS ?>",
-          params: ajaxReqParams
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -87,24 +72,34 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
-            news = news.concat(response.items);
-            var fetchMore = false;
-            if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
-              fetchMore = true;
+            let allNews = response.items;
+            
+            // Filter by category (if specific category selected)
+            if (news_category > 0) {
+              allNews = allNews.filter(function(item) {
+                if (!item.categories || item.categories.length === 0) return false;
+                return item.categories.some(function(cat) {
+                  return cat.id === news_category;
+                });
+              });
             }
-            if( settings.fetch_all === 'yes' && response.count > news.length ) {
-              fetchMore = true;
+            
+            // Apply fetch_limit after filtering (if not fetching all)
+            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+              allNews = allNews.slice(0, settings.fetch_limit);
             }
-            if( fetchMore ) {
-              page++;
-              fetch_news();
-            } else {
-              <?php if( $settings['categories_filters'] === 'show' ) : ?>
-                setup_categories();
-              <?php else : ?>
-                renderNews();
-              <?php endif; ?>
+            
+            news = allNews;
+            
+            if (response.stale_data) {
+              fetch_news(true);
             }
+            
+            <?php if( $settings['categories_filters'] === 'show' ) : ?>
+              setup_categories();
+            <?php else : ?>
+              renderNews();
+            <?php endif; ?>
           }
         }
       });
@@ -133,6 +128,9 @@ $unique_id = uniqid();
 
       categories = [{id: 0, name: 'All'}].concat(fetchedCategories);
 
+      categoryList.html('');
+      categoryDropdownList.html('');
+
       categories.forEach(category => {
         categoryList.append(`
           <li data-value="${category.id}" class="${category.id===0?'active':''}">${category.name}</li>
@@ -146,8 +144,9 @@ $unique_id = uniqid();
     }
     
     function renderNews() {
-      eyeonNews.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
-      newsList.empty();
+      eyeonNews.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      eyeonNews.find('.no-items-found').remove();
+      newsList.html('');
 
       if( news.length > 0 ) {
         news.forEach(item => {
@@ -179,13 +178,16 @@ $unique_id = uniqid();
         
         <?php include(MCD_PLUGIN_PATH.'elementor/widgets/common/carousel/setup-js.php'); ?>
       } else {
-        eyeonNews.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">${settings.no_results_found_text}</div>
-        `);
+        eyeonNews.find('.eyeon-wrapper').addClass('eyeon-hide');
+        if(eyeonNews.find('.no-items-found').length === 0) {
+          eyeonNews.append(`
+            <div class="no-items-found">${settings.no_results_found_text}</div>
+          `);
+        }
       }
       
-      if( news.length > 0 && elementorFrontend.config.environmentMode.edit) {
-        eyeonNews.find('.eyeon-wrapper').append(`
+      if( news.length > 0 && elementorFrontend.config.environmentMode.edit && eyeonNews.find('.no-items-found').length === 0) {
+        eyeonNews.append(`
           <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }

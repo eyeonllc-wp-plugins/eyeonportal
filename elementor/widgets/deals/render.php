@@ -50,25 +50,17 @@ $unique_id = uniqid();
     let deals = [];
     var page = 1;
     var defaultLimit = 100;
-    var noItemsFoundTextAdded = false;
     
     fetch_deals();
     
-    function fetch_deals() {
-      var limit = defaultLimit;
-      if( settings.fetch_all !== 'yes' ) {
-        var remainingLimit = settings.fetch_limit - (page - 1) * defaultLimit;
-        limit = Math.min(remainingLimit, defaultLimit);
-      }
+    function fetch_deals(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_DEALS ?>',
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_DEALS ?>",
-          params: {
-            limit,
-            page,
-          }
+          paginated_data: true,
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -77,20 +69,16 @@ $unique_id = uniqid();
         },
         success: function (response) {
           if (response.items) {
-            deals = deals.concat(response.items);
-            var fetchMore = false;
-            if( settings.fetch_all !== 'yes' && page * defaultLimit < settings.fetch_limit ) {
-              fetchMore = true;
+            let allDeals = response.items;
+            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+              allDeals = allDeals.slice(0, settings.fetch_limit);
             }
-            if( settings.fetch_all === 'yes' && response.count > deals.length ) {
-              fetchMore = true;
+
+            deals = allDeals;
+            if (response.stale_data) {
+              fetch_deals(true);
             }
-            if( fetchMore ) {
-              page++;
-              fetch_deals();
-            } else {
-              render();
-            }
+            render();
           }
         }
       });
@@ -119,7 +107,8 @@ $unique_id = uniqid();
       filterAndSortItems();
 
       eyeonDeals.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
-      dealsList.empty();
+      eyeonDeals.find('.no-items-found').remove();
+      dealsList.html('');
       
       if( deals.length > 0 ) {
         deals.forEach(deal => {
@@ -140,14 +129,16 @@ $unique_id = uniqid();
           dealsList.append(dealItem);
         });
       } else {
-        eyeonDeals.find('.eyeon-wrapper').html(`
-          <div class="no-items-found">${settings.no_results_found_text}</div>
-        `);
+        eyeonDeals.find('.eyeon-wrapper').addClass('eyeon-hide');
+        if(eyeonDeals.find('.no-items-found').length === 0) {
+          eyeonDeals.append(`
+            <div class="no-items-found">${settings.no_results_found_text}</div>
+          `);
+        }
       }
       
-      if( !noItemsFoundTextAdded && deals.length > 0 && elementorFrontend.config.environmentMode.edit) {
-        noItemsFoundTextAdded = true;
-        eyeonDeals.find('.eyeon-wrapper').append(`
+      if( deals.length > 0 && elementorFrontend.config.environmentMode.edit && eyeonDeals.find('.no-items-found').length === 0) {
+        eyeonDeals.append(`
           <div class="no-items-found">${settings.no_results_found_text}</div>
         `);
       }

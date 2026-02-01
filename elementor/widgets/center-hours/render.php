@@ -9,7 +9,7 @@ $unique_id = uniqid();
 ?>
 
 <div id="eyeon-center-hours-<?= $unique_id ?>" class="eyeon-center-hours eyeon-loader">
-  <div class="eyeon-wrapper" style="display:none;">
+  <div class="eyeon-wrapper eyeon-hide">
     <div class="center-hours-wrapper">
       <?php if( $settings['center_hours_icon']['value'] ) : ?>
         <div class="icon-col">
@@ -45,17 +45,13 @@ $unique_id = uniqid();
 
     fetch_center_hours();
 
-    function fetch_center_hours() {
+    function fetch_center_hours(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_CENTER_HOURS ?>', 
         data: {
           action: 'eyeon_api_request',
           apiUrl: "<?= MCD_API_CENTER_HOURS ?>",
-          params: {
-            limit: 100,
-            page: 1,
-            group: true
-          }
+          force_refresh: force_refresh
         },
         method: "POST",
         dataType: 'json',
@@ -63,6 +59,9 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
+          if (response.stale_data) {
+            fetch_center_hours(true);
+          }
           if (response.sets) {
             renderHours(response);
           }
@@ -71,8 +70,8 @@ $unique_id = uniqid();
     }
 
     function renderHours(data) {
-      eyeonCenterHours.removeClass('eyeon-loader').find('.eyeon-wrapper').removeAttr('style');
-      centerHours.empty();
+      eyeonCenterHours.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
+      centerHours.html('');
       
       const weeklyOpeningHours = getOpeningHoursForNext7Days(data);
       let formattedOpeningHours = formatOpeningHours(weeklyOpeningHours);
