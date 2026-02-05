@@ -323,7 +323,7 @@ $unique_id = uniqid();
 
     function renderRetailers() {
       eyeonStores.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
-      eyeonCareers.find('.no-items-found').remove();
+      eyeonStores.find('.no-items-found').remove();
       retailersList.html('');
 
       const multipleLocationsGlobalRetailerIds = getMultipleLocationsGlobalRetailerIds();
