@@ -62,14 +62,6 @@ if( !class_exists('MCDShortcodes') ) {
 				$wp_rewrite->flush_rules(false);
 				update_option('mcd_plugin_version', MCD_PLUGIN_VERSION);
 			}
-
-      // generate session token
-      $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? null;
-      if (!$token) {
-        $token = wp_hash( time() . rand() );
-        // set_transient("eyeon_api_session_$token", true, EYEON_API_SESSION_TOKEN_EXPIRE);
-        setcookie(EYEON_API_SESSION_TOKEN, $token, time() + EYEON_API_SESSION_TOKEN_EXPIRE, "/", "", false, true);
-      }
     }
 
 		function redux_options_saved($options) {
@@ -335,8 +327,12 @@ if( !class_exists('MCDShortcodes') ) {
 			// Output EYEON variable directly in wp_head
 			// This ensures it's always available regardless of jQuery's enqueue state
 			$ajaxurl = admin_url('admin-ajax.php');
+			$nonce = wp_create_nonce('eyeon_api_nonce');
 			echo "<script type='text/javascript'>\n";
-			echo "var EYEON = " . wp_json_encode(['ajaxurl' => $ajaxurl]) . ";\n";
+			echo "var EYEON = " . wp_json_encode([
+				'ajaxurl' => $ajaxurl,
+				'nonce' => $nonce
+			]) . ";\n";
 			echo "</script>\n";
 		}
 
@@ -369,8 +365,9 @@ if( !class_exists('MCDShortcodes') ) {
 		}
 
     function eyeon_api_request() {
-      $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? '';
-      if (! $token) {
+      // Verify nonce for security (replaces cookie-based auth to avoid race condition on first page load)
+      $nonce = isset($_POST['nonce']) ? $_POST['nonce'] : '';
+      if (!wp_verify_nonce($nonce, 'eyeon_api_nonce')) {
         wp_send_json_error(['msg' => "You're not authorized to access this resource."], 403);
       }
 
@@ -504,12 +501,6 @@ if( !class_exists('MCDShortcodes') ) {
      * Handle REST API proxy requests
      */
     function handle_rest_api_proxy($request) {
-      // Validate session token
-      $token = $_COOKIE[EYEON_API_SESSION_TOKEN] ?? '';
-      if (! $token) {
-        return new WP_Error('unauthorized', "You're not authorized to access this resource.", array('status' => 403));
-      }
-
       // Get the API path from the route parameter
       $api_path = $request->get_param('path');
       if (empty($api_path)) {

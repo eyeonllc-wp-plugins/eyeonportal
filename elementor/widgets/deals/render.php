@@ -58,6 +58,7 @@ $unique_id = uniqid();
         url: EYEON.ajaxurl+'?api=<?= MCD_API_DEALS ?>',
         data: {
           action: 'eyeon_api_request',
+          nonce: EYEON.nonce,
           apiUrl: "<?= MCD_API_DEALS ?>",
           paginated_data: true,
           force_refresh: force_refresh

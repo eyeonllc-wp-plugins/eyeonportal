@@ -48,7 +48,8 @@ function eyeon_elementor_editor_scripts() {
   wp_register_script( 'eyeon-retailers-categories-script', mcd_version_url( 'elementor/controls/retailer-categories.js' ), array('jquery') );
   $categoriesCustomData = array(
     'ajaxurl' => admin_url('admin-ajax.php'),
-    'api_endpoint' => MCD_API_STORES.'/categories'
+    'api_endpoint' => MCD_API_STORES.'/categories',
+    'nonce' => wp_create_nonce('eyeon_api_nonce')
   );
   wp_localize_script('eyeon-retailers-categories-script', 'categoriesCustomData', $categoriesCustomData);
   wp_enqueue_script( 'eyeon-retailers-categories-script' );
@@ -58,6 +59,7 @@ function eyeon_elementor_editor_scripts() {
   $tagsCustomData = array(
     'ajaxurl' => admin_url('admin-ajax.php'),
     'api_endpoint' => MCD_API_STORES.'/tags',
+    'nonce' => wp_create_nonce('eyeon_api_nonce')
   );
   wp_localize_script('eyeon-retailers-tags-script', 'tagsCustomData', $tagsCustomData);
   wp_enqueue_script( 'eyeon-retailers-tags-script' );

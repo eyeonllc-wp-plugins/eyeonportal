@@ -24,6 +24,7 @@ jQuery(function ($) {
           data: function (params) {
             return {
               action: 'eyeon_api_request',
+              nonce: tagsCustomData.nonce,
               apiUrl: tagsCustomData.api_endpoint,
               nocache: true,
               params: {

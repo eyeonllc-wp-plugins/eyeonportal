@@ -35,6 +35,7 @@ jQuery(document).ready(function($) {
       url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>/'+banner_id,
       data: {
         action: 'eyeon_api_request',
+        nonce: EYEON.nonce,
         apiUrl: "<?= MCD_API_BANNERS ?>",
         params: ajaxReqParams
       },

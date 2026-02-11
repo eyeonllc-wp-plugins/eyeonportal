@@ -135,6 +135,7 @@ $unique_id = uniqid();
         url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES ?>',
         data: {
           action: 'eyeon_api_request',
+          nonce: EYEON.nonce,
           apiUrl: "<?= MCD_API_STORES ?>",
           paginated_data: true,
           force_refresh: force_refresh
@@ -190,6 +191,7 @@ $unique_id = uniqid();
         url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES.'/categories' ?>',
         data: {
           action: 'eyeon_api_request',
+          nonce: EYEON.nonce,
           apiUrl: "<?= MCD_API_STORES.'/categories' ?>",
           params: {
             group: true

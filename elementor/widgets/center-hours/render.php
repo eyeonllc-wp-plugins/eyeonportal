@@ -50,6 +50,7 @@ $unique_id = uniqid();
         url: EYEON.ajaxurl+'?api=<?= MCD_API_CENTER_HOURS ?>', 
         data: {
           action: 'eyeon_api_request',
+          nonce: EYEON.nonce,
           apiUrl: "<?= MCD_API_CENTER_HOURS ?>",
           force_refresh: force_refresh
         },

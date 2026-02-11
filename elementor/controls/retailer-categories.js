@@ -13,6 +13,7 @@ jQuery(function ($) {
         url: categoriesCustomData.ajaxurl + '?api=' + categoriesCustomData.api_endpoint,
         data: {
           action: 'eyeon_api_request',
+          nonce: categoriesCustomData.nonce,
           apiUrl: categoriesCustomData.api_endpoint,
           force_refresh: true,
           paginated_data: true,

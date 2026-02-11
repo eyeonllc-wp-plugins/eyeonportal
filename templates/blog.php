@@ -89,6 +89,7 @@ jQuery(document).ready(function($) {
     url: EYEON.ajaxurl+'?api=<?= MCD_API_NEWS ?>',
     data: {
       action: 'eyeon_api_request',
+      nonce: EYEON.nonce,
       apiUrl: "<?= MCD_API_NEWS ?>",
     },
     method: "POST",
