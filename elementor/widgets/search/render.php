@@ -49,13 +49,13 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
-          if( response.stale_data ) {
-            fetch_retailers(true);
-          }
           if (response.items) {
             retailers = response.items;
             retailersFetched = true;
             filterRetailersBySearch(searchInput.val().toLowerCase());
+          }
+          if( response.stale_data ) {
+            fetch_retailers(true);
           }
         }
       });

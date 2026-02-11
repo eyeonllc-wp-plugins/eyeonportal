@@ -175,10 +175,11 @@ $unique_id = uniqid();
             
             retailers = allRetailers;
             retailersFetched = true;
-            if( response.stale_data ) {
-              fetch_retailers(true);
-            }
             renderCategories();
+          }
+          
+          if( response.stale_data ) {
+            fetch_retailers(true);
           }
         }
       });

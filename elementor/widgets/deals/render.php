@@ -75,10 +75,11 @@ $unique_id = uniqid();
             }
 
             deals = allDeals;
-            if (response.stale_data) {
-              fetch_deals(true);
-            }
             render();
+          }
+          
+          if (response.stale_data) {
+            fetch_deals(true);
           }
         }
       });

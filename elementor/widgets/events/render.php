@@ -125,11 +125,11 @@ $unique_id = uniqid();
             }
             
             events = allEvents;
-            
-            if (response.stale_data) {
-              fetch_events(true);
-            }
             setup_events();
+          }
+          
+          if (response.stale_data) {
+            fetch_events(true);
           }
         }
       });

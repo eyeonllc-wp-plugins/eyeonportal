@@ -53,11 +53,11 @@ $unique_id = uniqid();
             }
             
             careers = allCareers;
-            
-            if (response.stale_data) {
-              fetch_careers(true);
-            }
             render();
+          }
+          
+          if (response.stale_data) {
+            fetch_careers(true);
           }
         }
       });

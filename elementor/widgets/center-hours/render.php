@@ -59,11 +59,11 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
-          if (response.stale_data) {
-            fetch_center_hours(true);
-          }
           if (response.sets) {
             renderHours(response);
+          }
+          if (response.stale_data) {
+            fetch_center_hours(true);
           }
         }
       });

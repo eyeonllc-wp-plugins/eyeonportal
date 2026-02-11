@@ -91,16 +91,16 @@ $unique_id = uniqid();
             
             news = allNews;
             
-            if (response.stale_data) {
-              fetch_news(true);
-            }
-            
             <?php if( $settings['categories_filters'] === 'show' ) : ?>
               setup_categories();
             <?php else : ?>
               renderNews();
             <?php endif; ?>
           }
+          
+          if (response.stale_data) {
+            fetch_news(true);
+          }            
         }
       });
     }
