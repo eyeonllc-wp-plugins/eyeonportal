@@ -43,6 +43,20 @@ if( !class_exists('MCDShortcodes') ) {
 			add_filter( 'wp_title', array( $this, 'change_page_title' ), 999 );
 			add_filter( 'wpseo_title', array( $this, 'change_page_title' ), 999 );
 			add_filter( 'pre_get_document_title', array( $this, 'change_page_title' ), 999 );
+			
+			// Rank Math SEO filters - override OG tags with our custom data
+			add_filter( 'rank_math/frontend/title', array( $this, 'change_page_title' ), 999 );
+			add_filter( 'rank_math/frontend/description', array( $this, 'rankmath_description' ), 999 );
+			add_filter( 'rank_math/opengraph/facebook/og_title', array( $this, 'change_page_title' ), 999 );
+			add_filter( 'rank_math/opengraph/facebook/og_description', array( $this, 'rankmath_description' ), 999 );
+			add_filter( 'rank_math/opengraph/facebook/og_url', array( $this, 'rankmath_url' ), 999 );
+			add_filter( 'rank_math/opengraph/facebook/image', array( $this, 'rankmath_image' ), 999 );
+			add_filter( 'rank_math/opengraph/twitter/title', array( $this, 'change_page_title' ), 999 );
+			add_filter( 'rank_math/opengraph/twitter/description', array( $this, 'rankmath_description' ), 999 );
+			add_filter( 'rank_math/opengraph/twitter/image', array( $this, 'rankmath_image' ), 999 );
+			add_filter( 'rank_math/frontend/canonical', array( $this, 'rankmath_url' ), 999 );
+			
+			// Fallback OG meta for sites without Rank Math
 			add_action( 'wp_head', array( $this, 'output_opengraph_meta' ), 5 );
 
       add_action('wp_ajax_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
@@ -332,9 +346,49 @@ if( !class_exists('MCDShortcodes') ) {
 		}
 
 		/**
-		 * Output Open Graph meta tags for social sharing
+		 * Rank Math SEO: Override description
+		 */
+		function rankmath_description($description) {
+			if( $this->is_querystring_present() && !empty($this->og_description) ) {
+				$og_description = $this->og_description;
+				$og_description = html_entity_decode($og_description, ENT_QUOTES, 'UTF-8');
+				$og_description = wp_strip_all_tags($og_description);
+				$og_description = preg_replace('/\s+/', ' ', $og_description);
+				$og_description = trim($og_description);
+				$og_description = wp_trim_words($og_description, 30, '...');
+				return $og_description;
+			}
+			return $description;
+		}
+
+		/**
+		 * Rank Math SEO: Override URL
+		 */
+		function rankmath_url($url) {
+			if( $this->is_querystring_present() ) {
+				return get_current_url();
+			}
+			return $url;
+		}
+
+		/**
+		 * Rank Math SEO: Override image
+		 */
+		function rankmath_image($image) {
+			if( $this->is_querystring_present() && !empty($this->og_image) ) {
+				return $this->og_image;
+			}
+			return $image;
+		}
+
+		/**
+		 * Output Open Graph meta tags for social sharing (fallback for sites without Rank Math)
 		 */
 		function output_opengraph_meta() {
+			// Skip if Rank Math is active - it handles OG tags
+			if( class_exists('RankMath') ) {
+				return;
+			}
 			if( !$this->is_querystring_present() ) {
 				return;
 			}
@@ -352,7 +406,16 @@ if( !class_exists('MCDShortcodes') ) {
 			$og_description = wp_trim_words($og_description, 30, '...');
 			$og_description = esc_attr($og_description);
 			
-			$og_image = esc_url($this->og_image);
+			// Get og:image - use fallback if empty
+			$og_image = $this->og_image;
+			if (empty($og_image)) {
+				// Fallback to site logo
+				$custom_logo_id = get_theme_mod('custom_logo');
+				if ($custom_logo_id) {
+					$og_image = wp_get_attachment_image_url($custom_logo_id, 'full');
+				}
+			}
+			$og_image = esc_url($og_image);
 
 			echo "\n<!-- EyeOn Portal Open Graph Meta Tags -->\n";
 			echo '<meta property="og:type" content="article" />' . "\n";
