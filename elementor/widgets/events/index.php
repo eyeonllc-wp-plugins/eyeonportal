@@ -35,7 +35,8 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
 	}
 
   private function get_categories_from_api() {
-    $eventCategoriesResp = mcd_api_data(MCD_API_EVENTS.'/categories');
+    $response = mcd_api_data(MCD_API_EVENTS.'/categories');
+    $eventCategoriesResp = $response['data'];
     $options = array(
       0 => 'All',
       ONGOING_EVENT_CATEGORY_ID => 'On-Going',

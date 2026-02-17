@@ -2,7 +2,8 @@
 $retailer_deals = array();
 if( $this->mcd_settings['stores_single_deals'] ) {
 	$req_url = MCD_API_DEALS.'?limit='.$this->mcd_settings['stores_single_deals_fetch'].'&page=1&retailer_id='.$mycenterstore['id'];
-	$retailer_deals = mcd_api_data($req_url);
+	$response = mcd_api_data($req_url);
+	$retailer_deals = $response['data'];
 }
 ?>
 

@@ -1,5 +1,6 @@
 <?php
-$links_data = mcd_api_data(MCP_API_LINKS);
+$response = mcd_api_data(MCP_API_LINKS);
+$links_data = $response['data'];
 ?>
 
 <!DOCTYPE html>

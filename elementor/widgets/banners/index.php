@@ -33,7 +33,8 @@ class EyeOn_Banner_Widget extends \Elementor\Widget_Base {
   }
 
   private function get_banners_from_api() {
-    $bannersResp = mcd_api_data(MCD_API_BANNERS);
+    $response = mcd_api_data(MCD_API_BANNERS);
+    $bannersResp = $response['data'];
     $options = array();
     if(isset($bannersResp) && isset($bannersResp['items']) & count($bannersResp['items'])>0 ) {
       foreach( $bannersResp['items'] as $banner ) {

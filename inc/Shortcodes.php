@@ -232,7 +232,8 @@ if( !class_exists('MCDShortcodes') ) {
 			if ( array_key_exists( 'mycenterdeal', $wp_query->query_vars ) ) {
 				$this->template = 'templates/deal.php';
 				$req_url = MCD_API_DEALS.'/'.get_query_var('mycenterdeal', 0);
-        $dealData = mcd_api_data($req_url);
+        $response = mcd_api_data($req_url);
+        $dealData = $response['data'];
 				$this->mcd_settings['mycenterdeal'] = $dealData;
 				if( $this->mcd_settings['deals_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['deals_single_page_custom_title'];
@@ -246,7 +247,8 @@ if( !class_exists('MCDShortcodes') ) {
 				$this->template = 'templates/store.php';
         $multiple_location_retailer_id = (isset($_GET['r']) && !empty(['r'])) ? $_GET['r'] : null;
 				$req_url = MCD_API_STORES.'/'.get_query_var('mycenterstore', 0).($multiple_location_retailer_id?'/'.$multiple_location_retailer_id:'');
-				$storeData = mcd_api_data($req_url);
+				$response = mcd_api_data($req_url);
+				$storeData = $response['data'];
 				$this->mcd_settings['mycenterstore'] = $storeData;
 				if( $this->mcd_settings['stores_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['stores_single_page_custom_title'];
@@ -265,7 +267,8 @@ if( !class_exists('MCDShortcodes') ) {
         // ==================
 
 				$req_url = MCD_API_EVENTS.'/'.get_query_var('mycenterevent', 0);
-        $eventData = mcd_api_data($req_url);
+        $response = mcd_api_data($req_url);
+        $eventData = $response['data'];
 				$this->mcd_settings['mycenterevent'] = $eventData;
 				if( $this->mcd_settings['events_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['events_single_page_custom_title'];
@@ -278,7 +281,8 @@ if( !class_exists('MCDShortcodes') ) {
 			} elseif ( array_key_exists( 'mycentercareer', $wp_query->query_vars ) ) {
 				$this->template = 'templates/career.php';
 				$req_url = MCD_API_CAREERS.'/'.get_query_var('mycentercareer', 0);
-        $careerData = mcd_api_data($req_url);
+        $response = mcd_api_data($req_url);
+        $careerData = $response['data'];
 				$this->mcd_settings['mycentercareer'] = $careerData;
 				if( $this->mcd_settings['careers_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['careers_single_page_custom_title'];
@@ -294,7 +298,8 @@ if( !class_exists('MCDShortcodes') ) {
         wp_enqueue_script( 'eyeon-moment' );
         wp_enqueue_script( 'eyeon-elementor-utils' );
 				$req_url = MCD_API_NEWS.'/'.get_query_var('mycenterblogpost', 0);
-				$blogpost = mcd_api_data($req_url);
+				$response = mcd_api_data($req_url);
+				$blogpost = $response['data'];
         $this->mcd_settings['mycenterblogpost'] = $blogpost;
 				if( $this->mcd_settings['blog_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['blog_single_page_custom_title'];
@@ -535,13 +540,19 @@ if( !class_exists('MCDShortcodes') ) {
 
       // If no cached data, fetch fresh (first load)
       $fresh_data = null;
+      $api_status = 200;
       if($paginated_data) {
-        $fresh_data = $this->fetch_api_data_and_handle_pagination($apiUrl, $params);
+        $result = $this->fetch_api_data_and_handle_pagination($apiUrl, $params);
+        $fresh_data = $result['data'];
+        $api_status = $result['status'];
       } else {
-        $fresh_data = mcd_api_data($apiUrl.'?'.http_build_query($params));
+        $result = mcd_api_data($apiUrl.'?'.http_build_query($params));
+        $fresh_data = $result['data'];
+        $api_status = $result['status'];
       }
       
-      if(!$nocache) {
+      // Only cache successful responses (status 200 and no error)
+      if(!$nocache && $api_status === 200 && $fresh_data && !isset($fresh_data['error'])) {
         update_option($option_key, json_encode($fresh_data));
       }
       
@@ -553,19 +564,31 @@ if( !class_exists('MCDShortcodes') ) {
       $all_items = array();
       $page = 1;
       $limit = 100;
+      $total_count = 0;
+      $last_status = 200;
 
       do {
         $params['page'] = $page;
         $params['limit'] = $limit;
         
         $response = mcd_api_data($apiUrl . '?' . http_build_query($params));
+        $last_status = $response['status'];
+        $data = $response['data'];
         
-        if (!$response || !isset($response['items'])) {
+        // If API returns an error, return it immediately (don't cache errors)
+        if ($data && isset($data['error'])) {
+          return array(
+            'status' => $last_status,
+            'data' => $data
+          );
+        }
+        
+        if (!$data || !isset($data['items'])) {
           break;
         }
 
-        $all_items = array_merge($all_items, $response['items']);
-        $total_count = isset($response['count']) ? intval($response['count']) : 0;
+        $all_items = array_merge($all_items, $data['items']);
+        $total_count = isset($data['count']) ? intval($data['count']) : 0;
 
         if (count($all_items) < $total_count) {
           $page++;
@@ -575,8 +598,11 @@ if( !class_exists('MCDShortcodes') ) {
       } while (true);
 
       return array(
-        'items' => $all_items,
-        'count' => $total_count
+        'status' => $last_status,
+        'data' => array(
+          'items' => $all_items,
+          'count' => $total_count
+        )
       );
     }
 
@@ -661,10 +687,10 @@ if( !class_exists('MCDShortcodes') ) {
       }
 
       // Call the API using mcd_api_data
-      $data = mcd_api_data($api_url);
+      $response = mcd_api_data($api_url);
 
-      // Return the response
-      return rest_ensure_response($data);
+      // Return the response data
+      return rest_ensure_response($response['data']);
     }
 	}
 

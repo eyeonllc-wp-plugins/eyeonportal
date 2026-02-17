@@ -62,14 +62,18 @@ function mcd_api_data($url) {
     ),
 	);
 	$req = wp_remote_get( $url, $args );
+	$status = wp_remote_retrieve_response_code( $req );
 	$body = wp_remote_retrieve_body( $req );
 	$data = json_decode( $body, true );
-	return $data;
+	return array(
+		'status' => $status,
+		'data' => $data
+	);
 }
 
 function eyeon_get_center() {
-	$center = mcd_api_data( MCD_API_CENTER );
-  return $center;
+	$response = mcd_api_data( MCD_API_CENTER );
+  return $response['data'];
 }
 
 function mcd_get_file_content($file_path) {
