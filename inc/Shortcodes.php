@@ -5,6 +5,8 @@ if( !class_exists('MCDShortcodes') ) {
 
 		private $mcd_settings;
 		private $page_title = MCD_PLUGIN_TITLE;
+		private $og_description = '';
+		private $og_image = '';
 		private $template = '';
 		private $search = array();
 		private $links_page_template = 'templates/links.php';
@@ -40,7 +42,8 @@ if( !class_exists('MCDShortcodes') ) {
 
 			add_filter( 'wp_title', array( $this, 'change_page_title' ), 999 );
 			add_filter( 'wpseo_title', array( $this, 'change_page_title' ), 999 );
-			add_filter( 'pre_get_document_title', array( $this, 'change_page_title' ) );
+			add_filter( 'pre_get_document_title', array( $this, 'change_page_title' ), 999 );
+			add_action( 'wp_head', array( $this, 'output_opengraph_meta' ), 5 );
 
       add_action('wp_ajax_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
       add_action('wp_ajax_nopriv_eyeon_api_request', array( $this, 'eyeon_api_request' ) );
@@ -222,16 +225,23 @@ if( !class_exists('MCDShortcodes') ) {
 				} else {
 					$this->page_title = @$this->mcd_settings['mycenterdeal']['title'];
 				}
+				// Set Open Graph data
+				$this->og_description = @$dealData['description'] ?: '';
+				$this->og_image = @$dealData['media']['url'] ?: '';
 			} elseif ( array_key_exists( 'mycenterstore', $wp_query->query_vars ) ) {
 				$this->template = 'templates/store.php';
         $multiple_location_retailer_id = (isset($_GET['r']) && !empty(['r'])) ? $_GET['r'] : null;
 				$req_url = MCD_API_STORES.'/'.get_query_var('mycenterstore', 0).($multiple_location_retailer_id?'/'.$multiple_location_retailer_id:'');
-				$this->mcd_settings['mycenterstore'] = mcd_api_data($req_url);
+				$storeData = mcd_api_data($req_url);
+				$this->mcd_settings['mycenterstore'] = $storeData;
 				if( $this->mcd_settings['stores_single_page_title'] == 'custom' ) {
 					$this->page_title = $this->mcd_settings['stores_single_page_custom_title'];
 				} else {
 					$this->page_title = @$this->mcd_settings['mycenterstore']['name'];
 				}
+				// Set Open Graph data
+				$this->og_description = @$storeData['description'] ?: '';
+				$this->og_image = @$storeData['media']['url'] ?: '';
 			} elseif ( array_key_exists( 'mycenterevent', $wp_query->query_vars ) ) {
 				$this->template = 'templates/event.php';
 
@@ -248,6 +258,9 @@ if( !class_exists('MCDShortcodes') ) {
 				} else {
 					$this->page_title = $this->mcd_settings['mycenterevent']['title'];
 				}
+				// Set Open Graph data
+				$this->og_description = @$eventData['description'] ?: '';
+				$this->og_image = @$eventData['media']['url'] ?: '';
 			} elseif ( array_key_exists( 'mycentercareer', $wp_query->query_vars ) ) {
 				$this->template = 'templates/career.php';
 				$req_url = MCD_API_CAREERS.'/'.get_query_var('mycentercareer', 0);
@@ -258,6 +271,10 @@ if( !class_exists('MCDShortcodes') ) {
 				} else {
 					$this->page_title = $this->mcd_settings['mycentercareer']['title'];
 				}
+				// Set Open Graph data
+				$this->og_description = @$careerData['description'] ?: '';
+				// Careers typically don't have images, use retailer logo if available
+				$this->og_image = @$careerData['retailer']['media']['url'] ?: '';
 			} elseif ( array_key_exists( 'mycenterblogpost', $wp_query->query_vars ) ) {
 				$this->template = 'templates/blog.php';
         wp_enqueue_script( 'eyeon-moment' );
@@ -270,6 +287,9 @@ if( !class_exists('MCDShortcodes') ) {
 				} else {
 					$this->page_title = $this->mcd_settings['mycenterblogpost']['title'];
 				}
+				// Set Open Graph data
+				$this->og_description = @$blogpost['excerpt'] ?: (@$blogpost['content'] ?: '');
+				$this->og_image = @$blogpost['media']['url'] ?: '';
 			}
 
 			add_filter( 'the_content', array( $this, 'change_single_page_content') );
@@ -306,9 +326,59 @@ if( !class_exists('MCDShortcodes') ) {
 
 		function change_page_title($title) {
 			if( $this->is_querystring_present() ) {
-				$title = $this->page_title.' - '.get_bloginfo('name');
+        $title = $this->page_title.' - '.get_bloginfo('name');
 			}
 			return $title;
+		}
+
+		/**
+		 * Output Open Graph meta tags for social sharing
+		 */
+		function output_opengraph_meta() {
+			if( !$this->is_querystring_present() ) {
+				return;
+			}
+
+			$og_title = esc_attr($this->page_title . ' - ' . get_bloginfo('name'));
+			$og_url = esc_url(get_current_url());
+			$og_site_name = esc_attr(get_bloginfo('name'));
+			
+			// Clean description - strip HTML tags and limit length
+			$og_description = $this->og_description;
+			$og_description = wp_strip_all_tags($og_description);
+			$og_description = wp_trim_words($og_description, 30, '...');
+			$og_description = esc_attr($og_description);
+			
+			$og_image = esc_url($this->og_image);
+
+			echo "\n<!-- EyeOn Portal Open Graph Meta Tags -->\n";
+			echo '<meta property="og:type" content="article" />' . "\n";
+			echo '<meta property="og:title" content="' . $og_title . '" />' . "\n";
+			echo '<meta property="og:url" content="' . $og_url . '" />' . "\n";
+			echo '<meta property="og:site_name" content="' . $og_site_name . '" />' . "\n";
+			
+			if (!empty($og_description)) {
+				echo '<meta property="og:description" content="' . $og_description . '" />' . "\n";
+				echo '<meta name="description" content="' . $og_description . '" />' . "\n";
+			}
+			
+			if (!empty($og_image)) {
+				echo '<meta property="og:image" content="' . $og_image . '" />' . "\n";
+			}
+
+			// Twitter Card meta tags
+			echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
+			echo '<meta name="twitter:title" content="' . $og_title . '" />' . "\n";
+			
+			if (!empty($og_description)) {
+				echo '<meta name="twitter:description" content="' . $og_description . '" />' . "\n";
+			}
+			
+			if (!empty($og_image)) {
+				echo '<meta name="twitter:image" content="' . $og_image . '" />' . "\n";
+			}
+			
+			echo "<!-- End EyeOn Portal Open Graph Meta Tags -->\n\n";
 		}
 
 		function enqueue() {
