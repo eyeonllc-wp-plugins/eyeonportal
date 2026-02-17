@@ -343,9 +343,12 @@ if( !class_exists('MCDShortcodes') ) {
 			$og_url = esc_url(get_current_url());
 			$og_site_name = esc_attr(get_bloginfo('name'));
 			
-			// Clean description - strip HTML tags and limit length
+			// Clean description - decode HTML entities, strip tags, normalize whitespace, limit length
 			$og_description = $this->og_description;
-			$og_description = wp_strip_all_tags($og_description);
+			$og_description = html_entity_decode($og_description, ENT_QUOTES, 'UTF-8'); // Decode HTML entities
+			$og_description = wp_strip_all_tags($og_description); // Strip HTML tags
+			$og_description = preg_replace('/\s+/', ' ', $og_description); // Normalize whitespace
+			$og_description = trim($og_description);
 			$og_description = wp_trim_words($og_description, 30, '...');
 			$og_description = esc_attr($og_description);
 			
@@ -362,8 +365,10 @@ if( !class_exists('MCDShortcodes') ) {
 				echo '<meta name="description" content="' . $og_description . '" />' . "\n";
 			}
 			
+			// Always output og:image - LinkedIn and Facebook require it explicitly
+			echo '<meta property="og:image" content="' . $og_image . '" />' . "\n";
 			if (!empty($og_image)) {
-				echo '<meta property="og:image" content="' . $og_image . '" />' . "\n";
+				echo '<meta property="og:image:secure_url" content="' . $og_image . '" />' . "\n";
 			}
 
 			// Twitter Card meta tags
@@ -374,9 +379,7 @@ if( !class_exists('MCDShortcodes') ) {
 				echo '<meta name="twitter:description" content="' . $og_description . '" />' . "\n";
 			}
 			
-			if (!empty($og_image)) {
-				echo '<meta name="twitter:image" content="' . $og_image . '" />' . "\n";
-			}
+			echo '<meta name="twitter:image" content="' . $og_image . '" />' . "\n";
 			
 			echo "<!-- End EyeOn Portal Open Graph Meta Tags -->\n\n";
 		}
