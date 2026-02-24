@@ -71,6 +71,11 @@ function mcd_api_data($url) {
 	);
 }
 
+function get_eyeon_api_cache_key($apiNameForCache) {
+  $option_key = 'eyeon_api_cache_' . getFriendlyURL($apiNameForCache, '_');
+  return $option_key;
+}
+
 function eyeon_get_center() {
 	$response = mcd_api_data( MCD_API_CENTER );
   return $response['data'];

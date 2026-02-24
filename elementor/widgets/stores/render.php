@@ -116,21 +116,28 @@ $unique_id = uniqid();
     let categoriesFetched = false;
     const allCategoriesLabel = 'Categories';
 
-    fetch_retailers();
-    fetch_categories();
+    const filterCategoryIds = [];
+    const filterTagIds = [];
+    $.each(settings.retailer_categories, function(index, category) {
+      filterCategoryIds.push(parseInt(category));
+    }); 
+    $.each(settings.retailer_tags || [], function(index, tag) {
+      const parseTag = JSON.parse(tag);
+      filterTagIds.push(parseTag.id);
+    });
+
+    const cachedRetailers = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_STORES)))) ?>;
+    const cachedCategories = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_STORES.'/categories')))) ?>;
+
+    if (cachedRetailers && cachedCategories) {
+      parseRetailers(cachedRetailers);
+      parseCategories(cachedCategories);
+    }
+
+    fetch_retailers(true);
+    fetch_categories(true);
 
     function fetch_retailers(force_refresh = false) {
-      // Build filter arrays from settings
-      const filterCategoryIds = [];
-      const filterTagIds = [];
-      $.each(settings.retailer_categories, function(index, category) {
-        filterCategoryIds.push(parseInt(category));
-      }); 
-      $.each(settings.retailer_tags || [], function(index, tag) {
-        const parseTag = JSON.parse(tag);
-        filterTagIds.push(parseTag.id);
-      });
-
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_STORES ?>',
         data: {
@@ -146,44 +153,44 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
-          if (response.items) {
-            let allRetailers = response.items;
-            
-            // Filter by categories (if any specified)
-            if (filterCategoryIds.length > 0) {
-              allRetailers = allRetailers.filter(function(retailer) {
-                if (!retailer.categories || retailer.categories.length === 0) return false;
-                return retailer.categories.some(function(cat) {
-                  return filterCategoryIds.includes(cat.id);
-                });
-              });
-            }
-            
-            // Filter by tags (if any specified)
-            if (filterTagIds.length > 0) {
-              allRetailers = allRetailers.filter(function(retailer) {
-                if (!retailer.tags || retailer.tags.length === 0) return false;
-                return retailer.tags.some(function(tag) {
-                  return filterTagIds.includes(tag.id);
-                });
-              });
-            }
-            
-            // Apply fetch_limit after filtering (if not fetching all)
-            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
-              allRetailers = allRetailers.slice(0, settings.fetch_limit);
-            }
-            
-            retailers = allRetailers;
-            retailersFetched = true;
-            renderCategories();
-          }
-          
-          if( response.stale_data ) {
-            fetch_retailers(true);
-          }
+          parseRetailers(response);
         }
       });
+    }
+
+    function parseRetailers(response) {
+      if (response.items) {
+        let allRetailers = response.items;
+        
+        // Filter by categories (if any specified)
+        if (filterCategoryIds.length > 0) {
+          allRetailers = allRetailers.filter(function(retailer) {
+            if (!retailer.categories || retailer.categories.length === 0) return false;
+            return retailer.categories.some(function(cat) {
+              return filterCategoryIds.includes(cat.id);
+            });
+          });
+        }
+        
+        // Filter by tags (if any specified)
+        if (filterTagIds.length > 0) {
+          allRetailers = allRetailers.filter(function(retailer) {
+            if (!retailer.tags || retailer.tags.length === 0) return false;
+            return retailer.tags.some(function(tag) {
+              return filterTagIds.includes(tag.id);
+            });
+          });
+        }
+        
+        // Apply fetch_limit after filtering (if not fetching all)
+        if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+          allRetailers = allRetailers.slice(0, settings.fetch_limit);
+        }
+        
+        retailers = allRetailers;
+        retailersFetched = true;
+        renderCategories();
+      }
     }
 
     function fetch_categories(force_refresh = false) {
@@ -205,34 +212,35 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
-          if (response.items) {
-            categoriesFetched = true;
-            responseCategories = response.items;
-            <?php if( in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories']) ) : ?>
-              $.each(response.items, function(index, category) {
-                if (category.id === <?= RESTAURANTS_CATEGORY_ID ?>) {
-                  responseCategories = category.children;
-                }
-              });
-            <?php endif; ?>
-
-            // Clear categories array before populating to prevent duplicates on refetch
-            categories = [];
-            $.each(responseCategories, function (index, item) {
-              categories.push({
-                id: item.id,
-                name: item.name,
-                display: false,
-              });
-            });
-            if( response.stale_data ) {
-              fetch_categories(true);
-            }
-
-            renderCategories();
-          }
+          parseCategories(response);
         }
       });
+    }
+
+    function parseCategories(response) {
+      if (response.items) {
+        categoriesFetched = true;
+        responseCategories = response.items;
+        <?php if( in_array(RESTAURANTS_CATEGORY_ID, $settings['retailer_categories']) ) : ?>
+          $.each(response.items, function(index, category) {
+            if (category.id === <?= RESTAURANTS_CATEGORY_ID ?>) {
+              responseCategories = category.children;
+            }
+          });
+        <?php endif; ?>
+
+        // Clear categories array before populating to prevent duplicates on refetch
+        categories = [];
+        $.each(responseCategories, function (index, item) {
+          categories.push({
+            id: item.id,
+            name: item.name,
+            display: false,
+          });
+        });
+
+        renderCategories();
+      }
     }
 
     function renderCategories() {

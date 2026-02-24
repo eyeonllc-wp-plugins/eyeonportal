@@ -43,8 +43,6 @@ $unique_id = uniqid();
 
     const todayDate = getTimezoneDate();
 
-    fetch_center_hours();
-
     function fetch_center_hours(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_CENTER_HOURS ?>', 
@@ -62,9 +60,6 @@ $unique_id = uniqid();
         success: function (response) {
           if (response.sets) {
             renderHours(response);
-          }
-          if (response.stale_data) {
-            fetch_center_hours(true);
           }
         }
       });
@@ -233,5 +228,14 @@ $unique_id = uniqid();
       const index = weekDays.indexOf(lowercaseDay);
       return index;
     }
-  });
+
+    const cachedData = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_CENTER_HOURS)))) ?>;
+
+    if (cachedData) {
+      renderHours(cachedData);
+    }
+
+    fetch_center_hours(true);
+
+});
 </script>

@@ -524,7 +524,7 @@ if( !class_exists('MCDShortcodes') ) {
 
       // Generate unique cache key per API + params
       $apiNameForCache = isset($_GET['api']) ? $_GET['api'] : $apiUrl;
-      $option_key = 'eyeon_api_cache_' . getFriendlyURL($apiNameForCache, '_');
+      $option_key = get_eyeon_api_cache_key($apiNameForCache);
 
       // Read cached data
       if(!$force_refresh && !$nocache) {
