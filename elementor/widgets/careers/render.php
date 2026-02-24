@@ -27,8 +27,6 @@ $unique_id = uniqid();
 
     let careers = [];
 
-    fetch_careers();
-
     function fetch_careers(force_refresh = false) {
       $.ajax({
         url: EYEON.ajaxurl+'?api=<?= MCD_API_CAREERS ?>',
@@ -45,26 +43,26 @@ $unique_id = uniqid();
           withCredentials: true
         },
         success: function (response) {
-          if (response.items) {
-            let allCareers = response.items;
-            
-            // Apply fetch_limit after fetching (if not fetching all)
-            if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
-              allCareers = allCareers.slice(0, settings.fetch_limit);
-            }
-            
-            careers = allCareers;
-            render();
-          }
-          
-          if (response.stale_data) {
-            fetch_careers(true);
-          }
+          parse_careers(response);
         }
       });
     }
 
-    function render() {
+    function parse_careers(response) {
+      if (response.items) {
+        let allCareers = response.items;
+        
+        // Apply fetch_limit after fetching (if not fetching all)
+        if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
+          allCareers = allCareers.slice(0, settings.fetch_limit);
+        }
+        
+        careers = allCareers;
+        render_careers();
+      }
+    }
+
+    function render_careers() {
       eyeonCareers.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
       eyeonCareers.find('.no-items-found').remove();
       careersList.html('');
@@ -99,5 +97,11 @@ $unique_id = uniqid();
         `);
       }
     }
+    
+    const cachedCareers = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_CAREERS)))) ?>;
+    if (cachedCareers) {
+      parse_careers(cachedCareers);
+    }
+    fetch_careers(true);
   });
 </script>
