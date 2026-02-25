@@ -229,7 +229,7 @@ $unique_id = uniqid();
       return index;
     }
 
-    const cachedData = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_CENTER_HOURS)))) ?>;
+    const cachedData = <?= get_eyeon_api_cache_data(MCD_API_CENTER_HOURS) ?>;
     if (cachedData) {
       renderHours(cachedData);
     }

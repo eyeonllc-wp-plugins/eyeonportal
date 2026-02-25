@@ -156,7 +156,7 @@ jQuery(document).ready(function($) {
     });
   <?php endif; ?>
 
-  const cachedDeals = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_DEALS)))) ?>;
+  const cachedDeals = <?= get_eyeon_api_cache_data(MCD_API_DEALS) ?>;
   if (cachedDeals) {
     parse_deals(cachedDeals);
   }

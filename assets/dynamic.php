@@ -83,7 +83,6 @@ ul.mcd-social-icons li a {
 <script type="text/javascript">
 window.MCD_CURRENT_THEME = '<?= mcd_current_theme_name() ?>';
 window.MCP_BLANK_IMAGE_URL = '<?= mcd_image_url() ?>';
-window.MCP_CENTER_ID = '<?= $mcd_settings['center_id'] ?>';
 window.MCP_SINGLE_STORE_URL = '<?= mcd_single_page_url('mycenterstore') ?>';
 
 window.McpFriendlyUrl = function(str) {

@@ -221,7 +221,7 @@ jQuery(document).ready(function($) {
     filterNewsByCategory(selectedCategoryId);
   });
 
-  const cachedNews = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_NEWS)))) ?>;
+  const cachedNews = <?= get_eyeon_api_cache_data(MCD_API_NEWS) ?>;
   if (cachedNews) {
     parse_news(cachedNews);
   }

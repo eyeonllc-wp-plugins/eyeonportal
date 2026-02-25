@@ -346,7 +346,7 @@ jQuery(document).ready(function($) {
     filterByCategory(selectedCategoryId);
   });
 
-  const cachedEvents = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_EVENTS)))) ?>;
+  const cachedEvents = <?= get_eyeon_api_cache_data(MCD_API_EVENTS) ?>;
   if (cachedEvents) {
     parse_events(cachedEvents);
   }

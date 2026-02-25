@@ -459,8 +459,8 @@ jQuery(document).ready(function($) {
     filterRetailersByCategoryAndSearch(selectedCategory, search);
   });
 
-  const cachedRetailers = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_STORES)))) ?>;
-  const cachedCategories = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_STORES.'/categories')))) ?>;
+  const cachedRetailers = <?= get_eyeon_api_cache_data(MCD_API_STORES) ?>;
+  const cachedCategories = <?= get_eyeon_api_cache_data(MCD_API_STORES.'/categories') ?>;
 
   if (cachedRetailers && cachedCategories) {
     parseRetailers(cachedRetailers);

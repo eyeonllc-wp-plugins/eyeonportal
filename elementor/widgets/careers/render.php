@@ -98,7 +98,7 @@ $unique_id = uniqid();
       }
     }
     
-    const cachedCareers = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_CAREERS)))) ?>;
+    const cachedCareers = <?= get_eyeon_api_cache_data(MCD_API_CAREERS) ?>;
     if (cachedCareers) {
       parse_careers(cachedCareers);
     }

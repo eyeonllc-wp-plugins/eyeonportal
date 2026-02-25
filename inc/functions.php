@@ -71,11 +71,6 @@ function mcd_api_data($url) {
 	);
 }
 
-function get_eyeon_api_cache_key($apiNameForCache) {
-  $option_key = 'eyeon_api_cache_' . getFriendlyURL($apiNameForCache, '_');
-  return $option_key;
-}
-
 function eyeon_get_center() {
 	$response = mcd_api_data( MCD_API_CENTER );
   return $response['data'];
@@ -303,3 +298,77 @@ function eyeon_format_phone($phoneNumber) {
   }
 }
 
+function get_eyeon_api_cache_key($apiNameForCache) {
+  $option_key = 'eyeon_api_cache_' . getFriendlyURL($apiNameForCache, '_');
+  return $option_key;
+}
+
+/**
+ * Get cached API data as JavaScript-safe JSON string
+ * Uses Base64 encoding to completely avoid character escaping issues
+ * 
+ * @param string $apiNameForCache The API endpoint name
+ * @return string JavaScript code that decodes and parses the data, or 'null'
+ */
+function get_eyeon_api_cache_data($apiNameForCache) {
+  $option_key = get_eyeon_api_cache_key($apiNameForCache);
+  $cached_json = get_option($option_key);
+  
+  if (!$cached_json) {
+    return 'null';
+  }
+  
+  $cached_data = json_decode($cached_json, true);
+  
+  if (!$cached_data || json_last_error() !== JSON_ERROR_NONE) {
+    return 'null';
+  }
+  
+  // Recursively sanitize all string values
+  $cached_data = eyeon_escape_for_js($cached_data);
+  
+  // Re-encode to JSON
+  $json_string = json_encode($cached_data, JSON_INVALID_UTF8_SUBSTITUTE);
+  
+  if ($json_string === false) {
+    return 'null';
+  }
+  
+  // Base64 encode to completely avoid any character escaping issues
+  $base64 = base64_encode($json_string);
+  
+  // Return JavaScript that decodes the Base64 and parses the JSON
+  return 'JSON.parse(atob("' . $base64 . '"))';
+}
+
+/**
+ * Recursively sanitize array/string data for safe JavaScript output
+ * Ensures proper UTF-8 encoding and removes problematic characters
+ * 
+ * @param mixed $data Array or string to sanitize
+ * @return mixed Sanitized data
+ */
+function eyeon_escape_for_js($data) {
+  if (is_array($data)) {
+    foreach ($data as $key => $value) {
+      $data[$key] = eyeon_escape_for_js($value);
+    }
+    return $data;
+  }
+  
+  if (is_string($data)) {
+    // Decode HTML entities to get raw characters
+    // This ensures consistent handling
+    $data = html_entity_decode($data, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    
+    // Ensure valid UTF-8 by re-encoding
+    $data = mb_convert_encoding($data, 'UTF-8', 'UTF-8');
+    
+    // Remove null bytes and other control characters that can break JSON
+    $data = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $data);
+    
+    return $data;
+  }
+  
+  return $data;
+}

@@ -203,7 +203,7 @@ jQuery(document).ready(function($) {
     }
   });
 
-  const cachedRetailers = <?= json_encode(json_decode(get_option(get_eyeon_api_cache_key(MCD_API_STORES)))) ?>;
+  const cachedRetailers = <?= get_eyeon_api_cache_data(MCD_API_STORES) ?>;
   if (cachedRetailers) {
     parse_retailers(cachedRetailers);
   }
