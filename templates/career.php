@@ -43,8 +43,10 @@ if( isset($mycentercareer['next']) ) {
 				<div class="mcd-career-details">
 					<div class="mcd-career-title"><?= $mycentercareer['title'] ?></div>
 					<div class="mcd-career-description editor_output"><?= get_editor_output($mycentercareer['description']) ?></div>
+				</div>
 
-					<?php if( !empty($mycentercareer['apply_link']) ) : ?>
+        <div class="mcd-career-apply-col">
+          <?php if( !empty($mycentercareer['apply_link']) ) : ?>
 					<div class="mcd-apply-link"><a href="<?= $mycentercareer['apply_link'] ?>" class="mcp_btn rounded" target="_blank">Apply Now</a></div>
 					<?php endif; ?>
 
@@ -81,7 +83,7 @@ if( isset($mycentercareer['next']) ) {
 						</ul>
 					</div>
 					<?php endif; ?>
-				</div>
+        </div>
 			</div>
 		</div>
 

@@ -1262,10 +1262,14 @@
   display: -ms-flexbox;
   display: flex;
   font-size: 16px;
+  gap: 2rem;
 }
 #eyeoncareer-single .eyeon-career .mcd-career-image-col {
   width: 100%;
   max-width: 320px;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 25%;
+          flex: 0 0 25%;
 }
 #eyeoncareer-single .eyeon-career .mcd-career-image-col .mcd-retailer-image {
   position: relative;
@@ -1292,7 +1296,6 @@
      object-fit: contain;
 }
 #eyeoncareer-single .eyeon-career .mcd-career-details {
-  padding-left: 30px;
   line-height: 23px;
   -webkit-box-flex: 1;
       -ms-flex: 1;
@@ -1308,34 +1311,24 @@
   margin-bottom: 20px;
   white-space: pre-wrap;
 }
-#eyeoncareer-single .eyeon-career .mcd-career-details .mcd-career-center-location {
+#eyeoncareer-single .eyeon-career .mcd-career-apply-col {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 25%;
+          flex: 0 0 25%;
+}
+#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-apply-link {
   margin-bottom: 15px;
 }
-#eyeoncareer-single .eyeon-career .mcd-career-details .mcd-apply-link {
+#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-contact-details {
   margin-bottom: 15px;
 }
-#eyeoncareer-single .eyeon-career .mcd-career-details .mcd-contact-details {
-  margin-bottom: 15px;
-}
-#eyeoncareer-single .eyeon-career .mcd-career-details .mcd-contact-details .mcd-contact-detail {
+#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-contact-details .mcd-contact-detail {
   line-height: 23px;
 }
-#eyeoncareer-single .eyeon-career .mcd-career-details .mcd-retailer-phone {
+#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-retailer-phone {
   margin-bottom: 15px;
 }
 @media (max-width: 767px) {
-  #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-image-col {
-    width: 35%;
-    max-width: none;
-  }
-  #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-details {
-    padding-left: 15px;
-  }
-}
-@media (max-width: 599px) {
-  #eyeoncareer-single .eyeon-career {
-    font-size: 14px;
-  }
   #eyeoncareer-single .eyeon-career .mcd-career-cols {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
@@ -1343,12 +1336,36 @@
             flex-direction: column;
   }
   #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-image-col {
-    padding-right: 0;
-    margin-bottom: 15px;
-    width: 100%;
+    -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+            order: 1;
   }
   #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-details {
-    padding: 8px 5px;
+    -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+            order: 3;
+  }
+  #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-apply-col {
+    -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+            order: 2;
+  }
+}
+@media (max-width: 599px) {
+  #eyeoncareer-single .eyeon-career {
+    font-size: 14px;
+  }
+  #eyeoncareer-single .eyeon-career .mcd-career-cols {
+    gap: 1.5rem;
+  }
+  #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-image-col {
+    width: 100%;
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1;
+    max-width: 480px;
+  }
+  #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-details {
     line-height: 16px;
   }
   #eyeoncareer-single .eyeon-career .mcd-career-cols .mcd-career-details .mcd-career-title {
