@@ -1716,6 +1716,15 @@
   text-align: left;
 }
 
+.eyeon-slider-widget .eyeon-slider-error {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 20px;
+  background-color: rgba(255, 0, 0, 0.6117647059);
+  margin: 1rem 0;
+}
 .eyeon-slider-widget .eyeon-slider .slider-wrapper {
   position: relative;
   width: 100%;

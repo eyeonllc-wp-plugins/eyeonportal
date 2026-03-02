@@ -1,4 +1,15 @@
 .eyeon-slider-widget {
+
+  .eyeon-slider-error {
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    padding: 20px;
+    background-color: #ff00009c;
+    margin: 1rem 0;
+  }
+
   .eyeon-slider {
     .slider-wrapper {
       position: relative;

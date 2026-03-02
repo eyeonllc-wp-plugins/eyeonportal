@@ -15,6 +15,7 @@ $unique_id = uniqid();
 jQuery(document).ready(function($) {
   const settings = <?= json_encode($filtered_settings) ?>;
   const eyeonSlider = $('#eyeon-slider-widget-<?= $unique_id ?>');
+  const banner_id = settings.banner_id;
 
   let currentDevice = getCurrentDevice();
 
@@ -23,21 +24,14 @@ jQuery(document).ready(function($) {
   let sliderSettings;
   let slides;
 
-  fetch_slider();
-
-  function fetch_slider() {
-    const banner_id = settings.banner_id;
-    const ajaxReqParams = {
-      banner_id,
-    };
-
+  function fetch_slider(force_refresh = false) {
     $.ajax({
       url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>/'+banner_id,
       data: {
         action: 'eyeon_api_request',
         nonce: EYEON.nonce,
-        apiUrl: "<?= MCD_API_BANNERS ?>",
-        params: ajaxReqParams
+        apiUrl: "<?= MCD_API_BANNERS ?>/"+banner_id,
+        force_refresh: force_refresh
       },
       method: "POST",
       dataType: 'json',
@@ -45,46 +39,59 @@ jQuery(document).ready(function($) {
         withCredentials: true
       },
       success: function(response) {
-        if(!response || !response.settings ) return false;
-        
-        defaultSliderSettings = response.settings.settings;
-        defaultSlides = response.settings.slides.filter(slide => slide.active).map(slide => ({
-          ...slide,
-          layers: slide.layers.filter(layer => layer.active)
-        }));
-
-        defaultSliderSettings.height = generateScreenResponsiveNumberUnitValues(defaultSliderSettings.height);
-
-        defaultSlides.forEach((slide) => {
-          slide.layers.forEach((layer) => {
-            layer.isVisible = generateScreenResponsiveValues(layer.isVisible);
-
-            layer.positionGroup.offset = generateScreenResponsiveOffsetValues(layer.positionGroup.offset);
-            layer.positionGroup.position = generateScreenResponsivePositionValues(layer.positionGroup.position);
-            
-            if (layer.type === 'text' || layer.type === 'button') {
-              if(layer.width) layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
-              layer.fontGroup.font.alignment = generateScreenResponsiveValues(layer.fontGroup.font.alignment);
-              layer.fontGroup.font.size = generateScreenResponsiveNumberUnitValues(layer.fontGroup.font.size);
-              layer.styleGroup.padding = generateScreenResponsivePaddingValues(layer.styleGroup.padding);
-            }
-            if (layer.type === 'image' ||layer.type === 'box') {
-              layer.sizeGroup.width = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.width);
-              layer.sizeGroup.height = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.height);
-            }
-            if (layer.type === 'image') {
-              layer.sizeGroup.objectFit = generateScreenResponsiveValues(layer.sizeGroup.objectFit);
-            }
-          });
-        });
-        
-        calculateResizeValues();
+        if(response.error) {
+          let errorMsg = 'Something went wrong while fetching the banner.';
+          if(response.error.type==="webSliderNotExistsInCenter") {
+            errorMsg = 'Banner not found.';
+          }
+          eyeonSlider.removeClass('eyeon-loader').html(`<div class="eyeon-slider-error">${errorMsg}</div>`);  
+        } else {
+          parse_slider(response);
+        }
       },
       error: function(xhr, status, error) {
         console.log('error', error);
         eyeonSlider.removeClass('eyeon-loader').html('Banner not found.');
       }
     });
+  }
+
+  function parse_slider(response) {
+    if(!response || !response.settings ) return false;
+    
+    defaultSliderSettings = response.settings.settings;
+    defaultSlides = response.settings.slides.filter(slide => slide.active).map(slide => ({
+      ...slide,
+      layers: slide.layers.filter(layer => layer.active)
+    }));
+
+    defaultSliderSettings.height = generateScreenResponsiveNumberUnitValues(defaultSliderSettings.height);
+    
+    defaultSlides.forEach((slide) => {
+      slide.bgImageUrl = generateScreenResponsiveValues(slide.bgImageUrl);
+      slide.layers.forEach((layer) => {
+        layer.isVisible = generateScreenResponsiveValues(layer.isVisible);
+
+        layer.positionGroup.offset = generateScreenResponsiveOffsetValues(layer.positionGroup.offset);
+        layer.positionGroup.position = generateScreenResponsivePositionValues(layer.positionGroup.position);
+        
+        if (layer.type === 'text' || layer.type === 'button') {
+          if(layer.width) layer.width = generateScreenResponsiveNumberUnitValues(layer.width);
+          layer.fontGroup.font.alignment = generateScreenResponsiveValues(layer.fontGroup.font.alignment);
+          layer.fontGroup.font.size = generateScreenResponsiveNumberUnitValues(layer.fontGroup.font.size);
+          layer.styleGroup.padding = generateScreenResponsivePaddingValues(layer.styleGroup.padding);
+        }
+        if (layer.type === 'image' ||layer.type === 'box') {
+          layer.sizeGroup.width = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.width);
+          layer.sizeGroup.height = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.height);
+        }
+        if (layer.type === 'image') {
+          layer.sizeGroup.objectFit = generateScreenResponsiveValues(layer.sizeGroup.objectFit);
+        }
+      });
+    });
+    
+    calculateResizeValues();
   }
 
   function calculateResizeValues() {
@@ -104,18 +111,18 @@ jQuery(document).ready(function($) {
           layer.positionGroup.offset[currentDevice].y = (Number(layer.positionGroup.offset[currentDevice]?.y) / DefaultDeviceWidths[currentDevice]) * width;
 
           if (layer.type === 'text' || layer.type === 'button') {
-            layer.font.size[currentDevice].value = (Number(layer.font.size[currentDevice].value) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.fontGroup.font.size[currentDevice].value = (Number(layer.fontGroup.font.size[currentDevice].value) / DefaultDeviceWidths[currentDevice]) * width;
 
             // Update padding
-            layer.padding[currentDevice].top = (Number(layer.padding[currentDevice].top) / DefaultDeviceWidths[currentDevice]) * width;
-            layer.padding[currentDevice].right = (Number(layer.padding[currentDevice].right) / DefaultDeviceWidths[currentDevice]) * width;
-            layer.padding[currentDevice].bottom = (Number(layer.padding[currentDevice].bottom) / DefaultDeviceWidths[currentDevice]) * width;
-            layer.padding[currentDevice].left = (Number(layer.padding[currentDevice].left) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.styleGroup.padding[currentDevice].top = (Number(layer.styleGroup.padding[currentDevice].top) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.styleGroup.padding[currentDevice].right = (Number(layer.styleGroup.padding[currentDevice].right) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.styleGroup.padding[currentDevice].bottom = (Number(layer.styleGroup.padding[currentDevice].bottom) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.styleGroup.padding[currentDevice].left = (Number(layer.styleGroup.padding[currentDevice].left) / DefaultDeviceWidths[currentDevice]) * width;
           }
 
           if (layer.type === 'image' || layer.type === 'box') {
-            layer.width[currentDevice].value = (Number(layer.width[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
-            layer.height[currentDevice].value = (Number(layer.height[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.sizeGroup.width[currentDevice].value = (Number(layer.sizeGroup.width[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
+            layer.sizeGroup.height[currentDevice].value = (Number(layer.sizeGroup.height[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
           }
         });
       });
@@ -158,13 +165,14 @@ jQuery(document).ready(function($) {
 
     // Add slides
     slides.forEach((slide, slideIndex) => {
+      console.log('slide', slide);
       sliderHtml += `
         <div
           class="slide-item"
           data-slide-index="${slideIndex}"
           style="
             height: ${sliderSettings.height[currentDevice].value}${sliderSettings.height[currentDevice].unit};
-            background-image: url('${slide.bgImageUrl || ''}'); 
+            background-image: url('${slide.bgImageUrl[currentDevice] || ''}'); 
             ${slide.bgColor ? `background-color: ${slide.bgColor};` : ''}
             ${slide.link ? 'cursor: pointer;' : ''}
           "
@@ -367,6 +375,12 @@ jQuery(document).ready(function($) {
     const width = window.innerWidth;
     calculateResizeValues();
   });
+
+  const cachedSliderData = <?= get_eyeon_api_cache_data(MCD_API_BANNERS.'/'.$settings['banner_id']) ?>;
+  if (cachedSliderData) {
+    parse_slider(cachedSliderData);
+  }
+  fetch_slider(true);
 });
 </script>
 

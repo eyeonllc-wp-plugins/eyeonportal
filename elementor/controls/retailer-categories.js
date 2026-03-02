@@ -27,7 +27,6 @@ jQuery(function ($) {
           withCredentials: true
         },
         success: function (response) {
-          console.log('response', response);
           if (response.items) {
             $.each(response.items, function (index, item) {
               const selected = selectedCategories.includes(item.id);
