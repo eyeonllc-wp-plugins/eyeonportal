@@ -165,7 +165,6 @@ jQuery(document).ready(function($) {
 
     // Add slides
     slides.forEach((slide, slideIndex) => {
-      console.log('slide', slide);
       sliderHtml += `
         <div
           class="slide-item"
