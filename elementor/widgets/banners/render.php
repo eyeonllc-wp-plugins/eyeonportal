@@ -25,35 +25,39 @@ jQuery(document).ready(function($) {
   let slides;
 
   function fetch_slider(force_refresh = false) {
-    $.ajax({
-      url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>/'+banner_id,
-      data: {
-        action: 'eyeon_api_request',
-        nonce: EYEON.nonce,
-        apiUrl: "<?= MCD_API_BANNERS ?>/"+banner_id,
-        force_refresh: force_refresh
-      },
-      method: "POST",
-      dataType: 'json',
-      xhrFields: {
-        withCredentials: true
-      },
-      success: function(response) {
-        if(response.error) {
-          let errorMsg = 'Something went wrong while fetching the banner.';
-          if(response.error.type==="webSliderNotExistsInCenter") {
-            errorMsg = 'Banner not found.';
+    if(banner_id <= 0) {
+      eyeonSlider.removeClass('eyeon-loader').html('<div class="eyeon-slider-error">No Banner selected.</div>');
+    } else {
+      $.ajax({
+        url: EYEON.ajaxurl+'?api=<?= MCD_API_BANNERS ?>/'+banner_id,
+        data: {
+          action: 'eyeon_api_request',
+          nonce: EYEON.nonce,
+          apiUrl: "<?= MCD_API_BANNERS ?>/"+banner_id,
+          force_refresh: force_refresh
+        },
+        method: "POST",
+        dataType: 'json',
+        xhrFields: {
+          withCredentials: true
+        },
+        success: function(response) {
+          if(response.error) {
+            let errorMsg = 'Something went wrong while fetching the banner.';
+            if(response.error.type==="webSliderNotExistsInCenter") {
+              errorMsg = 'Banner not found.';
+            }
+            eyeonSlider.removeClass('eyeon-loader').html(`<div class="eyeon-slider-error">${errorMsg}</div>`);  
+          } else {
+            parse_slider(response);
           }
-          eyeonSlider.removeClass('eyeon-loader').html(`<div class="eyeon-slider-error">${errorMsg}</div>`);  
-        } else {
-          parse_slider(response);
+        },
+        error: function(xhr, status, error) {
+          console.log('error', error);
+          eyeonSlider.removeClass('eyeon-loader').html('<div class="eyeon-slider-error">Banner not found.</div>');
         }
-      },
-      error: function(xhr, status, error) {
-        console.log('error', error);
-        eyeonSlider.removeClass('eyeon-loader').html('Banner not found.');
-      }
-    });
+      });
+    }
   }
 
   function parse_slider(response) {
