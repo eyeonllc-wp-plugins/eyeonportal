@@ -148,6 +148,8 @@ function generateScreenResponsivePositionValues(values) {
 }
 
 function generateScreenResponsiveValues(values) {
+  if(!values) return false;
+
   const newValues = { ...values };
 
   if (values.mobile === undefined) {

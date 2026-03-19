@@ -85,11 +85,11 @@ jQuery(document).ready(function($) {
           layer.fontGroup.font.size = generateScreenResponsiveNumberUnitValues(layer.fontGroup.font.size);
           layer.styleGroup.padding = generateScreenResponsivePaddingValues(layer.styleGroup.padding);
         }
-        if (layer.type === 'image' ||layer.type === 'box') {
+        if (layer.type === 'media' ||layer.type === 'box') {
           layer.sizeGroup.width = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.width);
           layer.sizeGroup.height = generateScreenResponsiveNumberUnitValues(layer.sizeGroup.height);
         }
-        if (layer.type === 'image') {
+        if (layer.type === 'media') {
           layer.sizeGroup.objectFit = generateScreenResponsiveValues(layer.sizeGroup.objectFit);
         }
       });
@@ -124,7 +124,7 @@ jQuery(document).ready(function($) {
             layer.styleGroup.padding[currentDevice].left = (Number(layer.styleGroup.padding[currentDevice].left) / DefaultDeviceWidths[currentDevice]) * width;
           }
 
-          if (layer.type === 'image' || layer.type === 'box') {
+          if (layer.type === 'media' || layer.type === 'box') {
             layer.sizeGroup.width[currentDevice].value = (Number(layer.sizeGroup.width[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
             layer.sizeGroup.height[currentDevice].value = (Number(layer.sizeGroup.height[currentDevice]?.value) / DefaultDeviceWidths[currentDevice]) * width;
           }
@@ -231,14 +231,14 @@ jQuery(document).ready(function($) {
           `;
         }
 
-        if (layer.type === 'image' || layer.type === 'box') {
+        if (layer.type === 'media' || layer.type === 'box') {
           contentStyles += `
             width: ${layer.sizeGroup.width[currentDevice].value}${layer.sizeGroup.width[currentDevice].unit};
             height: ${layer.sizeGroup.height[currentDevice].value}${layer.sizeGroup.height[currentDevice].unit};
           `;
         }
 
-        if (layer.type === 'image') {
+        if (layer.type === 'media') {
           contentStyles += `
             object-fit: ${layer.sizeGroup.objectFit[currentDevice]};
           `;
@@ -267,10 +267,10 @@ jQuery(document).ready(function($) {
         
         if (layer.type === 'button') sliderHtml += `<div ${layer.link ? `data-link="${layer.link}"` : ''}>${layer.content}</div>`;
 
-        if (layer.type === 'image') {
+        if (layer.type === 'media') {
           sliderHtml += `
               <img
-                src="${layer.imageUrl}"
+                src="${layer.mediaUrl}"
                 ${layer.link ? `data-link="${layer.link}"` : ''}
                 style="object-fit: ${layer.sizeGroup.objectFit[currentDevice]};"
               />
