@@ -207,6 +207,37 @@ function eyeon_format_time($time) {
 	return $time;
 }
 
+function eyeon_get_rrule_occurrences($rrule_string, $upcoming_only = false) {
+  if (empty($rrule_string)) return [];
+  try {
+    $rrule = new \RRule\RRule($rrule_string);
+  } catch (\Exception $e) {
+    return [];
+  }
+  $dates = [];
+  $now = new DateTime('now', wp_timezone());
+  foreach ($rrule as $occurrence) {
+    if ($upcoming_only && $occurrence < $now) continue;
+    $dates[] = $occurrence;
+  }
+  return $dates;
+}
+
+function eyeon_get_upcoming_custom_date($custom_dates) {
+  if (empty($custom_dates) || !is_array($custom_dates)) return null;
+  $now = new DateTime('now', wp_timezone());
+  $today = $now->format('Y-m-d');
+  usort($custom_dates, function($a, $b) {
+    return strcmp($a['date'], $b['date']);
+  });
+  foreach ($custom_dates as $cd) {
+    if (!empty($cd['date']) && $cd['date'] >= $today) {
+      return $cd;
+    }
+  }
+  return null;
+}
+
 function getFriendlyURL($string, $separator='-') {
 	$string = strtolower($string); // convert to lower case
 	$string = preg_replace('/\'/', '', $string); // remove special chars

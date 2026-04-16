@@ -12,6 +12,7 @@ Licence: GPLv2 or later
 define('THREEJS_MAP_VERSION', '1.1.9');
 define('THREEJS_MAP_API_RESPONSE_KEY', 'eyeon_map_api_response');
 
+require_once __DIR__ . '/vendor/autoload.php';
 require 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 

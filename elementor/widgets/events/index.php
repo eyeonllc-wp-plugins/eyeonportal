@@ -39,7 +39,6 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     $eventCategoriesResp = $response['data'];
     $options = array(
       0 => 'All',
-      ONGOING_EVENT_CATEGORY_ID => 'On-Going',
     );
     if( isset($eventCategoriesResp['items']) & count($eventCategoriesResp['items'])>0 ) {
       foreach( $eventCategoriesResp['items'] as $category ) {
@@ -159,58 +158,14 @@ class EyeOn_Events_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
-      'event_date',
+      'only_static_events',
       [
-        'label' => esc_html__( 'Event Date', EYEON_NAMESPACE ),
+        'label' => esc_html__( 'Only Static Events', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => 'show',
-      ]
-    );
-
-    $this->add_control(
-      'event_display_date',
-      [
-        'label' => __( 'Date Format', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SELECT,
-        'default' => 'upcoming',
-        'options' => [
-          'upcoming' => __( 'Upcoming Event Date', EYEON_NAMESPACE ),
-          'daterange' => __( 'Event Dates Range', EYEON_NAMESPACE ),
-        ],
-        'condition' => [
-          'event_date' => 'show',
-        ],
-      ]
-    );
-
-    $this->add_control(
-      'event_time',
-      [
-        'label' => esc_html__( 'Event Time', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => 'show',
-      ]
-    );
-
-    $this->add_control(
-      'event_ongoing_dates',
-      [
-        'label' => esc_html__( 'On-Going Events Date', EYEON_NAMESPACE ),
-        'type' => \Elementor\Controls_Manager::SWITCHER,
-        'label_on' => esc_html__( 'Show', EYEON_NAMESPACE ),
-        'label_off' => esc_html__( 'Hide', EYEON_NAMESPACE ),
-        'return_value' => 'show',
-        'default' => 'show',
-        'frontend_available' => true,
-        'condition' => [
-          'event_date' => 'show',
-        ],
+        'label_on' => esc_html__( 'Yes', EYEON_NAMESPACE ),
+        'label_off' => esc_html__( 'No', EYEON_NAMESPACE ),
+        'return_value' => 'yes',
+        'default' => '',
       ]
     );
 

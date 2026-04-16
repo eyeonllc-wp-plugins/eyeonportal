@@ -8,8 +8,11 @@
 !/inc/
 !/plugin-update-checker/
 !/templates/
+!/vendor/
 
 !.gitignore
+!composer.json
+!composer.lock
 !eyeonportal.php
 !readme.txt
 !uninstall.php

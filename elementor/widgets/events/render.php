@@ -5,11 +5,8 @@ $fields = [
   'fetch_limit',
   'external_event_new_tab',
   'event_title',
-  'event_date',
-  'event_display_date',
-  'event_time',
-  'event_ongoing_dates',
   'event_category',
+  'only_static_events',
   'no_results_found_text',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip(array_merge($fields, get_carousel_fields())));
@@ -57,7 +54,6 @@ jQuery(document).ready(function($) {
   let events = [];
   let categories = [];
 
-  const ongoingEventCategoryId = <?= ONGOING_EVENT_CATEGORY_ID ?>;
   const event_category = parseInt(settings.event_category);
 
   function getTimezoneDate(date = null) {
@@ -106,24 +102,19 @@ jQuery(document).ready(function($) {
     if (response.items) {
       let allEvents = response.items;
       
-      // Filter by category (if specific category selected, not "all" or "ongoing")
-      if (event_category > 0 && event_category !== ongoingEventCategoryId) {
+      if (settings.only_static_events === 'yes') {
         allEvents = allEvents.filter(function(event) {
-          if (!event.categories || event.categories.length === 0) return false;
-          return event.categories.some(function(cat) {
-            return cat.id === event_category;
-          });
+          return event.event_type === 'ongoing';
+        });
+      }
+
+      if (event_category > 0) {
+        allEvents = allEvents.filter(function(event) {
+          if (!event.category) return false;
+          return event.category.id === event_category;
         });
       }
       
-      // Filter for ongoing events only (event_category === ongoingEventCategoryId)
-      if (event_category === ongoingEventCategoryId) {
-        allEvents = allEvents.filter(function(event) {
-          return event.ongoing_event === true;
-        });
-      }
-      
-      // Apply fetch_limit after filtering (if not fetching all)
       if (settings.fetch_all !== 'yes' && settings.fetch_limit > 0) {
         allEvents = allEvents.slice(0, settings.fetch_limit);
       }
@@ -141,9 +132,8 @@ jQuery(document).ready(function($) {
     events = events.map(parseAndFindUpcoming);
 
     events.sort(function (a, b) {
-      // Sort by ongoing events
-      if (a.ongoing_event && !b.ongoing_event) return 1;
-      if (!a.ongoing_event && b.ongoing_event) return -1;
+      if (a.event_type === 'ongoing' && b.event_type !== 'ongoing') return 1;
+      if (a.event_type !== 'ongoing' && b.event_type === 'ongoing') return -1;
 
       if (a.upcoming_date && b.upcoming_date) {
         if (a.upcoming_date > b.upcoming_date) {
@@ -177,13 +167,6 @@ jQuery(document).ready(function($) {
     events.forEach(item => {
       item.categories = [];
       if(item.category) item.categories.push(item.category);
-
-      if( item.ongoing_event ) {
-        item.categories.push({
-          id: ongoingEventCategoryId,
-          title: 'On-Going'
-        });
-      }
 
       item.categories.forEach(category => {
         if( !(fetchedCategories.some(cat => cat.id === category.id)) ) {
@@ -221,11 +204,27 @@ jQuery(document).ready(function($) {
   function parseAndFindUpcoming(event) {
     var upcomingOccurrence = null;
     var tempStartDate = new Date(event.start_date + ' ' + (event.is_all_day_event ? '00:00:00' : event.start_time));
-    if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
-      var rule = rrule.RRule.fromString(event.repeat_rrule);
-      // console.log('%c'+event.title+' - %c'+rule.toText(), 'font-size: 14px; font-family: system-ui;', 'font-size: 14px; font-weight: bold; font-style: italic; border: 1px solid rgba(255,255,255,0.5); padding: 3px 6px; background-color: rgba(255,255,255,0.1); border-radius: 4px; font-family: system-ui;');
 
-      // Get occurrences within a certain time range (adjust as needed)
+    if (event.event_type === 'custom' && event.custom_dates && event.custom_dates.length > 0) {
+      const validDates = event.custom_dates
+        .filter(cd => cd.date && cd.date !== '')
+        .map(cd => ({
+          date: new Date(cd.date + ' ' + (cd.start_time || '00:00')),
+          start_time: cd.start_time,
+          end_time: cd.end_time
+        }))
+        .sort((a, b) => a.date - b.date);
+
+      const upcomingCustom = validDates.find(cd => cd.date >= todayDate);
+      if (upcomingCustom) {
+        event.upcoming_date = upcomingCustom.date;
+        event.upcoming_custom_time = upcomingCustom;
+      } else {
+        event.upcoming_date = tempStartDate > todayDate ? tempStartDate : todayDate;
+      }
+    } else if (event.is_repeat_event && event.repeat_rrule && event.repeat_rrule !== '') {
+      var rule = rrule.RRule.fromString(event.repeat_rrule);
+
       var occurrences = rule.between(
         new Date(todayDate.getTime() - 2 * 24 * 60 * 60 * 1000),
         new Date(todayDate.getTime() + 365 * 24 * 60 * 60 * 1000)
@@ -242,17 +241,17 @@ jQuery(document).ready(function($) {
         return addMinutesToDate(date, timezoneOffsetInMinutes+event_duration_in_minutes)
       });
 
-      // Find the next occurrence after the current date
       upcomingOccurrence = occurrencesInTimezone.find(function (occurrence) {
         return occurrence >= todayDate;
       });
-    }
 
-
-    if (upcomingOccurrence) {  
-      event.upcoming_date = tempStartDate > upcomingOccurrence ? tempStartDate : upcomingOccurrence;
+      if (upcomingOccurrence) {
+        event.upcoming_date = tempStartDate > upcomingOccurrence ? tempStartDate : upcomingOccurrence;
+      } else {
+        event.upcoming_date = tempStartDate > todayDate ? tempStartDate : todayDate;
+      }
     } else {
-      event.upcoming_date = tempStartDate>todayDate?tempStartDate:todayDate;
+      event.upcoming_date = tempStartDate > todayDate ? tempStartDate : todayDate;
     }
 
     event.datesStr = eyeonFormatDate(event.upcoming_date);
@@ -268,6 +267,25 @@ jQuery(document).ready(function($) {
 
     if( events.length > 0 ) {
       events.forEach(event => {
+        const showDate = event.list_page_date_display && event.list_page_date_display !== 'hide_date';
+        const showTime = event.list_page_time_display === 'show' && !event.is_all_day_event;
+
+        let dateHtml = '';
+        if (showDate) {
+          if (event.list_page_date_display === 'dateRange') {
+            dateHtml = `<span>${event.formatted_start_date} - ${event.formatted_end_date}</span>`;
+          } else {
+            dateHtml = `<span>${event.datesStr}</span>`;
+          }
+        }
+
+        let timeStartVal = event.start_time;
+        let timeEndVal = event.end_time;
+        if (event.event_type === 'custom' && event.upcoming_custom_time) {
+          timeStartVal = event.upcoming_custom_time.start_time;
+          timeEndVal = event.upcoming_custom_time.end_time;
+        }
+
         const eventItem = $(`
           <a href="${event.event_url?event.event_url:`<?= mcd_single_page_url('mycenterevent') ?>${event.slug}`}" class="event event-${event.id}" ${(event.event_url && settings.external_event_new_tab)?'target="_blank"':''}>
             <div class="image">
@@ -275,27 +293,23 @@ jQuery(document).ready(function($) {
             </div>
             <div class="event-content">
               ${ settings.event_title ? `<h3 class="event-title">${event.title}</h3>` : '' }
-              ${ (settings.event_date === 'show' || settings.event_time === 'show') ? `
+              ${ (showDate || showTime) ? `
                 <div class="metadata">
-                  ${ settings.event_date && (!event.ongoing_event || (event.ongoing_event && settings.event_ongoing_dates)) ? `
+                  ${ showDate ? `
                     <div class="date">
                       <i class="far fa-calendar"></i>
-                      ${ settings.event_display_date == 'upcoming' ? `
-                        <span>${event.datesStr}</span>
-                      ` : `
-                        <span>${event.formatted_start_date} - ${event.formatted_end_date}</span>
-                      `}
+                      ${dateHtml}
                     </div>
                   `: '' }
-                  ${(settings.event_time && !event.is_all_day_event) ? `
+                  ${ showTime ? `
                     <div class="time">
                       <i class="far fa-clock"></i>
-                      <span>${eyeonFormatTime(event.start_time)} - ${eyeonFormatTime(event.end_time)}</span>
+                      <span>${eyeonFormatTime(timeStartVal)} - ${eyeonFormatTime(timeEndVal)}</span>
                     </div>
                   ` : '' }
                 </div>
-                `: '' }
-              </div>
+              `: '' }
+            </div>
           </a>
         `);
         eventsList.append(eventItem);
