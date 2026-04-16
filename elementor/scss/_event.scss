@@ -67,14 +67,39 @@
 
         .mcd-event-date-time {
           margin-bottom: 20px;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 6px 20px;
         }
 
         .mcd-event-dates {
           font-weight: bold;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
         }
 
         .mcd-event-times {
           font-weight: bold;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .event-dates-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          width: 100%;
+
+          li {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 20px;
+            padding: 4px 0;
+          }
         }
 
         .mcd-event-description {

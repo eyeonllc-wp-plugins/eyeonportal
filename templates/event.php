@@ -3,8 +3,8 @@ $mycenterevent = $this->mcd_settings['mycenterevent'];
 $formatted_start_time = eyeon_format_time($mycenterevent['start_time']);
 $formatted_end_time = eyeon_format_time($mycenterevent['end_time']);
 
-$date_display = isset($mycenterevent['single_page_date_display']) ? $mycenterevent['single_page_date_display'] : 'show';
-$time_display = isset($mycenterevent['single_page_time_display']) ? $mycenterevent['single_page_time_display'] : 'show';
+$date_display = isset($mycenterevent['single_page_date_display']) ? $mycenterevent['single_page_date_display'] : null;
+$time_display = isset($mycenterevent['single_page_time_display']) ? $mycenterevent['single_page_time_display'] : null;
 $event_type = isset($mycenterevent['event_type']) ? $mycenterevent['event_type'] : 'onetime';
 $custom_dates = isset($mycenterevent['custom_dates']) ? $mycenterevent['custom_dates'] : [];
 $show_time = ($time_display === 'show' && !$mycenterevent['is_all_day_event']);
@@ -155,58 +155,37 @@ if( isset($mycenterevent['next']) ) {
           <?php if( $date_display && $date_display !== 'hide_date' ) : ?>
             <div class="mcd-event-date-time">
               <?php if( $event_dates_list === 'range' ) : ?>
-                <div class="mcd-event-dates">
-                  <i class="far fa-calendar-alt"></i>&nbsp;
-                  <?= eyeon_format_date($mycenterevent['start_date']) ?> - <?= eyeon_format_date($mycenterevent['end_date']) ?>
-                </div>
+                <span class="mcd-event-dates"><i class="far fa-calendar-alt"></i>&nbsp;<?= eyeon_format_date($mycenterevent['start_date']) ?> - <?= eyeon_format_date($mycenterevent['end_date']) ?></span>
                 <?php if( $show_time ) : ?>
-                  <div class="mcd-event-times">
-                    <i class="far fa-clock"></i>&nbsp;
-                    <?= $formatted_start_time ?> - <?= $formatted_end_time ?>
-                  </div>
+                  <span class="mcd-event-times"><i class="far fa-clock"></i>&nbsp;<?= $formatted_start_time ?> - <?= $formatted_end_time ?></span>
                 <?php endif; ?>
               <?php elseif( $event_dates_list === 'show' ) : ?>
-                <div class="mcd-event-dates">
-                  <i class="far fa-calendar-alt"></i>&nbsp;
-                  <?php
-                    $show_date_str = eyeon_format_date($mycenterevent['start_date']);
-                    if ($mycenterevent['end_date'] && $mycenterevent['start_date'] !== $mycenterevent['end_date']) {
-                      $show_date_str .= ' - ' . eyeon_format_date($mycenterevent['end_date']);
-                    }
-                  ?>
-                  <?= $show_date_str ?>
-                </div>
+                <?php
+                  $show_date_str = eyeon_format_date($mycenterevent['start_date']);
+                  if ($mycenterevent['end_date'] && $mycenterevent['start_date'] !== $mycenterevent['end_date']) {
+                    $show_date_str .= ' - ' . eyeon_format_date($mycenterevent['end_date']);
+                  }
+                ?>
+                <span class="mcd-event-dates"><i class="far fa-calendar-alt"></i>&nbsp;<?= $show_date_str ?></span>
                 <?php if( $show_time ) : ?>
-                  <div class="mcd-event-times">
-                    <i class="far fa-clock"></i>&nbsp;
-                    <?= $formatted_start_time ?> - <?= $formatted_end_time ?>
-                  </div>
+                  <span class="mcd-event-times"><i class="far fa-clock"></i>&nbsp;<?= $formatted_start_time ?> - <?= $formatted_end_time ?></span>
                 <?php endif; ?>
               <?php elseif( is_array($event_dates_list) && count($event_dates_list) === 1 ) : ?>
-                <div class="mcd-event-dates">
-                  <i class="far fa-calendar-alt"></i>&nbsp;
-                  <?= eyeon_format_date($event_dates_list[0]['date']) ?>
-                </div>
+                <span class="mcd-event-dates"><i class="far fa-calendar-alt"></i>&nbsp;<?= eyeon_format_date($event_dates_list[0]['date']) ?></span>
                 <?php if( $show_time && !empty($event_dates_list[0]['start_time']) ) : ?>
-                  <div class="mcd-event-times">
-                    <i class="far fa-clock"></i>&nbsp;
-                    <?= eyeon_format_time($event_dates_list[0]['start_time']) ?> - <?= eyeon_format_time($event_dates_list[0]['end_time']) ?>
-                  </div>
+                  <span class="mcd-event-times"><i class="far fa-clock"></i>&nbsp;<?= eyeon_format_time($event_dates_list[0]['start_time']) ?> - <?= eyeon_format_time($event_dates_list[0]['end_time']) ?></span>
                 <?php endif; ?>
               <?php elseif( is_array($event_dates_list) && count($event_dates_list) > 1 ) : ?>
-                <div class="mcd-event-dates mcd-event-dates-list">
-                  <i class="far fa-calendar-alt"></i>&nbsp;
-                  <ul class="event-dates-list">
-                    <?php foreach( $event_dates_list as $d ) : ?>
-                      <li>
-                        <?= eyeon_format_date($d['date']) ?>
-                        <?php if( $show_time && !empty($d['start_time']) ) : ?>
-                          &mdash; <?= eyeon_format_time($d['start_time']) ?> - <?= eyeon_format_time($d['end_time']) ?>
-                        <?php endif; ?>
-                      </li>
-                    <?php endforeach; ?>
-                  </ul>
-                </div>
+                <ul class="event-dates-list">
+                  <?php foreach( $event_dates_list as $d ) : ?>
+                    <li>
+                      <span class="mcd-event-dates"><i class="far fa-calendar-alt"></i>&nbsp;<?= eyeon_format_date($d['date']) ?></span>
+                      <?php if( $show_time && !empty($d['start_time']) ) : ?>
+                        <span class="mcd-event-times"><i class="far fa-clock"></i>&nbsp;<?= eyeon_format_time($d['start_time']) ?> - <?= eyeon_format_time($d['end_time']) ?></span>
+                      <?php endif; ?>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
               <?php endif; ?>
             </div>
           <?php endif; ?>

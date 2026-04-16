@@ -940,12 +940,53 @@
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-date-time {
   margin-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 6px 20px;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-dates {
   font-weight: bold;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 4px;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-times {
   font-weight: bold;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 4px;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-dates-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+#eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .event-dates-list li {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 6px 20px;
+  padding: 4px 0;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-description {
   line-height: 24px;
