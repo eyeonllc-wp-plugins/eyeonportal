@@ -985,8 +985,8 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  gap: 6px 20px;
-  padding: 4px 0;
+  gap: 6px 16px;
+  padding: 2px 0;
 }
 #eyeonevent-single .eyeon-event .mcd-event-cols .mcd-event-details-col .mcd-event-description {
   line-height: 24px;
