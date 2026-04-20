@@ -1,6 +1,5 @@
 <?php
 $mycenterdeal = $this->mcd_settings['mycenterdeal'];
-eyeon_debug($mycenterdeal, false);
 
 $deal_url = mcd_single_page_url('mycenterdeal');
 $prev_url = '';
