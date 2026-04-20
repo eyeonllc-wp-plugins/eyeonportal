@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from EyeOn Portal.
-Version: 0.1.90
+Version: 0.1.91
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -45,6 +45,7 @@ $api_base_url = 'https://web-backend-prod.eyeonportal.com';
 if( isset($mcd_settings['api_access_token']) && !empty($mcd_settings['api_access_token']) ) {
 	if( strpos($mcd_settings['api_access_token'], 'stage_') === 0 ) {
 		$api_base_url = 'https://web-backend-staging.eyeonportal.com';
+    // $api_base_url = 'http://localhost:3002';
 	} elseif( strpos($mcd_settings['api_access_token'], 'dev_') === 0 ) {
 		$api_base_url = 'http://localhost:3002';
 	}

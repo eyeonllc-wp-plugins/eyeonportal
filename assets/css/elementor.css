@@ -1315,18 +1315,20 @@
   -webkit-box-flex: 0;
       -ms-flex: 0 0 25%;
           flex: 0 0 25%;
-}
-#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-apply-link {
-  margin-bottom: 15px;
-}
-#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-contact-details {
-  margin-bottom: 15px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  gap: 15px;
 }
 #eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-contact-details .mcd-contact-detail {
   line-height: 23px;
-}
-#eyeoncareer-single .eyeon-career .mcd-career-apply-col .mcd-retailer-phone {
-  margin-bottom: 15px;
 }
 @media (max-width: 767px) {
   #eyeoncareer-single .eyeon-career .mcd-career-cols {
@@ -1687,6 +1689,9 @@
   -webkit-box-flex: 1;
       -ms-flex: 1;
           flex: 1;
+}
+.eyeon-center-hours .center-hours-wrapper .content-col .child-set-title {
+  font-weight: 600;
 }
 .eyeon-center-hours .center-hours-wrapper .content-col .center-hours {
   display: -webkit-box;
