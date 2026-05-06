@@ -109,10 +109,7 @@ jQuery(document).ready(function($) {
       // Filter by category (if specific category selected, not "all" or "ongoing")
       if (event_category > 0 && event_category !== ongoingEventCategoryId) {
         allEvents = allEvents.filter(function(event) {
-          if (!event.categories || event.categories.length === 0) return false;
-          return event.categories.some(function(cat) {
-            return cat.id === event_category;
-          });
+          return event.category && event.category.id === event_category;
         });
       }
       
