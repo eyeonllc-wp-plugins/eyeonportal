@@ -465,6 +465,11 @@
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-gap: 15px;
 }
+.eyeon-stores .eyeon-wrapper .stores-list .stores .store {
+  display: block;
+  width: 100vw;
+  max-width: 100%;
+}
 .eyeon-stores .eyeon-wrapper .stores-list .stores .store .image {
   position: relative;
   padding-top: 100%;
@@ -819,6 +824,11 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 20px;
 }
+.eyeon-events .eyeon-wrapper .events-list .event {
+  display: block;
+  width: 100vw;
+  max-width: 100%;
+}
 .eyeon-events .eyeon-wrapper .events-list .event .image {
   position: relative;
   padding-top: 52.5%;
@@ -1040,6 +1050,11 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-gap: 20px;
+}
+.eyeon-deals .deals-list .deal {
+  display: block;
+  width: 100vw;
+  max-width: 100%;
 }
 .eyeon-deals .deals-list .deal .image {
   position: relative;
@@ -1420,7 +1435,6 @@
   row-gap: 30px;
 }
 .eyeon-news .eyeon-wrapper .news-list .news .news-item {
-  width: 100%;
   color: #444;
   background-color: #f5f7fd;
   display: -webkit-box;
@@ -1430,6 +1444,8 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
+  width: 100vw;
+  max-width: 100%;
 }
 .eyeon-news .eyeon-wrapper .news-list .news .news-item .image {
   position: relative;

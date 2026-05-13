@@ -39,11 +39,12 @@
         }
 
         .news-item {
-          width: 100%;
           color: #444;
           background-color: #f5f7fd;
           display: flex;
           flex-direction: column;
+          width: 100vw;
+          max-width: 100%;
 
           .image {
             position: relative;
