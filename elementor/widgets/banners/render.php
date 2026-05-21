@@ -169,6 +169,7 @@ jQuery(document).ready(function($) {
 
     // Add slides
     slides.forEach((slide, slideIndex) => {
+    console.log('sliderSettings', sliderSettings);
       sliderHtml += `
         <div
           class="slide-item"
@@ -181,8 +182,9 @@ jQuery(document).ready(function($) {
           "
           ${slide.link ? `data-link="${slide.link}"` : ''}
         >
-          <div class="slider-container" style="max-width: ${sliderSettings.width.value}${sliderSettings.width.unit}">
-            <div class="slide-container" style="max-width: ${DefaultDeviceWidths[currentDevice]}px">
+          <div class="slider-container" style="max-width: ${sliderSettings.width[currentDevice].value}${sliderSettings.width[currentDevice].unit}">
+            <!--<div class="slide-container" style="max-width: ${DefaultDeviceWidths[currentDevice]}px">-->
+            <div class="slide-container">
       `;
 
       // Add layers with device-specific values
