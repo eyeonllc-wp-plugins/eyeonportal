@@ -246,6 +246,11 @@ require_once $redux_admin_path . 'sections/single-templates/blog.php';
 
 require_once $redux_admin_path . 'sections/shortcodes/shortcodes.php';
 
+$eyeon_center_for_chatbot = function_exists( 'eyeon_get_center' ) ? eyeon_get_center() : null;
+if ( ! empty( $eyeon_center_for_chatbot['chatbot_enabled'] ) ) {
+	require_once $redux_admin_path . 'sections/chatbot/settings.php';
+}
+
 /*
  * <--- END SECTIONS
  */
