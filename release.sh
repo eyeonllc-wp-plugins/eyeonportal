@@ -39,8 +39,14 @@ send_slack_release_notification() {
     emoji="❌"
   fi
 
-  title="Eyeon Portal Plugin - Release - ${status_label}"
-  notification_text="${emoji} ${title} 👤 ${actor}"
+  title="EyeOn WP Plugin - Release - ${status_label}"
+  local version_suffix=""
+  if [ "$status" = "success" ] && [ -n "$stable_tag" ]; then
+    version_suffix=" :hash: *${stable_tag}*"
+    notification_text="${emoji} ${title} 👤 ${actor}${version_suffix}"
+  else
+    notification_text="${emoji} ${title} 👤 ${actor}"
+  fi
 
   if [ -n "$sha" ]; then
     if [ -z "$before_sha" ] || [ "$before_sha" = "0000000000000000000000000000000000000000" ] || [ "$before_sha" = "$sha" ]; then
@@ -91,13 +97,14 @@ send_slack_release_notification() {
   }
 
   append_git_commits() {
-    local extra_args=()
+    local git_log_cmd=(git log "$@")
     if [ "$1" != "-n" ] && [ "$1" != "-1" ]; then
-      extra_args=(-n "$max_commits")
+      git_log_cmd+=(-n "$max_commits")
     fi
+    git_log_cmd+=(--pretty=format:'%H%x1f%h%x1f%s%x1f%an' --no-decorate)
     while IFS=$'\x1f' read -r full_hash short_hash subject author; do
       append_commit_line "$full_hash" "$short_hash" "$subject" "$author" || break
-    done < <(git log "$@" "${extra_args[@]}" --pretty=format:'%H%x1f%h%x1f%s%x1f%an' --no-decorate 2>/dev/null || true)
+    done < <("${git_log_cmd[@]}" 2>/dev/null || true)
   }
 
   if [ -n "$sha" ]; then
@@ -141,61 +148,60 @@ send_slack_release_notification() {
     --arg title "$title" \
     --arg emoji "$emoji" \
     --arg author_name "$actor" \
+    --arg version_suffix "$version_suffix" \
     --arg compare "$compare_url" \
     --arg release "$release_url" \
     --arg commits "$commits_mrkdwn" \
     --arg error "$error_message" \
     '{
       text: $text,
-      blocks: (
-        [
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: ("*" + $emoji + " " + $title + "* 👤 *" + $author_name + "*")
-            }
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: ("*" + $emoji + " " + $title + "* 👤 *" + $author_name + "*" + $version_suffix)
           }
-        ]
-        + (if $error != "" then [{
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: ("*Error:* " + $error)
-            }
-          }] else [])
-        + [
-          {
-            type: "section",
-            text: {
-              type: "mrkdwn",
-              text: $commits
-            }
-          },
-          {
-            type: "actions",
-            elements: (
-              [
-                {
-                  type: "button",
-                  text: {type: "plain_text", text: "Compare Changes"},
-                  url: $compare
-                }
-              ]
-              + (if $release != "" then [{
-                  type: "button",
-                  text: {type: "plain_text", text: "View Release"},
-                  url: $release
-                }] else [])
-            )
+        },
+        (if $error != "" then {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: ("*Error:* " + $error)
           }
-        ]
-      )
+        } else empty end),
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: $commits
+          }
+        },
+        {
+          type: "actions",
+          elements: [
+            {
+              type: "button",
+              text: {type: "plain_text", text: "Compare Changes"},
+              url: $compare
+            },
+            (if $release != "" then {
+              type: "button",
+              text: {type: "plain_text", text: "View Release"},
+              url: $release
+            } else empty end)
+          ]
+        }
+      ]
     }' > "$payload_file"
 
-  curl -fsS -H 'Content-Type: application/json' -d @"$payload_file" "$SLACK_WEBHOOK_URL"
-  rm -f "$payload_file"
-  echo "Slack notification sent."
+  if curl -fsS -H 'Content-Type: application/json' -d @"$payload_file" "$SLACK_WEBHOOK_URL"; then
+    rm -f "$payload_file"
+    echo "Slack notification sent."
+  else
+    rm -f "$payload_file"
+    return 1
+  fi
 }
 
 notify_failure() {
