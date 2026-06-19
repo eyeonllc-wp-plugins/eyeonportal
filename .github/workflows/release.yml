@@ -1,0 +1,249 @@
+name: Release Plugin
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    name: Release if version changed
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      skipped: ${{ steps.check.outputs.skipped }}
+      stable_tag: ${{ steps.check.outputs.stable_tag }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check version
+        id: check
+        run: |
+          set -euo pipefail
+          stable_tag="$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}' | tr -d '\r')"
+          if [ -z "$stable_tag" ]; then
+            echo "Error: Stable tag not found in readme.txt."
+            exit 1
+          fi
+
+          echo "stable_tag=${stable_tag}" >> "$GITHUB_OUTPUT"
+
+          git fetch --tags origin 2>/dev/null || true
+          if git ls-remote --exit-code --tags origin "refs/tags/${stable_tag}" >/dev/null 2>&1; then
+            echo "Stable tag '${stable_tag}' is already released. Skipping."
+            echo "skipped=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "skipped=false" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag and GitHub release
+        if: steps.check.outputs.skipped != 'true'
+        env:
+          STABLE_TAG: ${{ steps.check.outputs.stable_tag }}
+        run: |
+          set -euo pipefail
+          commit_message="$(git log -1 --pretty=format:'%s')"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "$STABLE_TAG"
+          git push origin "$STABLE_TAG"
+          gh release create "$STABLE_TAG" --notes "$commit_message"
+          echo "Version released: $STABLE_TAG"
+
+  slackNotification:
+    needs: [release]
+    if: always() && !cancelled() && needs.release.outputs.skipped != 'true'
+    name: Slack Notification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Send Slack Notification
+        env:
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
+          RUN_ID: ${{ github.run_id }}
+          SHA: ${{ github.sha }}
+          BEFORE: ${{ github.event.before }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_COMMITS: ${{ toJSON(github.event.commits) }}
+          RELEASE_RESULT: ${{ needs.release.result }}
+          STABLE_TAG: ${{ needs.release.outputs.stable_tag }}
+        run: |
+          set -euo pipefail
+          git fetch --prune origin 2>/dev/null || true
+
+          REPO_URL="https://github.com/${REPO}"
+          MAX_COMMITS=8
+          MAX_SUBJECT_LEN=80
+          MAX_COMMITS_TEXT=2900
+
+          if [ "$RELEASE_RESULT" = "success" ]; then
+            STATUS="Success"
+            EMOJI="✅"
+            ERROR=""
+            VERSION_SUFFIX=" :hash: *${STABLE_TAG}*"
+            RELEASE_URL="${REPO_URL}/releases/tag/${STABLE_TAG}"
+          else
+            STATUS="Failed"
+            EMOJI="❌"
+            ERROR="Plugin release failed."
+            VERSION_SUFFIX=""
+            RELEASE_URL=""
+          fi
+
+          TITLE="EyeOn WP Plugin - Release - ${STATUS}"
+          AUTHOR_NAME="$(git log -1 --pretty=format:'%an' 2>/dev/null || echo "$ACTOR")"
+          NOTIFICATION_TEXT="${EMOJI} ${TITLE} 👤 ${AUTHOR_NAME}${VERSION_SUFFIX}"
+
+          if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
+            COMPARE_URL="${REPO_URL}/commit/${SHA}"
+            GIT_LOG_ARGS=(-n 10)
+          else
+            COMPARE_URL="${REPO_URL}/compare/${BEFORE}...${SHA}"
+            GIT_LOG_ARGS=("${BEFORE}..${SHA}")
+          fi
+
+          WORKFLOW_URL="${REPO_URL}/actions/runs/${RUN_ID}"
+
+          slack_escape_mrkdwn() {
+            local s="$1"
+            s="${s//&/&amp;}"
+            s="${s//</&lt;}"
+            s="${s//>/&gt;}"
+            printf '%s' "$s"
+          }
+
+          truncate_subject() {
+            local s="$1"
+            if [ "${#s}" -gt "$MAX_SUBJECT_LEN" ]; then
+              printf '%s…' "${s:0:$((MAX_SUBJECT_LEN - 1))}"
+            else
+              printf '%s' "$s"
+            fi
+          }
+
+          append_commit_line() {
+            local full_hash="$1" short_hash="$2" subject="$3" author="$4"
+            [ -z "$full_hash" ] && return 0
+            [ "${COMMIT_COUNT:-0}" -ge "$MAX_COMMITS" ] && return 1
+            subject="$(truncate_subject "$(slack_escape_mrkdwn "$subject")")"
+            author="$(slack_escape_mrkdwn "$author")"
+            COMMITS_MRKNW="${COMMITS_MRKNW}• <${REPO_URL}/commit/${full_hash}|${short_hash}> - ${subject} (${author})"$'\n'
+            COMMIT_COUNT=$((COMMIT_COUNT + 1))
+          }
+
+          append_git_commits() {
+            local extra_args=()
+            if [ "$1" != "-n" ] && [ "$1" != "-1" ]; then
+              extra_args=(-n "$MAX_COMMITS")
+            fi
+            while IFS=$'\x1f' read -r full_hash short_hash subject author; do
+              append_commit_line "$full_hash" "$short_hash" "$subject" "$author" || break
+            done < <(git log "$@" "${extra_args[@]}" --pretty=format:'%H%x1f%h%x1f%s%x1f%an' --no-decorate 2>/dev/null || true)
+          }
+
+          COMMITS_MRKNW=""
+          COMMIT_COUNT=0
+          append_git_commits "${GIT_LOG_ARGS[@]}"
+
+          if [ -z "$COMMITS_MRKNW" ]; then
+            COMMIT_COUNT=0
+            append_git_commits -1 "$SHA"
+          fi
+
+          if [ -z "$COMMITS_MRKNW" ] && [ "$EVENT_NAME" = "push" ] && [ -n "$EVENT_COMMITS" ] && [ "$EVENT_COMMITS" != "null" ] && [ "$EVENT_COMMITS" != "[]" ]; then
+            COMMIT_COUNT=0
+            while IFS=$'\x1f' read -r full_hash short_hash subject author; do
+              append_commit_line "$full_hash" "$short_hash" "$subject" "$author" || break
+            done < <(jq -r --argjson max "$MAX_COMMITS" --argjson maxlen "$MAX_SUBJECT_LEN" '.[:$max][] | [.id, .id[0:7], ((.message | split("\n")[0]) | if length > $maxlen then .[0:$maxlen-1] + "…" else . end), .author.name] | join("\u001f")' <<< "$EVENT_COMMITS")
+          fi
+
+          if [ -z "$COMMITS_MRKNW" ]; then
+            SHORT_SHA="${SHA:0:7}"
+            FALLBACK_SUBJECT="$(git log -1 --pretty=format:'%s' 2>/dev/null || echo "manual or unavailable commit details")"
+            FALLBACK_SUBJECT="$(truncate_subject "$(slack_escape_mrkdwn "$FALLBACK_SUBJECT")")"
+            COMMITS_MRKNW="• <${REPO_URL}/commit/${SHA}|${SHORT_SHA}> - ${FALLBACK_SUBJECT} ($(slack_escape_mrkdwn "$AUTHOR_NAME"))"$'\n'
+          fi
+
+          if [ "${#COMMITS_MRKNW}" -gt "$MAX_COMMITS_TEXT" ]; then
+            trimmed=""
+            while IFS= read -r line; do
+              [ -z "$line" ] && continue
+              next="${trimmed}${line}"$'\n'
+              if [ "${#next}" -gt "$MAX_COMMITS_TEXT" ]; then
+                trimmed="${trimmed}_Commit list truncated. Use Compare Changes for full history._"$'\n'
+                break
+              fi
+              trimmed="$next"
+            done <<< "$COMMITS_MRKNW"
+            COMMITS_MRKNW="$trimmed"
+          fi
+
+          ERROR="$(slack_escape_mrkdwn "$ERROR")"
+
+          jq -n \
+            --arg text "$NOTIFICATION_TEXT" \
+            --arg title "$TITLE" \
+            --arg emoji "$EMOJI" \
+            --arg author_name "$AUTHOR_NAME" \
+            --arg version_suffix "$VERSION_SUFFIX" \
+            --arg compare "$COMPARE_URL" \
+            --arg release "$RELEASE_URL" \
+            --arg workflow "$WORKFLOW_URL" \
+            --arg commits "$COMMITS_MRKNW" \
+            --arg error "$ERROR" \
+            '{
+              text: $text,
+              blocks: [
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: ("*" + $emoji + " " + $title + "* 👤 *" + $author_name + "*" + $version_suffix)
+                  }
+                },
+                (if $error != "" then {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: ("*Error:* " + $error)
+                  }
+                } else empty end),
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: $commits
+                  }
+                },
+                {
+                  type: "actions",
+                  elements: [
+                    {
+                      type: "button",
+                      text: {type: "plain_text", text: "Compare Changes"},
+                      url: $compare
+                    },
+                    (if $release != "" then {
+                      type: "button",
+                      text: {type: "plain_text", text: "View Release"},
+                      url: $release
+                    } else {
+                      type: "button",
+                      text: {type: "plain_text", text: "View Workflow"},
+                      url: $workflow
+                    } end)
+                  ]
+                }
+              ]
+            }' > slack-payload.json
+
+          curl -fsS -H 'Content-Type: application/json' -d @slack-payload.json "${{ secrets.SLACK_WEBHOOK_URL }}"
