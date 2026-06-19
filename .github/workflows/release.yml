@@ -85,17 +85,19 @@ jobs:
             STATUS="Success"
             EMOJI="✅"
             VERSION_SUFFIX=" :hash: *${STABLE_TAG}*"
+            VERSION_PLAIN=" # ${STABLE_TAG}"
             RELEASE_URL="${REPO_URL}/releases/tag/${STABLE_TAG}"
           else
             STATUS="Failed"
             EMOJI="❌"
             VERSION_SUFFIX=""
+            VERSION_PLAIN=""
             RELEASE_URL=""
           fi
 
           TITLE="EyeOn WP Plugin - Release - ${STATUS}"
           AUTHOR_NAME="$(git log -1 --pretty=format:'%an' 2>/dev/null || echo "$ACTOR")"
-          NOTIFICATION_TEXT="${EMOJI} ${TITLE} 👤 ${AUTHOR_NAME}${VERSION_SUFFIX}"
+          NOTIFICATION_TEXT="${EMOJI} ${TITLE} 👤 ${AUTHOR_NAME}${VERSION_PLAIN}"
 
           if [ -z "$BEFORE" ] || [ "$BEFORE" = "0000000000000000000000000000000000000000" ]; then
             COMPARE_URL="${REPO_URL}/commit/${SHA}"
