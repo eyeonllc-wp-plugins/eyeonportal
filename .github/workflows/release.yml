@@ -39,6 +39,7 @@ jobs:
       - name: Create tag and GitHub release
         env:
           STABLE_TAG: ${{ steps.check.outputs.stable_tag }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           commit_message="$(git log -1 --pretty=format:'%s')"
