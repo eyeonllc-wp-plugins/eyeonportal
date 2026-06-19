@@ -22,9 +22,9 @@ jobs:
         id: check
         run: |
           set -euo pipefail
-          stable_tag="$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}' | tr -d '\r')"
+          stable_tag="$(grep -E '^[[:space:]]*Version:' eyeonportal.php | head -1 | awk '{print $NF}' | tr -d '\r')"
           if [ -z "$stable_tag" ]; then
-            echo "Error: Stable tag not found in readme.txt."
+            echo "Error: Version not found in eyeonportal.php."
             exit 1
           fi
 
