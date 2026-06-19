@@ -88,13 +88,11 @@ jobs:
           if [ "$RELEASE_RESULT" = "success" ]; then
             STATUS="Success"
             EMOJI="✅"
-            ERROR=""
             VERSION_SUFFIX=" :hash: *${STABLE_TAG}*"
             RELEASE_URL="${REPO_URL}/releases/tag/${STABLE_TAG}"
           else
             STATUS="Failed"
             EMOJI="❌"
-            ERROR="Plugin release failed."
             VERSION_SUFFIX=""
             RELEASE_URL=""
           fi
@@ -187,8 +185,6 @@ jobs:
             COMMITS_MRKNW="$trimmed"
           fi
 
-          ERROR="$(slack_escape_mrkdwn "$ERROR")"
-
           jq -n \
             --arg text "$NOTIFICATION_TEXT" \
             --arg title "$TITLE" \
@@ -199,7 +195,6 @@ jobs:
             --arg release "$RELEASE_URL" \
             --arg workflow "$WORKFLOW_URL" \
             --arg commits "$COMMITS_MRKNW" \
-            --arg error "$ERROR" \
             '{
               text: $text,
               blocks: [
@@ -210,13 +205,6 @@ jobs:
                     text: ("*" + $emoji + " " + $title + "* 👤 *" + $author_name + "*" + $version_suffix)
                   }
                 },
-                (if $error != "" then {
-                  type: "section",
-                  text: {
-                    type: "mrkdwn",
-                    text: ("*Error:* " + $error)
-                  }
-                } else empty end),
                 {
                   type: "section",
                   text: {
