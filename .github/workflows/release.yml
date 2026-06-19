@@ -85,7 +85,7 @@ jobs:
             STATUS="Success"
             EMOJI="✅"
             VERSION_SUFFIX=" :hash: *${STABLE_TAG}*"
-            VERSION_PLAIN=" # ${STABLE_TAG}"
+            VERSION_PLAIN=" :hash: ${STABLE_TAG}"
             RELEASE_URL="${REPO_URL}/releases/tag/${STABLE_TAG}"
           else
             STATUS="Failed"
