@@ -9,7 +9,7 @@ Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
 */
 
-define('THREEJS_MAP_VERSION', '1.1.20');
+define('THREEJS_MAP_VERSION', '1.1.22');
 define('THREEJS_MAP_API_RESPONSE_KEY', 'eyeon_map_api_response');
 
 require 'plugin-update-checker/plugin-update-checker.php';
