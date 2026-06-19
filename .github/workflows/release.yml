@@ -11,7 +11,6 @@ jobs:
     permissions:
       contents: write
     outputs:
-      skipped: ${{ steps.check.outputs.skipped }}
       stable_tag: ${{ steps.check.outputs.stable_tag }}
     steps:
       - name: Checkout
@@ -33,15 +32,11 @@ jobs:
 
           git fetch --tags origin 2>/dev/null || true
           if git ls-remote --exit-code --tags origin "refs/tags/${stable_tag}" >/dev/null 2>&1; then
-            echo "Stable tag '${stable_tag}' is already released. Skipping."
-            echo "skipped=true" >> "$GITHUB_OUTPUT"
-            exit 0
+            echo "Error: Tag '${stable_tag}' already exists."
+            exit 1
           fi
 
-          echo "skipped=false" >> "$GITHUB_OUTPUT"
-
       - name: Create tag and GitHub release
-        if: steps.check.outputs.skipped != 'true'
         env:
           STABLE_TAG: ${{ steps.check.outputs.stable_tag }}
         run: |
@@ -56,7 +51,7 @@ jobs:
 
   slackNotification:
     needs: [release]
-    if: always() && !cancelled() && needs.release.outputs.skipped != 'true'
+    if: always() && !cancelled()
     name: Slack Notification
     runs-on: ubuntu-latest
     steps:
