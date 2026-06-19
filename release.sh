@@ -218,7 +218,6 @@ before_sha=$(git rev-parse HEAD 2>/dev/null || echo "")
 
 if [ -z "$stable_tag" ]; then
   echo "Error: Stable tag not found in readme.txt."
-  notify_failure "Stable tag not found in readme.txt."
   exit 1
 fi
 
@@ -227,13 +226,11 @@ commit_message=$1
 git add .
 if ! git commit -m "$commit_message"; then
   echo "Error: Failed to commit changes."
-  notify_failure "Failed to commit changes."
   exit 1
 fi
 
-if ! git push origin master; then
-  echo "Error: Failed to push changes to master branch."
-  notify_failure "Failed to push changes to master branch."
+if ! git push origin main; then
+  echo "Error: Failed to push changes to main branch."
   exit 1
 fi
 
