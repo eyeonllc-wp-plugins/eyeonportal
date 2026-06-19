@@ -9,8 +9,10 @@ if [ -f "$SCRIPT_DIR/.env" ]; then
 fi
 
 send_slack_release_notification() {
-  local stable_tag="$1"
-  local before_sha="$2"
+  local status="$1"
+  local stable_tag="${2:-}"
+  local before_sha="${3:-}"
+  local error_message="${4:-}"
 
   if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
     echo "Warning: SLACK_WEBHOOK_URL not set; skipping Slack notification."
@@ -23,24 +25,41 @@ send_slack_release_notification() {
   remote_url="$(git remote get-url origin 2>/dev/null || true)"
   repo="$(printf '%s' "$remote_url" | sed -E 's#.*github.com[:/]([^/]+\/[^/.]+)(\.git)?$#\1#')"
   repo_url="https://github.com/${repo}"
-  sha="$(git rev-parse HEAD)"
+  sha="$(git rev-parse HEAD 2>/dev/null || echo "")"
   actor="$(git log -1 --pretty=format:'%an' 2>/dev/null || git config user.name || whoami)"
 
   local max_commits=8 max_subject_len=80 max_commits_text=2900
-  local status="Success" emoji="✅"
-  local title="Eyeon Portal Plugin - Release - ${status}"
-  local notification_text="${emoji} ${title} 👤 ${actor}"
-  local compare_url release_url git_log_args
+  local status_label emoji title notification_text compare_url release_url git_log_args
 
-  if [ -z "$before_sha" ] || [ "$before_sha" = "0000000000000000000000000000000000000000" ]; then
-    compare_url="${repo_url}/commit/${sha}"
-    git_log_args=(-n 10)
+  if [ "$status" = "success" ]; then
+    status_label="Success"
+    emoji="✅"
   else
-    compare_url="${repo_url}/compare/${before_sha}...${sha}"
-    git_log_args=("${before_sha}..${sha}")
+    status_label="Failed"
+    emoji="❌"
   fi
 
-  release_url="${repo_url}/releases/tag/${stable_tag}"
+  title="Eyeon Portal Plugin - Release - ${status_label}"
+  notification_text="${emoji} ${title} 👤 ${actor}"
+
+  if [ -n "$sha" ]; then
+    if [ -z "$before_sha" ] || [ "$before_sha" = "0000000000000000000000000000000000000000" ] || [ "$before_sha" = "$sha" ]; then
+      compare_url="${repo_url}/commit/${sha}"
+      git_log_args=(-n 10)
+    else
+      compare_url="${repo_url}/compare/${before_sha}...${sha}"
+      git_log_args=("${before_sha}..${sha}")
+    fi
+  else
+    compare_url="${repo_url}"
+    git_log_args=(-n 10)
+  fi
+
+  if [ "$status" = "success" ] && [ -n "$stable_tag" ]; then
+    release_url="${repo_url}/releases/tag/${stable_tag}"
+  else
+    release_url=""
+  fi
 
   slack_escape_mrkdwn() {
     local s="$1"
@@ -81,16 +100,22 @@ send_slack_release_notification() {
     done < <(git log "$@" "${extra_args[@]}" --pretty=format:'%H%x1f%h%x1f%s%x1f%an' --no-decorate 2>/dev/null || true)
   }
 
-  append_git_commits "${git_log_args[@]}"
+  if [ -n "$sha" ]; then
+    append_git_commits "${git_log_args[@]}"
 
-  if [ -z "$commits_mrkdwn" ]; then
-    commit_count=0
-    append_git_commits -1 "$sha"
+    if [ -z "$commits_mrkdwn" ]; then
+      commit_count=0
+      append_git_commits -1 "$sha"
+    fi
   fi
 
   if [ -z "$commits_mrkdwn" ]; then
-    local short_sha="${sha:0:7}"
-    commits_mrkdwn="• <${repo_url}/commit/${sha}|${short_sha}> - (manual or unavailable commit details)"$'\n'
+    if [ -n "$sha" ]; then
+      local short_sha="${sha:0:7}"
+      commits_mrkdwn="• <${repo_url}/commit/${sha}|${short_sha}> - (manual or unavailable commit details)"$'\n'
+    else
+      commits_mrkdwn="_No commit details available._"$'\n'
+    fi
   fi
 
   if [ "${#commits_mrkdwn}" -gt "$max_commits_text" ]; then
@@ -107,6 +132,8 @@ send_slack_release_notification() {
     commits_mrkdwn="$trimmed"
   fi
 
+  error_message="$(slack_escape_mrkdwn "$error_message")"
+
   local payload_file
   payload_file="$(mktemp)"
   jq -n \
@@ -117,39 +144,53 @@ send_slack_release_notification() {
     --arg compare "$compare_url" \
     --arg release "$release_url" \
     --arg commits "$commits_mrkdwn" \
+    --arg error "$error_message" \
     '{
       text: $text,
-      blocks: [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: ("*" + $emoji + " " + $title + "* 👤 *" + $author_name + "*")
-          }
-        },
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: $commits
-          }
-        },
-        {
-          type: "actions",
-          elements: [
-            {
-              type: "button",
-              text: {type: "plain_text", text: "Compare Changes"},
-              url: $compare
-            },
-            {
-              type: "button",
-              text: {type: "plain_text", text: "View Release"},
-              url: $release
+      blocks: (
+        [
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: ("*" + $emoji + " " + $title + "* 👤 *" + $author_name + "*")
             }
-          ]
-        }
-      ]
+          }
+        ]
+        + (if $error != "" then [{
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: ("*Error:* " + $error)
+            }
+          }] else [])
+        + [
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: $commits
+            }
+          },
+          {
+            type: "actions",
+            elements: (
+              [
+                {
+                  type: "button",
+                  text: {type: "plain_text", text: "Compare Changes"},
+                  url: $compare
+                }
+              ]
+              + (if $release != "" then [{
+                  type: "button",
+                  text: {type: "plain_text", text: "View Release"},
+                  url: $release
+                }] else [])
+            )
+          }
+        ]
+      )
     }' > "$payload_file"
 
   curl -fsS -H 'Content-Type: application/json' -d @"$payload_file" "$SLACK_WEBHOOK_URL"
@@ -157,37 +198,62 @@ send_slack_release_notification() {
   echo "Slack notification sent."
 }
 
+notify_failure() {
+  send_slack_release_notification "failed" "${stable_tag:-}" "${before_sha:-}" "$1" || echo "Warning: Slack notification failed."
+}
+
+notify_success() {
+  send_slack_release_notification "success" "$stable_tag" "$before_sha" "" || echo "Warning: Slack notification failed."
+}
+
 # Read the stable tag from readme.txt
 stable_tag=$(grep -E '^Stable tag:' readme.txt | awk '{print $NF}' | tr -d '\r')
 before_sha=$(git rev-parse HEAD 2>/dev/null || echo "")
 
-# Check if the stable tag is not empty
-if [ -n "$stable_tag" ]; then
-  # Accept commit message as a command line argument
-  commit_message=$1
-
-  # Add, commit, and push changes
-  git add .
-  git commit -m "$commit_message"
- 
-  # Push to master and check the exit status
-  if git push origin master; then
-    
-    if git rev-parse -q --verify "refs/tags/$stable_tag" >/dev/null; then
-      echo "Error: Tag '$stable_tag' already exists. Aborting script."
-    else
-      git tag $stable_tag
-      git push origin $stable_tag
-
-      # Release version
-      gh release create $stable_tag --notes "$commit_message"
-
-      echo "Version Released: $stable_tag"
-      send_slack_release_notification "$stable_tag" "$before_sha" || echo "Warning: Slack notification failed."
-    fi
-  else
-    echo "Error: Failed to push changes to master branch."
-  fi
-else
+if [ -z "$stable_tag" ]; then
   echo "Error: Stable tag not found in readme.txt."
+  notify_failure "Stable tag not found in readme.txt."
+  exit 1
 fi
+
+commit_message=$1
+
+git add .
+if ! git commit -m "$commit_message"; then
+  echo "Error: Failed to commit changes."
+  notify_failure "Failed to commit changes."
+  exit 1
+fi
+
+if ! git push origin master; then
+  echo "Error: Failed to push changes to master branch."
+  notify_failure "Failed to push changes to master branch."
+  exit 1
+fi
+
+if git rev-parse -q --verify "refs/tags/$stable_tag" >/dev/null; then
+  echo "Error: Tag '$stable_tag' already exists. Aborting script."
+  notify_failure "Tag '$stable_tag' already exists."
+  exit 1
+fi
+
+if ! git tag "$stable_tag"; then
+  echo "Error: Failed to create tag '$stable_tag'."
+  notify_failure "Failed to create tag '$stable_tag'."
+  exit 1
+fi
+
+if ! git push origin "$stable_tag"; then
+  echo "Error: Failed to push tag '$stable_tag'."
+  notify_failure "Failed to push tag '$stable_tag'."
+  exit 1
+fi
+
+if ! gh release create "$stable_tag" --notes "$commit_message"; then
+  echo "Error: Failed to create GitHub release for '$stable_tag'."
+  notify_failure "Failed to create GitHub release for '$stable_tag'."
+  exit 1
+fi
+
+echo "Version Released: $stable_tag"
+notify_success
