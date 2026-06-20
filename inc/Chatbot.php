@@ -35,6 +35,8 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 			mcd_include_js( 'chatbot', 'assets/chatbot/chatbot.js', true );
 
 			$accent = ! empty( $this->mcd_settings['accent_color'] ) ? $this->mcd_settings['accent_color'] : '#3d80b9';
+			$center   = function_exists( 'eyeon_get_center' ) ? eyeon_get_center() : array();
+			$center_id = ! empty( $center['id'] ) ? (int) $center['id'] : 0;
 
 			wp_localize_script(
 				'eyeon-chatbot',
@@ -42,6 +44,7 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 				array(
 					'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					'nonce' => wp_create_nonce( 'eyeon_api_nonce' ),
+					'centerId' => $center_id,
 					'botName' => ! empty( $this->mcd_settings['chatbot_bot_name'] ) ? $this->mcd_settings['chatbot_bot_name'] : 'Center Assistant',
 					'welcomeMessage' => ! empty( $this->mcd_settings['chatbot_welcome_message'] ) ? $this->mcd_settings['chatbot_welcome_message'] : 'Hi! Ask me anything about our center.',
 					'offlineMessage' => ! empty( $this->mcd_settings['chatbot_offline_message'] ) ? $this->mcd_settings['chatbot_offline_message'] : 'Sorry, the assistant is temporarily unavailable.',

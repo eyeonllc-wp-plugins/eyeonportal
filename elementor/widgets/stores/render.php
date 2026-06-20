@@ -56,9 +56,11 @@ $unique_id = uniqid();
         <?php endif; ?>
         
         <?php if( $settings['stores_search'] === 'show' ) : ?>
-          <div class="search-bar">
-            <span class="icon icon-search"></span>
-            <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
+          <div class="search-div">
+            <div class="search-field">
+              <span class="icon icon-search"></span>
+              <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="Search..." />
+            </div>
           </div>
         <?php endif; ?>
 

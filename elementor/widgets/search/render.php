@@ -13,12 +13,14 @@ $unique_id = uniqid();
 
 <div id="eyeon-search-<?= $unique_id ?>" class="eyeon-search">
   <div class="eyeon-wrapper">
-    <div class="search-bar">
-      <?php if( $settings['search_icon'] === 'show' ) : ?>
-        <span class="icon icon-search"></span>
-      <?php endif; ?>
-      <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="<?= $settings['search_placeholder_text'] ?>" />
-      <div id="search-results-dropdown-<?= $unique_id ?>" class="search-results-dropdown"></div>
+    <div class="search-div">
+      <div class="search-field">
+        <?php if( $settings['search_icon'] === 'show' ) : ?>
+          <span class="icon icon-search"></span>
+        <?php endif; ?>
+        <input type="text" id="stores-search-<?= $unique_id ?>" class="stores-search" placeholder="<?= $settings['search_placeholder_text'] ?>" />
+        <div id="search-results-dropdown-<?= $unique_id ?>" class="search-results-dropdown"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -165,7 +167,7 @@ jQuery(document).ready(function($) {
 
   // Close dropdown when clicking outside
   $(document).on('click', function(e) {
-    if (!$(e.target).closest('.search-bar').length) {
+    if (!$(e.target).closest('.search-div').length) {
       searchResults.removeClass('show');
     }
   });

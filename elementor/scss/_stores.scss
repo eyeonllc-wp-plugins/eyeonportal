@@ -144,12 +144,15 @@
         }
       }
 
-      .search-bar {
+      .search-div {
         width: 240px;
-        background-color: #f3f6f1;
         height: 100%;
-        display: flex;
         position: relative;
+
+        .search-field {
+          background-color: #f3f6f1;
+          display: flex;
+        }
 
         .icon-search {
           position: absolute;
@@ -181,7 +184,7 @@
         align-items: center;
         margin-bottom: 30px;
 
-        .search-bar {
+        .search-div {
           width: auto;
           flex: 1;
         }
@@ -346,7 +349,7 @@
           }
         }
 
-        .search-bar .stores-search {
+        .search-div .stores-search {
           width: 100% !important;
         }
 
@@ -367,7 +370,7 @@
             order: 1;
           }
 
-          .search-bar {
+          .search-div {
             order: 3;
           }
         }

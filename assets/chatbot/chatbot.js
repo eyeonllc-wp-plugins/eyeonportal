@@ -5,6 +5,10 @@
     return;
   }
 
+  var STORAGE_TTL_MS = 24 * 60 * 60 * 1000;
+  var MAX_STORED_MESSAGES = 50;
+  var API_HISTORY_LIMIT = 6;
+
   var history = [];
   var isOpen = false;
   var isSending = false;
@@ -21,6 +25,113 @@
   if (EYEON_CHATBOT.accentColor) {
     $root.css('--eyeon-chat-accent', EYEON_CHATBOT.accentColor);
     $launcher.css('background-color', EYEON_CHATBOT.accentColor);
+  }
+
+  function storageKey() {
+    var centerId = EYEON_CHATBOT.centerId || window.location.hostname || 'default';
+    return 'eyeon_chatbot_v1_' + centerId;
+  }
+
+  function persistHistory() {
+    try {
+      if (!window.localStorage) {
+        return;
+      }
+      var payload = {
+        expiresAt: Date.now() + STORAGE_TTL_MS,
+        messages: history.slice(-MAX_STORED_MESSAGES),
+      };
+      localStorage.setItem(storageKey(), JSON.stringify(payload));
+    } catch (e) {
+      // Ignore quota / private mode errors.
+    }
+  }
+
+  function clearStoredHistory() {
+    try {
+      if (window.localStorage) {
+        localStorage.removeItem(storageKey());
+      }
+    } catch (e) {}
+  }
+
+  function loadStoredHistory() {
+    try {
+      if (!window.localStorage) {
+        return;
+      }
+      var raw = localStorage.getItem(storageKey());
+      if (!raw) {
+        return;
+      }
+
+      var payload = JSON.parse(raw);
+      if (!payload || !payload.expiresAt || Date.now() > payload.expiresAt) {
+        clearStoredHistory();
+        return;
+      }
+
+      if (!Array.isArray(payload.messages)) {
+        clearStoredHistory();
+        return;
+      }
+
+      history = payload.messages
+        .filter(function (item) {
+          return (
+            item &&
+            (item.role === 'user' || item.role === 'assistant') &&
+            typeof item.content === 'string' &&
+            item.content.trim() !== ''
+          );
+        })
+        .slice(-MAX_STORED_MESSAGES);
+
+      history.forEach(function (item) {
+        appendMessage(item.role, item.content);
+      });
+    } catch (e) {
+      clearStoredHistory();
+    }
+  }
+
+  function buildPhoneTelHref(formattedPhone) {
+    var digits = String(formattedPhone || '').replace(/\D/g, '');
+    if (digits.length === 10) {
+      return 'tel:+1' + digits;
+    }
+    if (digits.length === 11 && digits.charAt(0) === '1') {
+      return 'tel:+' + digits;
+    }
+    return digits ? 'tel:' + digits : '';
+  }
+
+  function appendTextWithPhoneLinks($container, text) {
+    var phonePattern = /\b(\d{3}\.\d{3}\.\d{4})\b/g;
+    var lastIndex = 0;
+    var match;
+
+    while ((match = phonePattern.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        $container.append(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+      var href = buildPhoneTelHref(match[1]);
+      if (href) {
+        $container.append(
+          $('<a></a>')
+            .addClass('eyeon-chatbot__message-link eyeon-chatbot__message-link--phone')
+            .attr('href', href)
+            .text(match[1])
+        );
+      } else {
+        $container.append(document.createTextNode(match[1]));
+      }
+      lastIndex = phonePattern.lastIndex;
+    }
+
+    if (lastIndex < text.length) {
+      $container.append(document.createTextNode(text.slice(lastIndex)));
+    }
   }
 
   function buildItemUrl(type, slug) {
@@ -62,10 +173,10 @@
         return;
       }
 
-      if ($body.children().length) {
+      if ($body.contents().length) {
         $body.append('<br>');
       }
-      $body.append(document.createTextNode(trimmed));
+      appendTextWithPhoneLinks($body, trimmed);
     });
 
     if ($body.children().length || $body.text()) {
@@ -83,7 +194,9 @@
   function appendMessage(role, text) {
     var cls = role === 'user' ? 'eyeon-chatbot__message--user' : 'eyeon-chatbot__message--assistant';
     var $msg =
-      role === 'assistant' ? renderAssistantMessage(text) : $('<div class="eyeon-chatbot__message ' + cls + '"></div>').text(text);
+      role === 'assistant'
+        ? renderAssistantMessage(text)
+        : $('<div class="eyeon-chatbot__message ' + cls + '"></div>').text(text);
     $messages.append($msg);
     $messages.scrollTop($messages[0].scrollHeight);
     return $msg;
@@ -117,9 +230,13 @@
     $panel.prop('hidden', true);
   }
 
-  function trimHistory() {
-    if (history.length > 6) {
-      history = history.slice(-6);
+  function trimHistoryForApi() {
+    return history.slice(-API_HISTORY_LIMIT);
+  }
+
+  function capStoredHistory() {
+    if (history.length > MAX_STORED_MESSAGES) {
+      history = history.slice(-MAX_STORED_MESSAGES);
     }
   }
 
@@ -132,7 +249,8 @@
     $send.prop('disabled', true);
     appendMessage('user', message);
     history.push({ role: 'user', content: message });
-    trimHistory();
+    capStoredHistory();
+    persistHistory();
     setTyping(true);
 
     $.ajax({
@@ -143,7 +261,7 @@
         action: 'eyeon_chat_request',
         nonce: EYEON_CHATBOT.nonce,
         message: message,
-        history_json: JSON.stringify(history.slice(0, -1)),
+        history_json: JSON.stringify(trimHistoryForApi().slice(0, -1)),
       },
     })
       .done(function (response) {
@@ -154,7 +272,8 @@
             : EYEON_CHATBOT.offlineMessage;
         appendMessage('assistant', reply);
         history.push({ role: 'assistant', content: reply });
-        trimHistory();
+        capStoredHistory();
+        persistHistory();
       })
       .fail(function (xhr) {
         setTyping(false);
@@ -163,6 +282,9 @@
           msg = xhr.responseJSON.data.msg;
         }
         appendMessage('assistant', msg);
+        history.push({ role: 'assistant', content: msg });
+        capStoredHistory();
+        persistHistory();
       })
       .always(function () {
         isSending = false;
@@ -192,4 +314,6 @@
     $input.val('');
     sendMessage(message);
   });
+
+  loadStoredHistory();
 })(jQuery);
