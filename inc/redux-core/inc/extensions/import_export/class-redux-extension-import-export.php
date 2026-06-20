@@ -1,10 +1,12 @@
 <?php
 /**
- * Redux Import/Export Extention Class
+ * Redux Import/Export Extension Class
  *
- * @class Redux_Extension_Import_Export
- * @version 4.0.0
+ * @class   Redux_Extension_Import_Export
+ * @version 4.5.10
  * @package Redux Framework
+ *
+ * @noinspection PhpIgnoredClassAliasDeclaration
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -24,66 +26,35 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		 *
 		 * @var string
 		 */
-		public static $version = '4.0';
+		public static $version = '4.5.10';
 
 		/**
 		 * Is field bit.
 		 *
 		 * @var bool
 		 */
-		public $is_field = false;
+		public bool $is_field = false;
 
 		/**
-		 * Class Constructor. Defines the args for the extions class
+		 * Class Constructor. Defines the args for the extensions class
 		 *
-		 * @since       1.0.0
-		 * @access      public
-		 *
-		 * @param       object $parent ReduxFramework object.
+		 * @param object $redux ReduxFramework object.
 		 *
 		 * @return      void
+		 * @since       1.0.0
+		 * @access      public
 		 */
-		public function __construct( $parent ) {
-			parent::__construct( $parent, __FILE__ );
+		public function __construct( $redux ) {
+			parent::__construct( $redux, __FILE__ );
 
 			$this->add_field( 'import_export' );
 
-			add_action(
-				'wp_ajax_redux_link_options-' . $this->parent->args['opt_name'],
-				array(
-					$this,
-					'link_options',
-				)
-			);
-
-			add_action(
-				'wp_ajax_nopriv_redux_link_options-' . $this->parent->args['opt_name'],
-				array(
-					$this,
-					'link_options',
-				)
-			);
-
-			add_action(
-				'wp_ajax_redux_download_options-' . $this->parent->args['opt_name'],
-				array(
-					$this,
-					'download_options',
-				)
-			);
-
-			add_action(
-				'wp_ajax_nopriv_redux_download_options-' . $this->parent->args['opt_name'],
-				array(
-					$this,
-					'download_options',
-				)
-			);
+			add_action( 'wp_ajax_redux_download_options-' . $this->parent->args['opt_name'], array( $this, 'download_options' ) );
 
 			// phpcs:ignore WordPress.NamingConventions.ValidHookName
 			do_action( 'redux/options/' . $this->parent->args['opt_name'] . '/import', array( $this, 'remove_cookie' ) );
 
-			$this->is_field = Redux_Helpers::is_field_in_use( $parent, 'import_export' );
+			$this->is_field = Redux_Helpers::is_field_in_use( $redux, 'import_export' );
 
 			if ( ! $this->is_field && $this->parent->args['show_import_export'] ) {
 				$this->add_section();
@@ -95,11 +66,11 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		/**
 		 * Adds the appropriate mime types to WordPress
 		 *
-		 * @param array $existing_mimes .
+		 * @param array|null $existing_mimes .
 		 *
 		 * @return array
 		 */
-		public function custom_upload_mimes( $existing_mimes = array() ) {
+		public function custom_upload_mimes( ?array $existing_mimes = array() ): array {
 			$existing_mimes['redux'] = 'application/redux';
 
 			return $existing_mimes;
@@ -126,36 +97,22 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		}
 
 		/**
-		 * Import link options.
-		 */
-		public function link_options() {
-			if ( ! isset( $_GET['secret'] ) || md5( md5( Redux_Functions_Ex::hash_key() ) . '-' . $this->parent->args['opt_name'] ) !== $_GET['secret'] ) { // phpcs:ignore WordPress.Security.NonceVerification
-				wp_die( 'Invalid Secret for options use' );
-				exit;
-			}
-
-			$var                 = $this->parent->options;
-			$var['redux-backup'] = 1;
-
-			if ( isset( $var['REDUX_imported'] ) ) {
-				unset( $var['REDUX_imported'] );
-			}
-
-			echo wp_json_encode( $var );
-
-			die();
-		}
-
-		/**
 		 * Import download options.
 		 */
 		public function download_options() {
-			if ( ! isset( $_GET['secret'] ) || md5( md5( Redux_Functions_Ex::hash_key() ) . '-' . $this->parent->args['opt_name'] ) !== $_GET['secret'] ) { // phpcs:ignore WordPress.Security.NonceVerification
-				wp_die( 'Invalid Secret for options use' );
-				exit;
+			if ( ! is_user_logged_in() && ! is_admin() && ! current_user_can( $this->parent->args['page_permissions'] ) ) {
+				wp_die( esc_html__( 'You do not have permission to export options.', 'redux-framework' ) );
 			}
 
-			$this->parent->get_options();
+			if ( ! isset( $_GET['secret'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['secret'] ) ), 'redux_io_' . $this->parent->args['opt_name'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				wp_die( 'Invalid secret for options use.' );
+			}
+
+			if ( ! Redux_Rate_Limiter::check( 'download_options' ) ) {
+				wp_die( 'Rate limit exceeded. Please try again later.' );
+			}
+
+			$this->parent->options_class->get();
 			$backup_options                 = $this->parent->options;
 			$backup_options['redux-backup'] = 1;
 
@@ -169,15 +126,11 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 			if ( isset( $_GET['action'] ) && 'redux_download_options-' . $this->parent->args['opt_name'] === $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				header( 'Content-Description: File Transfer' );
 				header( 'Content-type: application/txt' );
-				header( 'Content-Disposition: attachment; filename="redux_options_"' . $this->parent->args['opt_name'] . '_backup_' . gmdate( 'd-m-Y' ) . '.json' );
+				header( 'Content-Disposition: attachment; filename="redux_options_"' . $this->parent->args['opt_name'] . '_backup_' . gmdate( 'm-d-Y' ) . '.json' );
 				header( 'Content-Transfer-Encoding: binary' );
 				header( 'Expires: 0' );
 				header( 'Cache-Control: must-revalidate' );
 				header( 'Pragma: public' );
-
-				echo( $content ); // phpcs:ignore WordPress.Security.EscapeOutput
-
-				exit;
 			} else {
 				header( 'Expires: Mon, 26 Jul 1997 05:00:00 GMT' );
 				header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . 'GMT' );
@@ -188,10 +141,11 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 
 				// Can't include the type. Thanks old Firefox and IE. BAH.
 				// header('Content-type: application/json');.
-				echo( $content ); // phpcs:ignore WordPress.Security.EscapeOutput
-
-				exit;
 			}
+
+			// phpcs:ignore WordPress.Security.EscapeOutput
+			echo( $content );
+			exit;
 		}
 
 		/**
@@ -199,14 +153,14 @@ if ( ! class_exists( 'Redux_Extension_Import_Export', false ) ) {
 		 */
 		public function remove_cookie() {
 			// Remove the import/export tab cookie.
-			if ( isset( $_COOKIE ) && isset( $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) && 'import_export_default' === $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) {
+			if ( isset( $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) && 'import_export_default' === $_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] ) {
 				setcookie( 'redux_current_tab_' . $this->parent->args['opt_name'], '', 1, '/' );
 				$_COOKIE[ 'redux_current_tab_' . $this->parent->args['opt_name'] ] = 1;
 			}
 		}
 	}
+}
 
-	if ( ! class_exists( 'ReduxFramework_extension_import_export' ) ) {
-		class_alias( 'Redux_Extension_Import_Export', 'ReduxFramework_extension_import_export' );
-	}
+if ( ! class_exists( 'ReduxFramework_extension_import_export' ) ) {
+	class_alias( 'Redux_Extension_Import_Export', 'ReduxFramework_extension_import_export' );
 }

@@ -18,14 +18,14 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 
 		/**
 		 * Field Render Function.
-		 * Takes the vars and outputs the HTML for the field in the settingss
+		 * Takes the vars and outputs the HTML for the field in the settings.
 		 *
 		 * @since       1.0.0
 		 * @access      public
 		 * @return      void
 		 */
 		public function render() {
-			if ( empty( $this->field['palettes'] ) ) {
+			if ( ! isset( $this->field['palettes'] ) && empty( $this->field['palettes'] ) ) {
 				echo 'No palettes have been set.';
 
 				return;
@@ -36,11 +36,11 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 			foreach ( $this->field['palettes'] as $value => $color_set ) {
 				$checked = checked( $this->value, $value, false );
 
-				echo '<input 
-						type="radio" 
-						value="' . esc_attr( $value ) . '" 
-						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '" 
-						class="redux-palette-set ' . esc_attr( $this->field['class'] ) . '" 
+				echo '<input
+						type="radio"
+						value="' . esc_attr( $value ) . '"
+						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '"
+						class="redux-palette-set ' . esc_attr( $this->field['class'] ) . '"
 						id="' . esc_attr( $this->field['id'] . '-' . $value ) . '"' . esc_html( $checked ) . '>';
 
 				echo '<label for="' . esc_attr( $this->field['id'] . '-' . $value ) . '">';
@@ -68,7 +68,7 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 			$min = Redux_Functions::is_min();
 
 			wp_enqueue_script(
-				'redux-field-palette-js',
+				'redux-field-palette',
 				Redux_Core::$url . 'inc/fields/palette/redux-palette' . $min . '.js',
 				array( 'jquery', 'redux-js', 'jquery-ui-button', 'jquery-ui-core' ),
 				$this->timestamp,
@@ -77,11 +77,10 @@ if ( ! class_exists( 'Redux_Palette', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-palette-css',
+					'redux-field-palette',
 					Redux_Core::$url . 'inc/fields/palette/redux-palette.css',
 					array(),
-					$this->timestamp,
-					'all'
+					$this->timestamp
 				);
 			}
 		}

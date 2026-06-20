@@ -4,26 +4,29 @@
  * Media Uploader
  * Dependencies        : jquery, wp media uploader
  * Feature added by    : Smartik - http://smartik.ws/
- * Date                  : 05.28.2013
+ * Date                : 05.28.2013
+ *
+ * Modified by         : Kevin Provance (kprovance/svl-studios)
+ * Date                : 07.07.2021
  */
 
-( function( $ ) {
+( function ( $ ) {
 	'use strict';
 
-	var isFiltered;
+	let isFiltered;
 
 	redux.field_objects       = redux.field_objects || {};
 	redux.field_objects.media = redux.field_objects.media || {};
 
-	redux.field_objects.media.init = function( selector ) {
+	redux.field_objects.media.init = function ( selector ) {
 		if ( ! selector ) {
 			selector = $( document ).find( '.redux-group-tab:visible' ).find( '.redux-container-media:visible' );
 		}
 
 		$( selector ).each(
-			function() {
-				var el     = $( this );
-				var parent = el;
+			function () {
+				const el   = $( this );
+				let parent = el;
 
 				if ( ! el.hasClass( 'redux-field-container' ) ) {
 					parent = el.parents( '.redux-field-container:first' );
@@ -39,20 +42,25 @@
 					return;
 				}
 
+				if ( undefined !== redux.field_objects.image_filters) {
+					redux.field_objects.image_filters.sliderInit( el, 'media' );
+					redux.field_objects.image_filters.checkbox( el, 'media' );
+				}
+
 				isFiltered = false;
 
 				// Remove the image button.
-				el.find( '.remove-image, .remove-file' ).unbind( 'click' ).on(
+				el.find( '.remove-image, .remove-file' ).off( 'click' ).on(
 					'click',
-					function() {
+					function () {
 						redux.field_objects.media.removeFile( $( this ).parents( 'fieldset.redux-field:first' ) );
 					}
 				);
 
 				// Upload media button.
-				el.find( '.media_upload_button' ).unbind().on(
+				el.find( '.media_upload_button' ).off().on(
 					'click',
-					function( event ) {
+					function ( event ) {
 						redux.field_objects.media.addFile( event, $( this ).parents( 'fieldset.redux-field:first' ) );
 					}
 				);
@@ -61,17 +69,17 @@
 	};
 
 	// Add a file via the wp.media function.
-	redux.field_objects.media.addFile = function( event, selector ) {
-		var frame;
-		var libFilter;
-		var filter;
-		var data;
-		var thumbSrc;
-		var height;
-		var key;
-		var object;
+	redux.field_objects.media.addFile = function ( event, selector ) {
+		let frame;
+		let libFilter;
+		let filter;
+		let data;
+		let thumbSrc;
+		let height;
+		let key;
+		let object;
 
-		var jQueryel = $( this );
+		const jQueryel = $( this );
 
 		event.preventDefault();
 
@@ -94,7 +102,7 @@
 
 				$.each(
 					filter,
-					function( index, value ) {
+					function ( index, value ) {
 						index = null;
 						libFilter.push( value );
 					}
@@ -110,7 +118,7 @@
 				// Set the title of the modal.
 				title: jQueryel.data( 'choose' ),
 
-				// Customize the submit button.
+				// Customize the 'submit' button.
 				button: {
 
 					// Set the text of the button.
@@ -125,10 +133,11 @@
 		// When an image is selected, run a callback.
 		frame.on(
 			'select',
-			function() {
+			function () {
 
 				// Grab the selected attachment.
-				var attachment = frame.state().get( 'selection' ).first();
+				const attachment = frame.state().get( 'selection' ).first();
+
 				frame.close();
 
 				data = $( selector ).find( '.data' ).data();
@@ -190,7 +199,7 @@
 
 				selector.find( '.upload-thumbnail' ).val( thumbSrc );
 				if ( ! selector.find( '.upload' ).hasClass( 'noPreview' ) ) {
-					selector.find( '.screenshot' ).empty().hide().append( '<img class="redux-option-image" src="' + thumbSrc + '">' ).slideDown( 'fast' );
+					selector.find( '.screenshot' ).empty().hide().append( '<img alt="" class="redux-option-image" src="' + thumbSrc + '">' ).slideDown( 'fast' );
 				}
 
 				selector.find( '.remove-image' ).removeClass( 'hide' ); // Show "Remove" button.
@@ -203,8 +212,8 @@
 	};
 
 	// Function to remove the image on click. Still requires a save.
-	redux.field_objects.media.removeFile = function( selector ) {
-		var screenshot;
+	redux.field_objects.media.removeFile = function ( selector ) {
+		let screenshot;
 
 		// This shouldn't have been run...
 		if ( ! selector.find( '.remove-image' ).addClass( 'hide' ) ) {
@@ -225,7 +234,7 @@
 		// Hide the screenshot.
 		screenshot.slideUp();
 
-		selector.find( '.remove-file' ).unbind();
+		selector.find( '.remove-file' ).off();
 
 		// We don't display the upload button if .upload-notice is present.
 		// This means the user doesn't have the WordPress 3.5 Media Library Support.

@@ -20,6 +20,18 @@ if ( ! class_exists( 'Redux_Button_Set', false ) ) {
 	class Redux_Button_Set extends Redux_Field {
 
 		/**
+		 * Set field defaults.
+		 */
+		public function set_defaults() {
+			$defaults = array(
+				'options' => array(),
+				'multi'   => false,
+			);
+
+			$this->field = wp_parse_args( $this->field, $defaults );
+		}
+
+		/**
 		 * Field Render Function.
 		 * Takes the vars and outputs the HTML for the field in the settings
 		 *
@@ -33,14 +45,14 @@ if ( ! class_exists( 'Redux_Button_Set', false ) ) {
 					$this->field['args'] = array();
 				}
 
-				$this->field['options'] = $this->parent->get_wordpress_data( $this->field['data'], $this->field['args'], $this->value );
+				$this->field['options'] = $this->parent->wordpress_data->get( $this->field['data'], $this->field['args'], $this->parent->args['opt_name'], $this->value );
 
 				if ( empty( $this->field['options'] ) ) {
 					return;
 				}
 			}
 
-			$is_multi = ( isset( $this->field['multi'] ) && true === $this->field['multi'] ) ? true : false;
+			$is_multi = isset( $this->field['multi'] ) && true === (bool) $this->field['multi'];
 
 			$name = $this->field['name'] . $this->field['name_suffix'];
 
@@ -118,7 +130,7 @@ if ( ! class_exists( 'Redux_Button_Set', false ) ) {
 		 */
 		public function enqueue() {
 			wp_enqueue_script(
-				'redux-field-button-set-js',
+				'redux-field-button-set',
 				Redux_Core::$url . 'inc/fields/button_set/redux-button-set' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'jquery-ui-core', 'redux-js' ),
 				$this->timestamp,

@@ -21,7 +21,7 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 		 * Set field and value defaults.
 		 */
 		public function set_defaults() {
-			// No errors please.
+			// No errors, please.
 			$defaults = array(
 				'width'          => true,
 				'height'         => true,
@@ -76,23 +76,23 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 			}
 
 			/*
-			 * Since units field could be an array, string value or bool (to hide the unit field)
+			 * Since the unit field could be an array, string value or bool (to hide the unit field)
 			 * we need to separate our functions to avoid those nasty PHP index notices!
 			 */
 
-			// if field units has a value and IS an array, then evaluate as needed.
+			// if field units have a value and ARE an array, then evaluate as needed.
 			if ( isset( $this->field['units'] ) && ! is_array( $this->field['units'] ) ) {
 
 				// If units fields has a value but units value does not then make units value the field value.
 				if ( isset( $this->field['units'] ) && ! isset( $this->value['units'] ) || false === $this->field['units'] ) {
 					$this->value['units'] = $this->field['units'];
 
-					// If units field does NOT have a value and units value does NOT have a value, set both to blank (default?).
+					// If unit field does NOT have a value and units value does NOT have a value, set both to blank (default?).
 				} elseif ( ! isset( $this->field['units'] ) && ! isset( $this->value['units'] ) ) {
 					$this->field['units'] = 'px';
 					$this->value['units'] = 'px';
 
-					// If units field has NO value but units value does, then set unit field to value field.
+					// If unit field has NO value but units value does, then set unit field to value field.
 				} elseif ( ! isset( $this->field['units'] ) && isset( $this->value['units'] ) ) {
 					$this->field['units'] = $this->value['units'];
 
@@ -124,7 +124,7 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 
 			// This used to be unit field, but was giving the PHP index error when it was an array,
 			// so I changed it.
-			echo '<input type="hidden" class="field-units" value="' . esc_attr( $this->value['units'] ) . '">';
+			echo '<input type="hidden" id="' . esc_attr( $this->field['id'] ) . '-units" class="field-units" value="' . esc_attr( $this->value['units'] ) . '">';
 
 			/**
 			 * Width
@@ -138,18 +138,19 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 				}
 				echo '<div class="field-dimensions-input input-prepend">';
 				echo '<span class="add-on"><i class="el el-resize-horizontal icon-large"></i></span>';
-				echo '<input 
-						type="text" 
-						class="redux-dimensions-input redux-dimensions-width mini ' . esc_attr( $this->field['class'] ) . '" 
-						placeholder="' . esc_html__( 'Width', 'redux-framework' ) . '" 
-						rel="' . esc_attr( $this->field['id'] ) . '-width" 
+				echo '<input
+						type="text"
+						id="' . esc_attr( $this->field['id'] ) . '-width"
+						class="redux-dimensions-input redux-dimensions-width mini ' . esc_attr( $this->field['class'] ) . '"
+						placeholder="' . esc_html__( 'Width', 'redux-framework' ) . '"
+						rel="' . esc_attr( $this->field['id'] ) . '-width-hidden"
 						value="' . esc_attr( filter_var( $this->value['width'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) ) . '">';
 
-				echo '<input 
-						data-id="' . esc_attr( $this->field['id'] ) . '" 
-						type="hidden" 
-						id="' . esc_attr( $this->field['id'] ) . '-width" 
-						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '[width]" 
+				echo '<input
+						data-id="' . esc_attr( $this->field['id'] ) . '"
+						type="hidden"
+						id="' . esc_attr( $this->field['id'] ) . '-width-hidden"
+						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '[width]"
 						value="' . esc_attr( $this->value['width'] ) . '">';
 
 				echo '</div>';
@@ -167,18 +168,19 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 				}
 				echo '<div class="field-dimensions-input input-prepend">';
 				echo '<span class="add-on"><i class="el el-resize-vertical icon-large"></i></span>';
-				echo '<input 
-						type="text" 
-						class="redux-dimensions-input redux-dimensions-height mini ' . esc_attr( $this->field['class'] ) . '" 
-						placeholder="' . esc_html__( 'Height', 'redux-framework' ) . '" 
-						rel="' . esc_attr( $this->field['id'] ) . '-height" 
+				echo '<input
+						type="text"
+						id="' . esc_attr( $this->field['id'] ) . '-height"
+						class="redux-dimensions-input redux-dimensions-height mini ' . esc_attr( $this->field['class'] ) . '"
+						placeholder="' . esc_html__( 'Height', 'redux-framework' ) . '"
+						rel="' . esc_attr( $this->field['id'] ) . '-height-hidden"
 						value="' . esc_attr( filter_var( $this->value['height'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION ) ) . '">';
 
-				echo '<input 
-						data-id="' . esc_attr( $this->field['id'] ) . '" 
-						type="hidden" 
-						id="' . esc_attr( $this->field['id'] ) . '-height" 
-						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '[height]" 
+				echo '<input
+						data-id="' . esc_attr( $this->field['id'] ) . '"
+						type="hidden"
+						id="' . esc_attr( $this->field['id'] ) . '-height-hidden"
+						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '[height]"
 						value="' . esc_attr( $this->value['height'] ) . '">';
 						echo '</div>';
 			}
@@ -189,15 +191,15 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 			// If units field is set and units field NOT false then fill out the options object and show it, otherwise it's hidden
 			// and the default units value will apply.
 			if ( isset( $this->field['units'] ) && false !== $this->field['units'] ) {
-				echo '<div 
-						class="select_wrapper dimensions-units" 
+				echo '<div
+						class="select_wrapper dimensions-units"
 						original-title="' . esc_html__( 'Units', 'redux-framework' ) . '">';
 
-				echo '<select 
-						data-id="' . esc_attr( $this->field['id'] ) . '" 
-						data-placeholder="' . esc_html__( 'Units', 'redux-framework' ) . '" 
-						class="redux-dimensions redux-dimensions-units select ' . esc_attr( $this->field['class'] ) . '" 
-						original-title="' . esc_html__( 'Units', 'redux-framework' ) . '" 
+				echo '<select
+						data-id="' . esc_attr( $this->field['id'] ) . '"
+						data-placeholder="' . esc_html__( 'Units', 'redux-framework' ) . '"
+						class="redux-dimensions redux-dimensions-units select ' . esc_attr( $this->field['class'] ) . '"
+						original-title="' . esc_html__( 'Units', 'redux-framework' ) . '"
 						name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . '[units]"' . esc_attr( $select2_data ) . '>';
 
 				// Extended units, show 'em all.
@@ -219,7 +221,7 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 					}
 				}
 				echo '</select></div>';
-			};
+			}
 
 			echo '</fieldset>';
 		}
@@ -234,7 +236,7 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 			wp_enqueue_style( 'select2-css' );
 
 			wp_enqueue_script(
-				'redux-field-dimensions-js',
+				'redux-field-dimensions',
 				Redux_Core::$url . 'inc/fields/dimensions/redux-dimensions' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'select2-js', 'redux-js' ),
 				$this->timestamp,
@@ -243,23 +245,22 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-dimensions-css',
+					'redux-field-dimensions',
 					Redux_Core::$url . 'inc/fields/dimensions/redux-dimensions.css',
 					array(),
-					$this->timestamp,
-					'all'
+					$this->timestamp
 				);
 			}
 		}
 
 		/**
-		 * Compile CSS style for output.
+		 * Compile CSS styles for output.
 		 *
 		 * @param string $data CSS data.
 		 *
-		 * @return string|void
+		 * @return string
 		 */
-		public function css_style( $data ) {
+		public function css_style( $data ): string {
 			$style = '';
 
 			// If field units has a value and IS an array, then evaluate as needed.
@@ -290,7 +291,7 @@ if ( ! class_exists( 'Redux_Dimensions', false ) ) {
 				// nothing to do here, but I'm leaving the construct just in case I have to debug this again.
 			}
 
-			$units = isset( $this->value['units'] ) ? $this->value['units'] : '';
+			$units = $this->value['units'] ?? '';
 
 			if ( ! is_array( $this->field['mode'] ) ) {
 				$height = isset( $this->field['mode'] ) && ! empty( $this->field['mode'] ) ? $this->field['mode'] : 'height';

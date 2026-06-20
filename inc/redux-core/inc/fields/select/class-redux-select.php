@@ -5,6 +5,8 @@
  * @package     ReduxFramework/Fields
  * @author      Dovy Paukstys & Kevin Provance (kprovance)
  * @version     4.0.0
+ *
+ * @noinspection PhpIgnoredClassAliasDeclaration
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -17,15 +19,32 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 	class Redux_Select extends Redux_Field {
 
 		/**
+		 * Set field defaults.
+		 */
+		public function set_defaults() {
+			$defaults = array(
+				'options'          => array(),
+				'width'            => '40%',
+				'multi'            => false,
+				'sortable'         => false,
+				'ajax'             => false,
+				'min-input-length' => 1,
+				'placeholder'      => '',
+			);
+
+			$this->field = wp_parse_args( $this->field, $defaults );
+		}
+
+		/**
 		 * Field Render Function.
 		 * Takes the vars and outputs the HTML for the field in the settings
 		 *
 		 * @since ReduxFramework 1.0.0
 		 */
 		public function render() {
-			$sortable = ( isset( $this->field['sortable'] ) && $this->field['sortable'] ) ? ' select2-sortable' : '';
+			$sortable = ( isset( $this->field['sortable'] ) && true === (bool) $this->field['sortable'] ) ? ' select2-sortable' : '';
 
-			if ( ! empty( $sortable ) ) { // Dummy proofing  :P.
+			if ( ! empty( $sortable ) ) { // Dummy proofing :P.
 				$this->field['multi'] = true;
 			}
 
@@ -35,12 +54,12 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 				}
 
 				if ( 'elusive-icons' === $this->field['data'] || 'elusive-icon' === $this->field['data'] || 'elusive' === $this->field['data'] ) {
-					$icons_file = Redux_Core::$dir . 'inc/fields/select/elusive-icons.php';
+					$icons_file = Redux_Core::$dir . 'lib/elusive-icons.php';
 
 					/**
 					 * Filter 'redux-font-icons-file}'
 					 *
-					 * @param  array $icon_file File for the icons
+					 * @param  array $icon_file The File for the icons
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -49,7 +68,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 					/**
 					 * Filter 'redux/{opt_name}/field/font/icons/file'
 					 *
-					 * @param  array $icon_file File for the icons
+					 * @param  array $icon_file The file for the icons
 					 */
 
 					// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -60,12 +79,12 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 					}
 				}
 
-				// First one get with AJAX.
+				// The First one obtained with AJAX.
 				$ajax = false;
 				if ( isset( $this->field['ajax'] ) && $this->field['ajax'] ) {
 					$ajax = true;
 				}
-				$this->field['options'] = $this->parent->wordpress_data->get( $this->field['data'], $this->field['args'], $this->value, $ajax );
+				$this->field['options'] = $this->parent->wordpress_data->get( $this->field['data'], $this->field['args'], $this->parent->args['opt_name'], $this->value, $ajax );
 			}
 
 			if ( ! empty( $this->field['data'] ) && in_array( $this->field['data'], array( 'elusive-icons', 'elusive-icon', 'elusive', 'dashicons', 'dashicon', 'dash' ), true ) ) {
@@ -76,9 +95,9 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 				$multi = ( isset( $this->field['multi'] ) && $this->field['multi'] ) ? ' multiple="multiple"' : '';
 
 				if ( ! empty( $this->field['width'] ) ) {
-					$width = ' style="' . esc_attr( $this->field['width'] ) . '"';
+					$width = ' style="width:' . esc_attr( $this->field['width'] ) . '"';
 				} else {
-					$width = ' style="width: 40%;"';
+					$width = ' style="width:40%;"';
 				}
 
 				$name_brackets = '';
@@ -97,7 +116,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 
 				if ( isset( $this->field['ajax'] ) && $this->field['ajax'] && isset( $this->field['data'] ) && '' !== $this->field['data'] ) {
 					$this->select2_config['ajax']             = true;
-					$this->select2_config['min-input-length'] = isset( $this->field['min_input_length'] ) ? $this->field['min_input_length'] : 1;
+					$this->select2_config['min-input-length'] = $this->field['min_input_length'] ?? 1;
 					$this->select2_config['action']           = "redux_{$this->parent->args['opt_name']}_select2";
 					if ( isset( $this->field['args'] ) ) {
 						$this->select2_config['args'] = wp_json_encode( $this->field['args'] );
@@ -136,10 +155,10 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 				$sortable = ( isset( $this->field['sortable'] ) && $this->field['sortable'] ) ? ' select2-sortable' : '';
 
 				echo '<select ' .
-					esc_html( $multi ) . ' 
-			        id="' . esc_attr( $this->field['id'] ) . '-select" 
-			        data-placeholder="' . esc_attr( $placeholder ) . '" 
-			        name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . esc_attr( $name_brackets ) . '" 
+					esc_html( $multi ) . '
+			        id="' . esc_attr( $this->field['id'] ) . '-select"
+			        data-placeholder="' . esc_attr( $placeholder ) . '"
+			        name="' . esc_attr( $this->field['name'] . $this->field['name_suffix'] ) . esc_attr( $name_brackets ) . '"
 			        class="redux-select-item ' . esc_attr( $this->field['class'] ) . esc_attr( $sortable ) . '"' .
 					$width . ' rows="6"' . esc_attr( $select2_data ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput
 
@@ -150,7 +169,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 						echo '<optgroup label="' . esc_attr( $k ) . '">';
 
 						foreach ( $v as $opt => $val ) {
-							$this->make_option( $opt, $val, $k );
+							$this->make_option( (string) $opt, $val );
 						}
 
 						echo '</optgroup>';
@@ -158,7 +177,7 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 						continue;
 					}
 
-					$this->make_option( $k, $v );
+					$this->make_option( (string) $k, $v );
 				}
 
 				echo '</select>';
@@ -170,20 +189,28 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 		/**
 		 * Compile option HTML.
 		 *
-		 * @param string $id HTML ID.
-		 * @param array  $value Value array.
-		 * @param string $group_name Group name.
+		 * @param string $id         HTML ID.
+		 * @param mixed  $value      Value array.
 		 */
-		private function make_option( $id, $value, $group_name = '' ) {
-			$id = (string) $id;
-
+		private function make_option( string $id, $value ) {
 			if ( is_array( $this->value ) ) {
-				$selected = ( is_array( $this->value ) && in_array( $id, $this->value, true ) ) ? ' selected="selected"' : '';
+				$selected = ( in_array( $id, $this->value, true ) ) ? ' selected="selected"' : '';
 			} else {
 				$selected = selected( $this->value, $id, false );
 			}
 
 			echo '<option value="' . esc_attr( $id ) . '" ' . esc_html( $selected ) . '>' . esc_attr( $value ) . '</option>';
+		}
+
+		/**
+		 * Do enqueue for each field instance.
+		 *
+		 * @return void
+		 */
+		public function always_enqueue() {
+			if ( isset( $this->field['sortable'] ) && $this->field['sortable'] ) {
+				wp_enqueue_script( 'jquery-ui-sortable' );
+			}
 		}
 
 		/**
@@ -195,12 +222,8 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 		public function enqueue() {
 			wp_enqueue_style( 'select2-css' );
 
-			if ( isset( $this->field['sortable'] ) && $this->field['sortable'] ) {
-				wp_enqueue_script( 'jquery-ui-sortable' );
-			}
-
 			wp_enqueue_script(
-				'redux-field-select-js',
+				'redux-field-select',
 				Redux_Core::$url . 'inc/fields/select/redux-select' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'select2-js', 'redux-js' ),
 				$this->timestamp,
@@ -209,11 +232,10 @@ if ( ! class_exists( 'Redux_Select', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-select-css',
+					'redux-field-select',
 					Redux_Core::$url . 'inc/fields/select/redux-select.css',
 					array(),
-					$this->timestamp,
-					'all'
+					$this->timestamp
 				);
 			}
 		}

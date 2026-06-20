@@ -27,24 +27,32 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 		 * @var array
 		 * @access private
 		 */
-		private static $notices = array();
+		private static array $notices = array();
 
+		/**
+		 * Parent object.
+		 *
+		 * @var ReduxFramework
+		 */
+		private static ReduxFramework $redux;
 		/**
 		 * Redux_Admin_Notices constructor.
 		 *
-		 * @param array $parent ReduxFramework object.
+		 * @param ReduxFramework $redux ReduxFramework object.
 		 * @access public
 		 */
-		public function __construct( $parent ) {
-			parent::__construct( $parent );
+		public function __construct( $redux ) {
+			parent::__construct( $redux );
 
 			add_action( 'wp_ajax_redux_hide_admin_notice', array( $this, 'ajax' ) );
 			add_action( 'admin_notices', array( $this, 'notices' ), 99 );
 			add_action( 'admin_init', array( $this, 'dismiss' ), 9 );
+
+			self::$redux = $redux;
 		}
 
 		/**
-		 * Display nices stored in notices array.
+		 * Display notices stored in a notice array.
 		 *
 		 * @access public
 		 */
@@ -66,7 +74,7 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 		 *
 		 * @param array $data Notice data.
 		 */
-		public static function set_notice( $data ) {
+		public static function set_notice( array $data ) {
 			$type    = null;
 			$msg     = null;
 			$id      = null;
@@ -75,30 +83,29 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 			// phpcs:ignore WordPress.PHP.DontExtract
 			extract( $data );
 
-			self::$notices[ $parent->args['page_slug'] ][] = array(
+			self::$notices[ self::$redux->args['page_slug'] ][] = array(
 				'type'    => $type,
 				'msg'     => $msg,
-				'id'      => $id . '_' . $parent->args['opt_name'],
+				'id'      => $id . '_' . self::$redux->args['opt_name'],
 				'dismiss' => $dismiss,
-				'color'   => isset( $color ) ? $color : '#00A2E3',
+				'color'   => $color ?? '#00A2E3',
 			);
 		}
 
 		/**
-		 * Evaluates user dismiss option for displaying admin notices.
-		 *
-		 * @since       3.2.0
-		 * @access      public
+		 * Evaluates a user-dismissed option for displaying admin notices.
 		 *
 		 * @param array $notices Array of stored notices to display.
 		 *
 		 * @return      void
+		 * @since       3.2.0
+		 * @access      public
 		 */
-		public function admin_notices( $notices = array() ) {
-			global $current_user, $pagenow;
+		public function admin_notices( array $notices = array() ) {
+			global $current_user;
 
 			$core = $this->core();
-			if ( isset( $_GET ) && isset( $_GET['page'] ) && $core->args['page_slug'] === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['page'] ) && $core->args['page_slug'] === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 				do_action( 'redux_admin_notices_run', $core->args );
 
 				// Check for an active admin notice array.
@@ -119,6 +126,8 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 
 								if ( ! get_user_meta( $userid, 'ignore_' . $notice['id'] ) ) {
 									global $wp_version;
+
+									$css_id = '';
 
 									// Print the notice with the dismiss link.
 									if ( version_compare( $wp_version, '4.2', '>' ) ) {
@@ -141,20 +150,24 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 							}
 							?>
 							<script>
-								jQuery( document ).ready( function( $ ) {
-									$( document.body ).on(
-										'click', '.redux-notice.is-dismissible .notice-dismiss', function( e ) {
-											e.preventDefault();
-											var $data = $( this ).parent().find( '.dismiss_data' );
-											$.post(
-												ajaxurl, {
-													action: 'redux_hide_admin_notice',
-													id: $data.attr( 'id' ),
-													nonce: $data.val()
-												}
-											);
-										} );
-								} );
+								document.addEventListener(
+									'DOMContentLoaded',
+									function () {
+										$( document.body ).on(
+											'click', '.redux-notice.is-dismissible .notice-dismiss', function ( e ) {
+												e.preventDefault();
+												let $data = $( this ).parent().find( '.dismiss_data' );
+												$.post(
+													ajaxurl, {
+														action: 'redux_hide_admin_notice',
+														id: $data.attr( 'id' ),
+														nonce: $data.val()
+													}
+												);
+											}
+										);
+									}
+								)
 							</script>
 							<?php
 
@@ -176,7 +189,7 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 		private function dismiss_admin_notice() {
 			global $current_user;
 
-			// Verify the dismiss and id parameters are present.
+			// Verify the dismissed notice and id parameters are present.
 			if ( isset( $_GET['dismiss'] ) && isset( $_GET['id'] ) ) {
 				if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['nonce'] ) ), 'redux_hint_toggle' ) ) {
 					if ( 'true' === $_GET['dismiss'] || 'false' === $_GET['dismiss'] ) {
@@ -188,7 +201,7 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 						$id  = sanitize_text_field( wp_unslash( $_GET['id'] ) );
 						$val = sanitize_text_field( wp_unslash( $_GET['dismiss'] ) );
 
-						// Add the dismiss request to the user meta.
+						// Add the dismissed request to the user meta.
 						update_user_meta( $userid, 'ignore_' . $id, $val );
 					}
 				} else {
@@ -207,6 +220,12 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 		public function ajax() {
 			global $current_user;
 
+			$core = $this->core();
+
+			if ( ! is_user_logged_in() && ! is_admin() && ! current_user_can( $core->args['page_permissions'] ) ) {
+				wp_die( esc_html__( 'You do not have permission to perform this action.', 'redux-framework' ) );
+			}
+
 			if ( isset( $_POST['id'] ) ) {
 				// Get the notice id.
 				$id = explode( '&', sanitize_text_field( wp_unslash( $_POST['id'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -215,10 +234,10 @@ if ( ! class_exists( 'Redux_Admin_Notices', false ) ) {
 				// Get the user id.
 				$userid = $current_user->ID;
 
-				if ( ! isset( $_POST['nonce'] ) || ( isset( $_POST['nonce'] ) && ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), $id . $userid . 'nonce' ) ) ) {
+				if ( ! isset( $_POST['nonce'] ) || ( ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), $id . $userid . 'nonce' ) ) ) {
 					die( 0 );
 				} else {
-					// Add the dismiss request to the user meta.
+					// Add the dismissed request to the user meta.
 					update_user_meta( $userid, 'ignore_' . $id, true );
 				}
 			}

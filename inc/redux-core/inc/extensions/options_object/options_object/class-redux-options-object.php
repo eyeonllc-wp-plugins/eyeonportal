@@ -5,6 +5,8 @@
  * @package     ReduxFramework
  * @author      Kevin Provance (kprovance)
  * @version     3.5.4
+ *
+ * @noinspection ALL
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -19,16 +21,18 @@ if ( ! class_exists( 'Redux_Options_Object', false ) ) {
 	 */
 	class Redux_Options_Object extends Redux_Field {
 
+		public $is_field;
+
 		/**
 		 * Redux_Options_Object constructor.
 		 *
 		 * @param array  $field Field array.
-		 * @param string $value Value array.
+		 * @param mixed  $value Value array.
 		 * @param object $parent ReduxFramework object.
 		 *
 		 * @throws ReflectionException .
 		 */
-		public function __construct( $field = array(), $value = '', $parent ) {
+		public function __construct( array $field, $value, $parent ) {
 			parent::__construct( $field, $value, $parent );
 
 			$this->is_field = $this->parent->extensions['options_object']->is_field;
@@ -124,23 +128,23 @@ if ( ! class_exists( 'Redux_Options_Object', false ) ) {
 		 * @return      void
 		 */
 		public function enqueue() {
+			wp_enqueue_script(
+				'redux-extension-options-object',
+				$this->url . 'redux-options-object' . Redux_Functions::is_min() . '.js',
+				array( 'jquery', 'redux-js' ),
+				Redux_Extension_Options_Object::$version,
+				true
+			);
+
 			if ( $this->parent->args['dev_mode'] ) {
-				wp_enqueue_script(
-					'redux-extension-options-object-js',
-					$this->url . 'redux-options-object' . Redux_Functions::is_min() . '.js',
-					array( 'jquery', 'redux-js' ),
+				wp_enqueue_style(
+					'redux-options-object',
+					$this->url . 'redux-options-object.css',
+					array(),
 					Redux_Extension_Options_Object::$version,
-					true
+					'all'
 				);
 			}
-
-			wp_enqueue_style(
-				'redux-options-object',
-				$this->url . 'redux-options-object.css',
-				array(),
-				Redux_Extension_Options_Object::$version,
-				'all'
-			);
 		}
 	}
 }

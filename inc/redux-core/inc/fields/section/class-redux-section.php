@@ -25,7 +25,7 @@ if ( ! class_exists( 'Redux_Section', false ) ) {
 		public function set_defaults() {
 			// No errors please.
 			$defaults = array(
-				'indent'   => '',
+				'indent'   => true,
 				'style'    => '',
 				'class'    => '',
 				'title'    => '',
@@ -115,11 +115,10 @@ if ( ! class_exists( 'Redux_Section', false ) ) {
 		public function enqueue() {
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-section-css',
+					'redux-field-section',
 					Redux_Core::$url . 'inc/fields/section/redux-section.css',
 					array(),
-					$this->timestamp,
-					'all'
+					$this->timestamp
 				);
 			}
 		}
