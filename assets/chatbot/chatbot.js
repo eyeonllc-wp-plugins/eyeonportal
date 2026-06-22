@@ -22,11 +22,6 @@
   var $send = $('#eyeon-chatbot-send');
   var $close = $('#eyeon-chatbot-close');
 
-  if (EYEON_CHATBOT.accentColor) {
-    $root.css('--eyeon-chat-accent', EYEON_CHATBOT.accentColor);
-    $launcher.css('background-color', EYEON_CHATBOT.accentColor);
-  }
-
   function storageKey() {
     var centerId = EYEON_CHATBOT.centerId || window.location.hostname || 'default';
     return 'eyeon_chatbot_v1_' + centerId;
@@ -106,31 +101,76 @@
     return digits ? 'tel:' + digits : '';
   }
 
-  function appendTextWithPhoneLinks($container, text) {
+  function appendRichText($container, text) {
+    var itemPattern = /\[([^\]]+)\]\((deal|store|event|career|news):([^)]+)\)/g;
     var phonePattern = /\b(\d{3}\.\d{3}\.\d{4})\b/g;
-    var lastIndex = 0;
+    var tokens = [];
     var match;
 
-    while ((match = phonePattern.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        $container.append(document.createTextNode(text.slice(lastIndex, match.index)));
-      }
-      var href = buildPhoneTelHref(match[1]);
-      if (href) {
-        $container.append(
-          $('<a></a>')
-            .addClass('eyeon-chatbot__message-link eyeon-chatbot__message-link--phone')
-            .attr('href', href)
-            .text(match[1])
-        );
-      } else {
-        $container.append(document.createTextNode(match[1]));
-      }
-      lastIndex = phonePattern.lastIndex;
+    while ((match = itemPattern.exec(text)) !== null) {
+      tokens.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        kind: 'item',
+        label: match[1],
+        itemType: match[2],
+        slug: match[3],
+      });
     }
 
-    if (lastIndex < text.length) {
-      $container.append(document.createTextNode(text.slice(lastIndex)));
+    while ((match = phonePattern.exec(text)) !== null) {
+      tokens.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        kind: 'phone',
+        phone: match[1],
+      });
+    }
+
+    tokens.sort(function (a, b) {
+      return a.start - b.start;
+    });
+
+    var cursor = 0;
+    tokens.forEach(function (token) {
+      if (token.start < cursor) {
+        return;
+      }
+      if (token.start > cursor) {
+        $container.append(document.createTextNode(text.slice(cursor, token.start)));
+      }
+      if (token.kind === 'item') {
+        var href = buildItemUrl(token.itemType, token.slug);
+        if (href) {
+          $container.append(
+            $('<a></a>')
+              .addClass('eyeon-chatbot__message-link')
+              .attr('href', href)
+              .attr('target', '_blank')
+              .attr('rel', 'noopener noreferrer')
+              .text(token.label)
+          );
+        } else {
+          $container.append(document.createTextNode(token.label));
+        }
+      } else if (token.kind === 'phone') {
+        var telHref = buildPhoneTelHref(token.phone);
+        if (telHref) {
+          $container.append(
+            $('<a></a>')
+              .addClass('eyeon-chatbot__message-link eyeon-chatbot__message-link--phone')
+              .attr('href', telHref)
+              .text(token.phone)
+          );
+        } else {
+          $container.append(document.createTextNode(token.phone));
+        }
+      }
+      cursor = token.end;
+    });
+
+    if (cursor < text.length) {
+      $container.append(document.createTextNode(text.slice(cursor)));
     }
   }
 
@@ -143,47 +183,109 @@
     return base + encodeURIComponent(slug);
   }
 
+  var UNORDERED_LIST_PATTERN = /^[-*+]\s+(.+)$/;
+  var ORDERED_LIST_PATTERN = /^\d+\.\s+(.+)$/;
+
+  function parseListLine(line) {
+    var trimmed = $.trim(line);
+    if (!trimmed) {
+      return null;
+    }
+
+    var unordered = trimmed.match(UNORDERED_LIST_PATTERN);
+    if (unordered) {
+      return { type: 'ul', content: unordered[1] };
+    }
+
+    var ordered = trimmed.match(ORDERED_LIST_PATTERN);
+    if (ordered) {
+      return { type: 'ol', content: ordered[1] };
+    }
+
+    return null;
+  }
+
+  function appendParagraphLines($container, lines) {
+    if (!lines.length) {
+      return;
+    }
+
+    var $paragraph = $('<p class="eyeon-chatbot__paragraph"></p>');
+    lines.forEach(function (line, index) {
+      if (index > 0) {
+        $paragraph.append('<br>');
+      }
+      appendRichText($paragraph, line);
+    });
+    $container.append($paragraph);
+  }
+
+  function appendListBlock($container, type, items) {
+    var tag = type === 'ol' ? 'ol' : 'ul';
+    var listClass =
+      type === 'ol'
+        ? 'eyeon-chatbot__list eyeon-chatbot__list--ordered'
+        : 'eyeon-chatbot__list eyeon-chatbot__list--unordered';
+    var $list = $('<' + tag + '></' + tag + '>').addClass(listClass);
+
+    items.forEach(function (item) {
+      var $item = $('<li></li>');
+      appendRichText($item, item);
+      $list.append($item);
+    });
+
+    $container.append($list);
+  }
+
   function renderAssistantMessage(text) {
     var $msg = $('<div class="eyeon-chatbot__message eyeon-chatbot__message--assistant"></div>');
     var lines = String(text || '').split('\n');
     var $body = $('<div class="eyeon-chatbot__message-body"></div>');
-    var $links = $('<div class="eyeon-chatbot__message-links"></div>');
-    var hasLinks = false;
+    var index = 0;
 
-    lines.forEach(function (line) {
-      var trimmed = $.trim(line);
+    while (index < lines.length) {
+      var trimmed = $.trim(lines[index]);
       if (!trimmed) {
-        return;
+        index++;
+        continue;
       }
 
-      var linkMatch = trimmed.match(/^\[([^\]]+)\]\((deal|store|event|career|news):([^)]+)\)$/);
-      if (linkMatch) {
-        var href = buildItemUrl(linkMatch[2], linkMatch[3]);
-        if (href) {
-          hasLinks = true;
-          $links.append(
-            $('<a></a>')
-              .addClass('eyeon-chatbot__message-link')
-              .attr('href', href)
-              .attr('target', '_blank')
-              .attr('rel', 'noopener noreferrer')
-              .text(linkMatch[1])
-          );
+      var listLine = parseListLine(trimmed);
+      if (listLine) {
+        var listType = listLine.type;
+        var items = [];
+
+        while (index < lines.length) {
+          var current = parseListLine($.trim(lines[index]));
+          if (!current || current.type !== listType) {
+            break;
+          }
+          items.push(current.content);
+          index++;
         }
-        return;
+
+        appendListBlock($body, listType, items);
+        continue;
       }
 
-      if ($body.contents().length) {
-        $body.append('<br>');
+      var paragraphLines = [];
+      while (index < lines.length) {
+        var lineTrimmed = $.trim(lines[index]);
+        if (!lineTrimmed) {
+          break;
+        }
+        if (parseListLine(lineTrimmed)) {
+          break;
+        }
+        paragraphLines.push(lineTrimmed);
+        index++;
       }
-      appendTextWithPhoneLinks($body, trimmed);
-    });
 
-    if ($body.children().length || $body.text()) {
-      $msg.append($body);
+      appendParagraphLines($body, paragraphLines);
     }
-    if (hasLinks) {
-      $msg.append($links);
+
+    if ($body.contents().length || $body.text()) {
+      $msg.append($body);
     }
     if (!$msg.children().length) {
       $msg.text(text);

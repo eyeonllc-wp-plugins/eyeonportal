@@ -6,6 +6,20 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 		private $mcd_settings;
 		private $enabled = false;
 
+		private static $style_defaults = array(
+			'chatbot_header_bg'           => '#3d80b9',
+			'chatbot_header_text'         => '#ffffff',
+			'chatbot_chat_bg'             => '#f8f9fb',
+			'chatbot_user_bg'             => '#3d80b9',
+			'chatbot_user_text'           => '#ffffff',
+			'chatbot_assistant_bg'        => '#ffffff',
+			'chatbot_assistant_text'      => '#222222',
+			'chatbot_send_bg'             => '#3d80b9',
+			'chatbot_send_text'           => '#ffffff',
+			'chatbot_launcher_bg'         => '#3d80b9',
+			'chatbot_launcher_icon_color' => '#ffffff',
+		);
+
 		function __construct() {
 			$this->mcd_settings = get_option( MCD_REDUX_OPT_NAME );
 		}
@@ -26,6 +40,88 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 			return $this->enabled;
 		}
 
+		private function get_setting( $key, $default = '' ) {
+			if ( isset( $this->mcd_settings[ $key ] ) && $this->mcd_settings[ $key ] !== '' && null !== $this->mcd_settings[ $key ] ) {
+				return $this->mcd_settings[ $key ];
+			}
+
+			return $default;
+		}
+
+		private function get_color_setting( $key ) {
+			$default = isset( self::$style_defaults[ $key ] ) ? self::$style_defaults[ $key ] : '#000000';
+			$value   = trim( (string) $this->get_setting( $key, $default ) );
+
+			if ( '' === $value ) {
+				return $default;
+			}
+
+			if ( '#' !== $value[0] ) {
+				$value = '#' . $value;
+			}
+
+			$color = sanitize_hex_color( $value );
+
+			return $color ? $color : $default;
+		}
+
+		private function get_position() {
+			$position = $this->get_setting( 'chatbot_position', 'bottom-right' );
+
+			return 'bottom-left' === $position ? 'bottom-left' : 'bottom-right';
+		}
+
+		private function get_launcher_icon_url() {
+			$media = $this->get_setting( 'chatbot_launcher_icon', array() );
+
+			if ( is_array( $media ) ) {
+				if ( ! empty( $media['url'] ) ) {
+					return esc_url_raw( $media['url'] );
+				}
+				if ( ! empty( $media['id'] ) ) {
+					$url = wp_get_attachment_url( (int) $media['id'] );
+					if ( $url ) {
+						return esc_url_raw( $url );
+					}
+				}
+			}
+
+			// Legacy text URL field.
+			$legacy = $this->get_setting( 'chatbot_icon_url', '' );
+			if ( ! empty( $legacy ) ) {
+				return esc_url_raw( $legacy );
+			}
+
+			return '';
+		}
+
+		private function get_style_vars() {
+			return array(
+				'--eyeon-chat-header-bg'           => $this->get_color_setting( 'chatbot_header_bg' ),
+				'--eyeon-chat-header-text'         => $this->get_color_setting( 'chatbot_header_text' ),
+				'--eyeon-chat-bg'                  => $this->get_color_setting( 'chatbot_chat_bg' ),
+				'--eyeon-chat-user-bg'             => $this->get_color_setting( 'chatbot_user_bg' ),
+				'--eyeon-chat-user-text'           => $this->get_color_setting( 'chatbot_user_text' ),
+				'--eyeon-chat-assistant-bg'        => $this->get_color_setting( 'chatbot_assistant_bg' ),
+				'--eyeon-chat-assistant-text'      => $this->get_color_setting( 'chatbot_assistant_text' ),
+				'--eyeon-chat-send-bg'             => $this->get_color_setting( 'chatbot_send_bg' ),
+				'--eyeon-chat-send-text'           => $this->get_color_setting( 'chatbot_send_text' ),
+				'--eyeon-chat-launcher-bg'         => $this->get_color_setting( 'chatbot_launcher_bg' ),
+				'--eyeon-chat-launcher-icon-color' => $this->get_color_setting( 'chatbot_launcher_icon_color' ),
+				'--eyeon-chat-link'                => $this->get_color_setting( 'chatbot_user_bg' ),
+			);
+		}
+
+		private function build_root_style_attr() {
+			$parts = array();
+
+			foreach ( $this->get_style_vars() as $name => $value ) {
+				$parts[] = $name . ': ' . $value;
+			}
+
+			return implode( '; ', $parts ) . ';';
+		}
+
 		function maybe_enqueue() {
 			if ( is_admin() || ! $this->is_enabled() ) {
 				return;
@@ -34,29 +130,26 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 			mcd_include_css( 'chatbot', 'assets/chatbot/chatbot.css' );
 			mcd_include_js( 'chatbot', 'assets/chatbot/chatbot.js', true );
 
-			$accent = ! empty( $this->mcd_settings['accent_color'] ) ? $this->mcd_settings['accent_color'] : '#3d80b9';
-			$center   = function_exists( 'eyeon_get_center' ) ? eyeon_get_center() : array();
+			$center    = function_exists( 'eyeon_get_center' ) ? eyeon_get_center() : array();
 			$center_id = ! empty( $center['id'] ) ? (int) $center['id'] : 0;
 
 			wp_localize_script(
 				'eyeon-chatbot',
 				'EYEON_CHATBOT',
 				array(
-					'ajaxurl' => admin_url( 'admin-ajax.php' ),
-					'nonce' => wp_create_nonce( 'eyeon_api_nonce' ),
-					'centerId' => $center_id,
-					'botName' => ! empty( $this->mcd_settings['chatbot_bot_name'] ) ? $this->mcd_settings['chatbot_bot_name'] : 'Center Assistant',
-					'welcomeMessage' => ! empty( $this->mcd_settings['chatbot_welcome_message'] ) ? $this->mcd_settings['chatbot_welcome_message'] : 'Hi! Ask me anything about our center.',
-					'offlineMessage' => ! empty( $this->mcd_settings['chatbot_offline_message'] ) ? $this->mcd_settings['chatbot_offline_message'] : 'Sorry, the assistant is temporarily unavailable.',
-					'position' => ! empty( $this->mcd_settings['chatbot_position'] ) ? $this->mcd_settings['chatbot_position'] : 'bottom-right',
-					'iconUrl' => ! empty( $this->mcd_settings['chatbot_icon_url'] ) ? $this->mcd_settings['chatbot_icon_url'] : '',
-					'accentColor' => $accent,
-					'linkBases' => array(
-						'deal' => mcd_single_page_url( 'mycenterdeal' ),
-						'store' => mcd_single_page_url( 'mycenterstore' ),
-						'event' => mcd_single_page_url( 'mycenterevent' ),
+					'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+					'nonce'          => wp_create_nonce( 'eyeon_api_nonce' ),
+					'centerId'       => $center_id,
+					'botName'        => $this->get_setting( 'chatbot_bot_name', 'Center Assistant' ),
+					'welcomeMessage' => $this->get_setting( 'chatbot_welcome_message', 'Hi! Ask me anything about our center.' ),
+					'offlineMessage' => $this->get_setting( 'chatbot_offline_message', 'Sorry, the assistant is temporarily unavailable.' ),
+					'position'       => $this->get_position(),
+					'linkBases'      => array(
+						'deal'   => mcd_single_page_url( 'mycenterdeal' ),
+						'store'  => mcd_single_page_url( 'mycenterstore' ),
+						'event'  => mcd_single_page_url( 'mycenterevent' ),
 						'career' => mcd_single_page_url( 'mycentercareer' ),
-						'news' => mcd_single_page_url( 'mycenterblogpost' ),
+						'news'   => mcd_single_page_url( 'mycenterblogpost' ),
 					),
 				)
 			);
@@ -67,17 +160,17 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 				return;
 			}
 
-			$position = ! empty( $this->mcd_settings['chatbot_position'] ) ? $this->mcd_settings['chatbot_position'] : 'bottom-right';
-			$bot_name = ! empty( $this->mcd_settings['chatbot_bot_name'] ) ? $this->mcd_settings['chatbot_bot_name'] : 'Center Assistant';
-			$icon_url = ! empty( $this->mcd_settings['chatbot_icon_url'] ) ? $this->mcd_settings['chatbot_icon_url'] : '';
-			$accent = ! empty( $this->mcd_settings['accent_color'] ) ? $this->mcd_settings['accent_color'] : '#3d80b9';
+			$position  = $this->get_position();
+			$bot_name  = $this->get_setting( 'chatbot_bot_name', 'Center Assistant' );
+			$icon_url  = $this->get_launcher_icon_url();
+			$root_style = $this->build_root_style_attr();
 			?>
-			<div id="eyeon-chatbot-root" class="eyeon-chatbot eyeon-chatbot--<?php echo esc_attr( $position ); ?>" style="--eyeon-chat-accent: <?php echo esc_attr( $accent ); ?>;" aria-live="polite">
-				<button type="button" class="eyeon-chatbot__launcher" id="eyeon-chatbot-launcher" style="background-color: <?php echo esc_attr( $accent ); ?>;" aria-label="<?php echo esc_attr( sprintf( __( 'Open %s', EYEON_NAMESPACE ), $bot_name ) ); ?>">
+			<div id="eyeon-chatbot-root" class="eyeon-chatbot eyeon-chatbot--<?php echo esc_attr( $position ); ?>" style="<?php echo esc_attr( $root_style ); ?>" aria-live="polite">
+				<button type="button" class="eyeon-chatbot__launcher" id="eyeon-chatbot-launcher" aria-label="<?php echo esc_attr( sprintf( __( 'Open %s', EYEON_NAMESPACE ), $bot_name ) ); ?>">
 					<?php if ( $icon_url ) : ?>
 						<img src="<?php echo esc_url( $icon_url ); ?>" alt="" class="eyeon-chatbot__launcher-icon eyeon-chatbot__launcher-icon--image" />
 					<?php else : ?>
-						<svg class="eyeon-chatbot__launcher-icon eyeon-chatbot__launcher-icon--svg" viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffffff" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
+						<svg class="eyeon-chatbot__launcher-icon eyeon-chatbot__launcher-icon--svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
 					<?php endif; ?>
 				</button>
 				<div class="eyeon-chatbot__panel" id="eyeon-chatbot-panel" hidden>
@@ -131,7 +224,7 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 					$content = isset( $item['content'] ) ? sanitize_textarea_field( wp_unslash( $item['content'] ) ) : '';
 					if ( in_array( $role, array( 'user', 'assistant' ), true ) && $content !== '' ) {
 						$history[] = array(
-							'role' => $role,
+							'role'    => $role,
 							'content' => mb_substr( $content, 0, 2000 ),
 						);
 					}
@@ -164,7 +257,7 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 
 			wp_send_json_error(
 				array(
-					'msg' => $error_msg,
+					'msg'    => $error_msg,
 					'status' => $result['status'],
 				),
 				$result['status'] >= 400 ? $result['status'] : 500

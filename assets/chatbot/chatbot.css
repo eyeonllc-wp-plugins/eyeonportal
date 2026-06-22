@@ -1,5 +1,17 @@
 #eyeon-chatbot-root.eyeon-chatbot {
-  --eyeon-chat-accent: #3d80b9;
+  --eyeon-chat-header-bg: #3d80b9;
+  --eyeon-chat-header-text: #ffffff;
+  --eyeon-chat-bg: #f8f9fb;
+  --eyeon-chat-user-bg: #3d80b9;
+  --eyeon-chat-user-text: #ffffff;
+  --eyeon-chat-assistant-bg: #ffffff;
+  --eyeon-chat-assistant-text: #222222;
+  --eyeon-chat-send-bg: #3d80b9;
+  --eyeon-chat-send-text: #ffffff;
+  --eyeon-chat-launcher-bg: #3d80b9;
+  --eyeon-chat-launcher-icon-color: #ffffff;
+  --eyeon-chat-link: #3d80b9;
+  --eyeon-chat-input-border: #d1d5db;
   position: fixed;
   z-index: 99999;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
@@ -7,8 +19,6 @@
 
 #eyeon-chatbot-root.eyeon-chatbot--bottom-right { right: 20px; bottom: 20px; }
 #eyeon-chatbot-root.eyeon-chatbot--bottom-left { left: 20px; bottom: 20px; }
-#eyeon-chatbot-root.eyeon-chatbot--top-right { right: 20px; top: 20px; }
-#eyeon-chatbot-root.eyeon-chatbot--top-left { left: 20px; top: 20px; }
 
 #eyeon-chatbot-root .eyeon-chatbot__launcher {
   width: 56px;
@@ -18,11 +28,11 @@
   border-radius: 50% !important;
   border: none !important;
   outline: none !important;
-  background: var(--eyeon-chat-accent) !important;
-  background-color: var(--eyeon-chat-accent) !important;
-  color: #fff !important;
+  background: var(--eyeon-chat-launcher-bg) !important;
+  background-color: var(--eyeon-chat-launcher-bg) !important;
+  color: var(--eyeon-chat-launcher-icon-color) !important;
   cursor: pointer;
-  box-shadow: none;
+  box-shadow: none !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,9 +46,10 @@
 }
 
 #eyeon-chatbot-root .eyeon-chatbot__launcher:hover,
-#eyeon-chatbot-root .eyeon-chatbot__launcher:focus {
-  background: var(--eyeon-chat-accent) !important;
-  background-color: var(--eyeon-chat-accent) !important;
+#eyeon-chatbot-root .eyeon-chatbot__launcher:focus,
+#eyeon-chatbot-root .eyeon-chatbot__launcher:focus-visible {
+  background: var(--eyeon-chat-launcher-bg) !important;
+  background-color: var(--eyeon-chat-launcher-bg) !important;
   border: none !important;
   outline: none !important;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
@@ -53,12 +64,12 @@
 #eyeon-chatbot-root .eyeon-chatbot__launcher-icon--svg {
   width: 26px;
   height: 26px;
-  color: #fff !important;
-  fill: #fff !important;
+  color: var(--eyeon-chat-launcher-icon-color) !important;
+  fill: var(--eyeon-chat-launcher-icon-color) !important;
 }
 
 #eyeon-chatbot-root .eyeon-chatbot__launcher-icon--svg path {
-  fill: #fff !important;
+  fill: var(--eyeon-chat-launcher-icon-color) !important;
 }
 
 #eyeon-chatbot-root .eyeon-chatbot__launcher-icon--image {
@@ -70,7 +81,7 @@
   border: none;
 }
 
-.eyeon-chatbot__panel {
+#eyeon-chatbot-root .eyeon-chatbot__panel {
   position: absolute;
   width: 360px;
   max-width: calc(100vw - 40px);
@@ -89,76 +100,79 @@
   bottom: 70px;
 }
 
-#eyeon-chatbot-root.eyeon-chatbot--top-right .eyeon-chatbot__panel,
-#eyeon-chatbot-root.eyeon-chatbot--top-left .eyeon-chatbot__panel {
-  top: 70px;
-}
-
-#eyeon-chatbot-root.eyeon-chatbot--bottom-right .eyeon-chatbot__panel,
-#eyeon-chatbot-root.eyeon-chatbot--top-right .eyeon-chatbot__panel {
+#eyeon-chatbot-root.eyeon-chatbot--bottom-right .eyeon-chatbot__panel {
   right: 0;
 }
 
-#eyeon-chatbot-root.eyeon-chatbot--bottom-left .eyeon-chatbot__panel,
-#eyeon-chatbot-root.eyeon-chatbot--top-left .eyeon-chatbot__panel {
+#eyeon-chatbot-root.eyeon-chatbot--bottom-left .eyeon-chatbot__panel {
   left: 0;
 }
 
-.eyeon-chatbot__header {
+#eyeon-chatbot-root .eyeon-chatbot__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: var(--eyeon-chat-accent);
-  color: #fff;
+  background: var(--eyeon-chat-header-bg) !important;
+  background-color: var(--eyeon-chat-header-bg) !important;
+  color: var(--eyeon-chat-header-text) !important;
 }
 
-.eyeon-chatbot__header-info {
+#eyeon-chatbot-root .eyeon-chatbot__header-info {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.eyeon-chatbot__avatar {
+#eyeon-chatbot-root .eyeon-chatbot__avatar {
   width: 32px;
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.eyeon-chatbot__title {
+#eyeon-chatbot-root .eyeon-chatbot__title {
   font-size: 15px;
   font-weight: 600;
+  color: var(--eyeon-chat-header-text) !important;
 }
 
 #eyeon-chatbot-root .eyeon-chatbot__close {
   background: transparent !important;
   border: none !important;
-  color: #fff !important;
+  color: var(--eyeon-chat-header-text) !important;
   font-size: 24px;
   line-height: 1;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
   transition: background-color 0.15s ease;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 #eyeon-chatbot-root .eyeon-chatbot__close:hover,
+#eyeon-chatbot-root .eyeon-chatbot__close:focus,
 #eyeon-chatbot-root .eyeon-chatbot__close:focus-visible {
   background-color: rgba(255, 255, 255, 0.2) !important;
+  color: var(--eyeon-chat-header-text) !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.eyeon-chatbot__messages {
+#eyeon-chatbot-root .eyeon-chatbot__messages {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #f8f9fb;
+  background: var(--eyeon-chat-bg) !important;
+  background-color: var(--eyeon-chat-bg) !important;
 }
 
-.eyeon-chatbot__message {
+#eyeon-chatbot-root .eyeon-chatbot__message {
   max-width: 85%;
   padding: 10px 14px;
   border-radius: 12px;
@@ -167,49 +181,84 @@
   word-wrap: break-word;
 }
 
-.eyeon-chatbot__message--user {
+#eyeon-chatbot-root .eyeon-chatbot__message--user {
   align-self: flex-end;
-  background: var(--eyeon-chat-accent);
-  color: #fff;
+  background: var(--eyeon-chat-user-bg) !important;
+  background-color: var(--eyeon-chat-user-bg) !important;
+  color: var(--eyeon-chat-user-text) !important;
+  border: none !important;
   border-bottom-right-radius: 4px;
 }
 
-.eyeon-chatbot__message--assistant {
+#eyeon-chatbot-root .eyeon-chatbot__message--assistant {
   align-self: flex-start;
-  background: #fff;
-  color: #222;
-  border: 1px solid #e5e7eb;
+  background: var(--eyeon-chat-assistant-bg) !important;
+  background-color: var(--eyeon-chat-assistant-bg) !important;
+  color: var(--eyeon-chat-assistant-text) !important;
+  border: 1px solid #e5e7eb !important;
   border-bottom-left-radius: 4px;
 }
 
-.eyeon-chatbot__message-links {
+#eyeon-chatbot-root .eyeon-chatbot__message-links {
   display: flex;
   flex-direction: column;
   gap: 6px;
   margin-top: 8px;
 }
 
-.eyeon-chatbot__message-link {
+#eyeon-chatbot-root .eyeon-chatbot__message-link {
   display: inline-block;
-  color: var(--eyeon-chat-accent);
+  color: var(--eyeon-chat-link) !important;
   font-weight: 600;
   text-decoration: none;
 }
 
-.eyeon-chatbot__message-link:hover,
-.eyeon-chatbot__message-link:focus-visible {
+#eyeon-chatbot-root .eyeon-chatbot__message-link:hover,
+#eyeon-chatbot-root .eyeon-chatbot__message-link:focus,
+#eyeon-chatbot-root .eyeon-chatbot__message-link:focus-visible {
+  color: var(--eyeon-chat-link) !important;
   text-decoration: underline;
 }
 
-.eyeon-chatbot__message--typing {
+#eyeon-chatbot-root .eyeon-chatbot__message-body > .eyeon-chatbot__paragraph {
+  margin: 0 0 0.65em;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__message-body > .eyeon-chatbot__paragraph:last-child {
+  margin-bottom: 0;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__list {
+  margin: 0 0 0.65em;
+  padding-left: 1.25em;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__list:last-child {
+  margin-bottom: 0;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__list--unordered {
+  list-style-type: disc;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__list--ordered {
+  list-style-type: decimal;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__list li {
+  margin: 0.2em 0;
+}
+
+#eyeon-chatbot-root .eyeon-chatbot__message--typing {
   align-self: flex-start;
-  background: #fff;
-  color: #888;
-  border: 1px solid #e5e7eb;
+  background: var(--eyeon-chat-assistant-bg) !important;
+  background-color: var(--eyeon-chat-assistant-bg) !important;
+  color: #888 !important;
+  border: 1px solid #e5e7eb !important;
   font-style: italic;
 }
 
-.eyeon-chatbot__form {
+#eyeon-chatbot-root .eyeon-chatbot__form {
   display: flex;
   gap: 8px;
   padding: 12px;
@@ -217,38 +266,59 @@
   background: #fff;
 }
 
-.eyeon-chatbot__input {
+#eyeon-chatbot-root .eyeon-chatbot__input,
+#eyeon-chatbot-root .eyeon-chatbot__input:hover,
+#eyeon-chatbot-root .eyeon-chatbot__input:focus,
+#eyeon-chatbot-root .eyeon-chatbot__input:focus-visible,
+#eyeon-chatbot-root .eyeon-chatbot__input:active {
   flex: 1;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--eyeon-chat-input-border) !important;
+  border-color: var(--eyeon-chat-input-border) !important;
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 14px;
-  outline: none;
+  outline: none !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  background-color: #fff !important;
+  color: #222 !important;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-.eyeon-chatbot__input:focus {
-  border-color: var(--eyeon-chat-accent);
-  box-shadow: 0 0 0 2px rgba(61, 128, 185, 0.15);
-}
-
-.eyeon-chatbot__send {
-  border: none;
+#eyeon-chatbot-root .eyeon-chatbot__send,
+#eyeon-chatbot-root .eyeon-chatbot__send:hover,
+#eyeon-chatbot-root .eyeon-chatbot__send:focus,
+#eyeon-chatbot-root .eyeon-chatbot__send:focus-visible,
+#eyeon-chatbot-root .eyeon-chatbot__send:active {
+  border: none !important;
   border-radius: 8px;
-  background: var(--eyeon-chat-accent);
-  color: #fff;
+  background: var(--eyeon-chat-send-bg) !important;
+  background-color: var(--eyeon-chat-send-bg) !important;
+  color: var(--eyeon-chat-send-text) !important;
   padding: 0 16px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+  outline: none !important;
+  box-shadow: none !important;
+  appearance: none;
+  -webkit-appearance: none;
+  text-decoration: none !important;
 }
 
-.eyeon-chatbot__send:disabled {
+#eyeon-chatbot-root .eyeon-chatbot__send:disabled,
+#eyeon-chatbot-root .eyeon-chatbot__send:disabled:hover,
+#eyeon-chatbot-root .eyeon-chatbot__send:disabled:focus {
   opacity: 0.6;
   cursor: not-allowed;
+  background: var(--eyeon-chat-send-bg) !important;
+  background-color: var(--eyeon-chat-send-bg) !important;
+  color: var(--eyeon-chat-send-text) !important;
 }
 
 @media (max-width: 480px) {
-  .eyeon-chatbot__panel {
+  #eyeon-chatbot-root .eyeon-chatbot__panel {
     width: calc(100vw - 24px);
     height: calc(100vh - 90px);
     max-height: none;
