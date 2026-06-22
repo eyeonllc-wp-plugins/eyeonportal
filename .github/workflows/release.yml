@@ -86,13 +86,11 @@ jobs:
             EMOJI="✅"
             VERSION_SUFFIX=" :hash: *${STABLE_TAG}*"
             VERSION_PLAIN=" :hash: ${STABLE_TAG}"
-            RELEASE_URL="${REPO_URL}/releases/tag/${STABLE_TAG}"
           else
             STATUS="Failed"
             EMOJI="❌"
             VERSION_SUFFIX=""
             VERSION_PLAIN=""
-            RELEASE_URL=""
           fi
 
           TITLE="EyeOn WP Plugin - Release - ${STATUS}"
@@ -190,7 +188,6 @@ jobs:
             --arg author_name "$AUTHOR_NAME" \
             --arg version_suffix "$VERSION_SUFFIX" \
             --arg compare "$COMPARE_URL" \
-            --arg release "$RELEASE_URL" \
             --arg workflow "$WORKFLOW_URL" \
             --arg commits "$COMMITS_MRKNW" \
             '{
@@ -218,15 +215,11 @@ jobs:
                       text: {type: "plain_text", text: "Compare Changes"},
                       url: $compare
                     },
-                    (if $release != "" then {
-                      type: "button",
-                      text: {type: "plain_text", text: "View Release"},
-                      url: $release
-                    } else {
+                    {
                       type: "button",
                       text: {type: "plain_text", text: "View Workflow"},
                       url: $workflow
-                    } end)
+                    }
                   ]
                 }
               ]
