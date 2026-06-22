@@ -95,6 +95,10 @@
   overflow: hidden;
 }
 
+#eyeon-chatbot-root .eyeon-chatbot__panel[hidden] {
+  display: none !important;
+}
+
 #eyeon-chatbot-root.eyeon-chatbot--bottom-right .eyeon-chatbot__panel,
 #eyeon-chatbot-root.eyeon-chatbot--bottom-left .eyeon-chatbot__panel {
   bottom: 70px;

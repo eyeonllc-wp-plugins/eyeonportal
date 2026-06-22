@@ -27,6 +27,37 @@
     return 'eyeon_chatbot_v1_' + centerId;
   }
 
+  function panelStorageKey() {
+    return storageKey() + '_panel';
+  }
+
+  function persistPanelState() {
+    try {
+      if (!window.localStorage) {
+        return;
+      }
+      localStorage.setItem(panelStorageKey(), isOpen ? 'open' : 'closed');
+    } catch (e) {
+      // Ignore quota / private mode errors.
+    }
+  }
+
+  function loadPanelState() {
+    try {
+      if (!window.localStorage) {
+        closePanel();
+        return;
+      }
+
+      if (localStorage.getItem(panelStorageKey()) === 'open') {
+        openPanel();
+        return;
+      }
+    } catch (e) {}
+
+    closePanel();
+  }
+
   function persistHistory() {
     try {
       if (!window.localStorage) {
@@ -324,12 +355,14 @@
     isOpen = true;
     $panel.prop('hidden', false);
     showWelcome();
+    persistPanelState();
     $input.trigger('focus');
   }
 
   function closePanel() {
     isOpen = false;
     $panel.prop('hidden', true);
+    persistPanelState();
   }
 
   function trimHistoryForApi() {
@@ -418,4 +451,5 @@
   });
 
   loadStoredHistory();
+  loadPanelState();
 })(jQuery);
