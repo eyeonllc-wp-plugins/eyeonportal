@@ -12,6 +12,8 @@
   var history = [];
   var isOpen = false;
   var isSending = false;
+  var sessionNonce = null;
+  var pendingNonceRequest = null;
 
   var $root = $('#eyeon-chatbot-root');
   var $launcher = $('#eyeon-chatbot-launcher');
@@ -351,11 +353,75 @@
     }
   }
 
+  function fetchNonce(forceRefresh) {
+    if (forceRefresh) {
+      sessionNonce = null;
+    }
+
+    if (sessionNonce) {
+      return $.when(sessionNonce);
+    }
+
+    if (pendingNonceRequest) {
+      return pendingNonceRequest;
+    }
+
+    pendingNonceRequest = $.ajax({
+      url: EYEON_CHATBOT.ajaxurl,
+      method: 'POST',
+      dataType: 'json',
+      cache: false,
+      data: {
+        action: 'eyeon_chat_nonce',
+      },
+    })
+      .then(function (response) {
+        if (response && response.success && response.data && response.data.nonce) {
+          sessionNonce = response.data.nonce;
+          return sessionNonce;
+        }
+
+        return $.Deferred().reject().promise();
+      })
+      .always(function () {
+        pendingNonceRequest = null;
+      });
+
+    return pendingNonceRequest;
+  }
+
+  function isNonceAuthError(xhr) {
+    return (
+      xhr &&
+      xhr.status === 403 &&
+      xhr.responseJSON &&
+      xhr.responseJSON.data &&
+      xhr.responseJSON.data.msg &&
+      xhr.responseJSON.data.msg.indexOf('not authorized') !== -1
+    );
+  }
+
+  function postChatRequest(message, nonce) {
+    return $.ajax({
+      url: EYEON_CHATBOT.ajaxurl,
+      method: 'POST',
+      dataType: 'json',
+      cache: false,
+      data: {
+        action: 'eyeon_chat_request',
+        nonce: nonce,
+        message: message,
+        history_json: JSON.stringify(trimHistoryForApi().slice(0, -1)),
+      },
+    });
+  }
+
   function openPanel() {
     isOpen = true;
     $panel.prop('hidden', false);
     showWelcome();
     persistPanelState();
+    fetchNonce(false);
     $input.trigger('focus');
   }
 
@@ -375,6 +441,36 @@
     }
   }
 
+  function deliverAssistantReply(response) {
+    setTyping(false);
+    var reply =
+      response && response.success && response.data && response.data.reply
+        ? response.data.reply
+        : EYEON_CHATBOT.offlineMessage;
+    appendMessage('assistant', reply);
+    history.push({ role: 'assistant', content: reply });
+    capStoredHistory();
+    persistHistory();
+  }
+
+  function deliverAssistantError(xhr) {
+    setTyping(false);
+    var msg = EYEON_CHATBOT.offlineMessage;
+    if (xhr && xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.msg) {
+      msg = xhr.responseJSON.data.msg;
+    }
+    appendMessage('assistant', msg);
+    history.push({ role: 'assistant', content: msg });
+    capStoredHistory();
+    persistHistory();
+  }
+
+  function finishSend() {
+    isSending = false;
+    $send.prop('disabled', false);
+    $input.trigger('focus');
+  }
+
   function sendMessage(message) {
     if (!message || isSending) {
       return;
@@ -388,44 +484,27 @@
     persistHistory();
     setTyping(true);
 
-    $.ajax({
-      url: EYEON_CHATBOT.ajaxurl,
-      method: 'POST',
-      dataType: 'json',
-      data: {
-        action: 'eyeon_chat_request',
-        nonce: EYEON_CHATBOT.nonce,
-        message: message,
-        history_json: JSON.stringify(trimHistoryForApi().slice(0, -1)),
-      },
-    })
-      .done(function (response) {
-        setTyping(false);
-        var reply =
-          response && response.success && response.data && response.data.reply
-            ? response.data.reply
-            : EYEON_CHATBOT.offlineMessage;
-        appendMessage('assistant', reply);
-        history.push({ role: 'assistant', content: reply });
-        capStoredHistory();
-        persistHistory();
-      })
-      .fail(function (xhr) {
-        setTyping(false);
-        var msg = EYEON_CHATBOT.offlineMessage;
-        if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.msg) {
-          msg = xhr.responseJSON.data.msg;
-        }
-        appendMessage('assistant', msg);
-        history.push({ role: 'assistant', content: msg });
-        capStoredHistory();
-        persistHistory();
-      })
-      .always(function () {
-        isSending = false;
-        $send.prop('disabled', false);
-        $input.trigger('focus');
-      });
+    function trySend(isRetry) {
+      fetchNonce(isRetry)
+        .then(function (nonce) {
+          return postChatRequest(message, nonce);
+        })
+        .done(function (response) {
+          deliverAssistantReply(response);
+          finishSend();
+        })
+        .fail(function (xhr) {
+          if (!isRetry && isNonceAuthError(xhr)) {
+            trySend(true);
+            return;
+          }
+
+          deliverAssistantError(xhr);
+          finishSend();
+        });
+    }
+
+    trySend(false);
   }
 
   $launcher.on('click', function () {

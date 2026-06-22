@@ -30,6 +30,8 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 
 			add_action( 'wp_ajax_eyeon_chat_request', array( $this, 'chat_request' ) );
 			add_action( 'wp_ajax_nopriv_eyeon_chat_request', array( $this, 'chat_request' ) );
+			add_action( 'wp_ajax_eyeon_chat_nonce', array( $this, 'chat_nonce' ) );
+			add_action( 'wp_ajax_nopriv_eyeon_chat_nonce', array( $this, 'chat_nonce' ) );
 		}
 
 		function is_enabled() {
@@ -138,7 +140,6 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 				'EYEON_CHATBOT',
 				array(
 					'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-					'nonce'          => wp_create_nonce( 'eyeon_api_nonce' ),
 					'centerId'       => $center_id,
 					'botName'        => $this->get_setting( 'chatbot_bot_name', 'Center Assistant' ),
 					'welcomeMessage' => $this->get_setting( 'chatbot_welcome_message', 'Hi! Ask me anything about our center.' ),
@@ -191,6 +192,14 @@ if ( ! class_exists( 'EyeOnChatbot' ) ) {
 				</div>
 			</div>
 			<?php
+		}
+
+		function chat_nonce() {
+			wp_send_json_success(
+				array(
+					'nonce' => wp_create_nonce( 'eyeon_api_nonce' ),
+				)
+			);
 		}
 
 		function chat_request() {
