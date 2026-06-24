@@ -25,9 +25,61 @@
   var $close = $('#eyeon-chatbot-close');
   var mobileMediaQuery = window.matchMedia('(max-width: 480px)');
   var viewportListenersBound = false;
+  var touchMoveBlockBound = false;
+  var lockedScrollY = 0;
 
   function isMobileLayout() {
     return mobileMediaQuery.matches;
+  }
+
+  function onDocumentTouchMove(e) {
+    if (!isOpen || !isMobileLayout()) {
+      return;
+    }
+
+    if ($(e.target).closest('#eyeon-chatbot-messages, #eyeon-chatbot-input, #eyeon-chatbot-form').length) {
+      return;
+    }
+
+    e.preventDefault();
+  }
+
+  function bindTouchScrollLock() {
+    if (touchMoveBlockBound) {
+      return;
+    }
+
+    document.addEventListener('touchmove', onDocumentTouchMove, { passive: false });
+    touchMoveBlockBound = true;
+  }
+
+  function unbindTouchScrollLock() {
+    if (!touchMoveBlockBound) {
+      return;
+    }
+
+    document.removeEventListener('touchmove', onDocumentTouchMove, { passive: false });
+    touchMoveBlockBound = false;
+  }
+
+  function lockBodyScroll() {
+    lockedScrollY = window.scrollY || window.pageYOffset || 0;
+    $('html, body').addClass('eyeon-chatbot-mobile-open');
+    $('body').css({
+      position: 'fixed',
+      top: -lockedScrollY + 'px',
+      left: '0',
+      right: '0',
+      width: '100%',
+    });
+    bindTouchScrollLock();
+  }
+
+  function unlockBodyScroll() {
+    $('html, body').removeClass('eyeon-chatbot-mobile-open');
+    $('body').css({ position: '', top: '', left: '', right: '', width: '' });
+    window.scrollTo(0, lockedScrollY);
+    unbindTouchScrollLock();
   }
 
   function bindViewportListeners() {
@@ -51,7 +103,7 @@
   }
 
   function resetMobileViewportStyles() {
-    $root.css({ top: '', bottom: '', left: '', right: '', transform: '' });
+    $root.css({ top: '', bottom: '', left: '', right: '', width: '', height: '', transform: '' });
     $panel.css({ top: '', left: '', right: '', bottom: '', height: '', width: '' });
     $root.removeClass('eyeon-chatbot--keyboard-open');
   }
@@ -74,26 +126,41 @@
 
     if (isOpen) {
       $root.css({
-        top: viewport.offsetTop + 'px',
-        left: viewport.offsetLeft + 'px',
-        right: 'auto',
-        bottom: 'auto',
-        transform: 'none',
-      });
-
-      $panel.css({
         top: '0',
         left: '0',
         right: '0',
         bottom: '0',
-        width: viewport.width + 'px',
-        height: viewport.height + 'px',
+        width: '100%',
+        height: '100%',
+        transform: 'none',
       });
+
+      if (keyboardOpen) {
+        $panel.css({
+          top: viewport.offsetTop + 'px',
+          left: '0',
+          right: '0',
+          bottom: 'auto',
+          width: '100%',
+          height: viewport.height + 'px',
+        });
+      } else {
+        $panel.css({
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          width: '100%',
+          height: '100%',
+        });
+      }
 
       $root.toggleClass('eyeon-chatbot--keyboard-open', keyboardOpen);
 
       if (keyboardOpen) {
-        $messages.scrollTop($messages[0].scrollHeight);
+        window.requestAnimationFrame(function () {
+          $messages.scrollTop($messages[0].scrollHeight);
+        });
       }
 
       return;
@@ -122,16 +189,16 @@
 
   function setMobileOpenState(open) {
     $root.toggleClass('eyeon-chatbot--open', open);
-    $('body').toggleClass('eyeon-chatbot-mobile-open', open && isMobileLayout());
 
     if (open && isMobileLayout()) {
+      lockBodyScroll();
       bindViewportListeners();
       syncMobileViewport();
       return;
     }
 
     if (!open) {
-      $('body').removeClass('eyeon-chatbot-mobile-open');
+      unlockBodyScroll();
       resetMobileViewportStyles();
       if (isMobileLayout()) {
         syncMobileViewport();
@@ -668,12 +735,12 @@
         bindViewportListeners();
         syncMobileViewport();
         if (isOpen) {
-          $('body').addClass('eyeon-chatbot-mobile-open');
+          lockBodyScroll();
         }
         return;
       }
 
-      $('body').removeClass('eyeon-chatbot-mobile-open');
+      unlockBodyScroll();
       resetMobileViewportStyles();
       unbindViewportListeners();
     });
@@ -683,12 +750,12 @@
         bindViewportListeners();
         syncMobileViewport();
         if (isOpen) {
-          $('body').addClass('eyeon-chatbot-mobile-open');
+          lockBodyScroll();
         }
         return;
       }
 
-      $('body').removeClass('eyeon-chatbot-mobile-open');
+      unlockBodyScroll();
       resetMobileViewportStyles();
       unbindViewportListeners();
     });
