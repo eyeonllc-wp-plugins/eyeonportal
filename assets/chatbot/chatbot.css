@@ -17,8 +17,15 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
-#eyeon-chatbot-root.eyeon-chatbot--bottom-right { right: 20px; bottom: 20px; }
-#eyeon-chatbot-root.eyeon-chatbot--bottom-left { left: 20px; bottom: 20px; }
+#eyeon-chatbot-root.eyeon-chatbot--bottom-right {
+  right: max(20px, env(safe-area-inset-right, 0px));
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+}
+
+#eyeon-chatbot-root.eyeon-chatbot--bottom-left {
+  left: max(20px, env(safe-area-inset-left, 0px));
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+}
 
 #eyeon-chatbot-root .eyeon-chatbot__launcher {
   width: 56px;
@@ -322,12 +329,55 @@
 }
 
 @media (max-width: 480px) {
-  #eyeon-chatbot-root .eyeon-chatbot__panel {
-    width: calc(100vw - 24px);
-    height: calc(100vh - 90px);
-    max-height: none;
-    left: 12px !important;
-    right: 12px !important;
-    bottom: 76px !important;
+  #eyeon-chatbot-root.eyeon-chatbot--bottom-right {
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
   }
+
+  #eyeon-chatbot-root.eyeon-chatbot--bottom-left {
+    left: max(16px, env(safe-area-inset-left, 0px));
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  #eyeon-chatbot-root .eyeon-chatbot__input {
+    font-size: 16px;
+  }
+
+  #eyeon-chatbot-root .eyeon-chatbot__form {
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  }
+
+  #eyeon-chatbot-root.eyeon-chatbot--open .eyeon-chatbot__launcher {
+    display: none;
+  }
+
+  #eyeon-chatbot-root.eyeon-chatbot--open .eyeon-chatbot__panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    width: 100vw;
+    height: 100%;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 99999;
+  }
+
+  #eyeon-chatbot-root.eyeon-chatbot--open .eyeon-chatbot__header {
+    padding-top: max(14px, env(safe-area-inset-top, 0px));
+  }
+
+  #eyeon-chatbot-root.eyeon-chatbot--keyboard-open .eyeon-chatbot__messages {
+    scroll-behavior: smooth;
+  }
+}
+
+body.eyeon-chatbot-mobile-open {
+  overflow: hidden;
+  touch-action: none;
 }

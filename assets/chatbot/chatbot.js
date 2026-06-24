@@ -23,6 +23,123 @@
   var $input = $('#eyeon-chatbot-input');
   var $send = $('#eyeon-chatbot-send');
   var $close = $('#eyeon-chatbot-close');
+  var mobileMediaQuery = window.matchMedia('(max-width: 480px)');
+  var viewportListenersBound = false;
+
+  function isMobileLayout() {
+    return mobileMediaQuery.matches;
+  }
+
+  function bindViewportListeners() {
+    if (viewportListenersBound || !window.visualViewport) {
+      return;
+    }
+
+    window.visualViewport.addEventListener('resize', syncMobileViewport);
+    window.visualViewport.addEventListener('scroll', syncMobileViewport);
+    viewportListenersBound = true;
+  }
+
+  function unbindViewportListeners() {
+    if (!viewportListenersBound || !window.visualViewport) {
+      return;
+    }
+
+    window.visualViewport.removeEventListener('resize', syncMobileViewport);
+    window.visualViewport.removeEventListener('scroll', syncMobileViewport);
+    viewportListenersBound = false;
+  }
+
+  function resetMobileViewportStyles() {
+    $root.css({ top: '', bottom: '', left: '', right: '', transform: '' });
+    $panel.css({ top: '', left: '', right: '', bottom: '', height: '', width: '' });
+    $root.removeClass('eyeon-chatbot--keyboard-open');
+  }
+
+  function syncMobileViewport() {
+    if (!isMobileLayout()) {
+      resetMobileViewportStyles();
+      return;
+    }
+
+    var viewport = window.visualViewport;
+    if (!viewport) {
+      return;
+    }
+
+    var launcherHeight = $launcher.outerHeight() || 56;
+    var edgeOffset = 16;
+    var position = EYEON_CHATBOT.position === 'bottom-left' ? 'bottom-left' : 'bottom-right';
+    var keyboardOpen = window.innerHeight - viewport.height - viewport.offsetTop > 80;
+
+    if (isOpen) {
+      $root.css({
+        top: viewport.offsetTop + 'px',
+        left: viewport.offsetLeft + 'px',
+        right: 'auto',
+        bottom: 'auto',
+        transform: 'none',
+      });
+
+      $panel.css({
+        top: '0',
+        left: '0',
+        right: '0',
+        bottom: '0',
+        width: viewport.width + 'px',
+        height: viewport.height + 'px',
+      });
+
+      $root.toggleClass('eyeon-chatbot--keyboard-open', keyboardOpen);
+
+      if (keyboardOpen) {
+        $messages.scrollTop($messages[0].scrollHeight);
+      }
+
+      return;
+    }
+
+    $panel.css({ top: '', left: '', right: '', bottom: '', height: '', width: '' });
+
+    var launcherTop = viewport.offsetTop + viewport.height - launcherHeight - edgeOffset;
+    var launcherStyles = {
+      top: launcherTop + 'px',
+      bottom: 'auto',
+      transform: 'none',
+    };
+
+    if (position === 'bottom-left') {
+      launcherStyles.left = viewport.offsetLeft + edgeOffset + 'px';
+      launcherStyles.right = 'auto';
+    } else {
+      launcherStyles.left =
+        viewport.offsetLeft + viewport.width - ($launcher.outerWidth() || launcherHeight) - edgeOffset + 'px';
+      launcherStyles.right = 'auto';
+    }
+
+    $root.css(launcherStyles);
+  }
+
+  function setMobileOpenState(open) {
+    $root.toggleClass('eyeon-chatbot--open', open);
+    $('body').toggleClass('eyeon-chatbot-mobile-open', open && isMobileLayout());
+
+    if (open && isMobileLayout()) {
+      bindViewportListeners();
+      syncMobileViewport();
+      return;
+    }
+
+    if (!open) {
+      $('body').removeClass('eyeon-chatbot-mobile-open');
+      resetMobileViewportStyles();
+      if (isMobileLayout()) {
+        syncMobileViewport();
+      } else {
+        unbindViewportListeners();
+      }
+    }
+  }
 
   function storageKey() {
     var centerId = EYEON_CHATBOT.centerId || window.location.hostname || 'default';
@@ -419,15 +536,20 @@
   function openPanel() {
     isOpen = true;
     $panel.prop('hidden', false);
+    setMobileOpenState(true);
     showWelcome();
     persistPanelState();
     fetchNonce(false);
     $input.trigger('focus');
+    if (isMobileLayout()) {
+      window.requestAnimationFrame(syncMobileViewport);
+    }
   }
 
   function closePanel() {
     isOpen = false;
     $panel.prop('hidden', true);
+    setMobileOpenState(false);
     persistPanelState();
   }
 
@@ -528,6 +650,54 @@
     $input.val('');
     sendMessage(message);
   });
+
+  $input.on('focus', function () {
+    if (!isMobileLayout() || !isOpen) {
+      return;
+    }
+
+    window.setTimeout(function () {
+      syncMobileViewport();
+      $messages.scrollTop($messages[0].scrollHeight);
+    }, 300);
+  });
+
+  if (typeof mobileMediaQuery.addEventListener === 'function') {
+    mobileMediaQuery.addEventListener('change', function () {
+      if (isMobileLayout()) {
+        bindViewportListeners();
+        syncMobileViewport();
+        if (isOpen) {
+          $('body').addClass('eyeon-chatbot-mobile-open');
+        }
+        return;
+      }
+
+      $('body').removeClass('eyeon-chatbot-mobile-open');
+      resetMobileViewportStyles();
+      unbindViewportListeners();
+    });
+  } else if (typeof mobileMediaQuery.addListener === 'function') {
+    mobileMediaQuery.addListener(function () {
+      if (isMobileLayout()) {
+        bindViewportListeners();
+        syncMobileViewport();
+        if (isOpen) {
+          $('body').addClass('eyeon-chatbot-mobile-open');
+        }
+        return;
+      }
+
+      $('body').removeClass('eyeon-chatbot-mobile-open');
+      resetMobileViewportStyles();
+      unbindViewportListeners();
+    });
+  }
+
+  if (isMobileLayout()) {
+    bindViewportListeners();
+    syncMobileViewport();
+  }
 
   loadStoredHistory();
   loadPanelState();
