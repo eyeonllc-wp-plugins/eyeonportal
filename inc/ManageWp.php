@@ -55,31 +55,6 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			return true;
 		}
 
-		private function get_update_checker() {
-			global $eyeonportal_update_checker;
-			return $eyeonportal_update_checker;
-		}
-
-		private function get_remote_update_info() {
-			$installed        = MCD_PLUGIN_VERSION;
-			$remote_version   = $installed;
-			$update_available = false;
-
-			$checker = $this->get_update_checker();
-			if ( $checker ) {
-				$update = $checker->checkForUpdates();
-				if ( $update && ! empty( $update->version ) ) {
-					$remote_version   = $update->version;
-					$update_available = version_compare( $installed, $remote_version, '<' );
-				}
-			}
-
-			return array(
-				'remote_version'   => $remote_version,
-				'update_available' => $update_available,
-			);
-		}
-
 		public function handle_status( $request ) {
 			$auth = $this->verify_token( $request );
 			if ( is_wp_error( $auth ) ) {
@@ -90,15 +65,13 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
-			$update_info = $this->get_remote_update_info();
-
 			return rest_ensure_response(
 				array(
 					'installed_version'  => MCD_PLUGIN_VERSION,
 					'wp_version'         => get_bloginfo( 'version' ),
 					'plugin_active'      => is_plugin_active( MCD_PLUGIN ),
-					'remote_version'     => $update_info['remote_version'],
-					'update_available'   => $update_info['update_available'],
+					'remote_version'     => MCD_PLUGIN_VERSION,
+					'update_available'   => false,
 					'manage_api_version' => self::MANAGE_API_VERSION,
 				)
 			);
@@ -110,36 +83,75 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				return $auth;
 			}
 
-			$previous_version = MCD_PLUGIN_VERSION;
-			$checker          = $this->get_update_checker();
-
-			if ( ! $checker ) {
-				return new WP_Error(
-					'update_checker_unavailable',
-					'Update checker not available.',
-					array( 'status' => 500 )
-				);
-			}
-
-			$update = $checker->checkForUpdates();
-
-			if ( ! $update ) {
-				return rest_ensure_response(
+			$params = $request->get_json_params();
+			if ( empty( $params['package_base64'] ) || ! is_string( $params['package_base64'] ) ) {
+				return new WP_REST_Response(
 					array(
-						'success'            => true,
-						'previous_version'   => $previous_version,
-						'installed_version'  => MCD_PLUGIN_VERSION,
-						'message'            => 'Already up to date',
-					)
+						'success' => false,
+						'code'    => 'missing_package',
+						'message' => 'Plugin package not provided.',
+					),
+					400
 				);
 			}
 
+			$package_data = base64_decode( $params['package_base64'], true );
+			if ( false === $package_data || '' === $package_data ) {
+				return new WP_REST_Response(
+					array(
+						'success' => false,
+						'code'    => 'invalid_package',
+						'message' => 'Invalid plugin package.',
+					),
+					400
+				);
+			}
+
+			$target_version = ! empty( $params['target_version'] ) ? (string) $params['target_version'] : null;
+
+			return $this->install_plugin_package(
+				$package_data,
+				MCD_PLUGIN_VERSION,
+				$target_version
+			);
+		}
+
+		private function install_plugin_package( $package_data, $previous_version, $target_version = null ) {
 			if ( ! function_exists( 'request_filesystem_credentials' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/file.php';
 			}
 			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+			$temp_file = wp_tempnam( 'eyeonportal-update' );
+			if ( ! $temp_file ) {
+				return new WP_REST_Response(
+					array(
+						'success' => false,
+						'code'    => 'temp_file_failed',
+						'message' => 'Could not create temporary file.',
+					),
+					500
+				);
+			}
+
+			$temp_zip = $temp_file . '.zip';
+			if ( ! @rename( $temp_file, $temp_zip ) ) {
+				$temp_zip = $temp_file;
+			}
+
+			if ( false === file_put_contents( $temp_zip, $package_data ) ) {
+				@unlink( $temp_zip );
+				return new WP_REST_Response(
+					array(
+						'success' => false,
+						'code'    => 'write_package_failed',
+						'message' => 'Could not write package file.',
+					),
+					500
+				);
+			}
 
 			$transient = get_site_transient( 'update_plugins' );
 			if ( ! is_object( $transient ) ) {
@@ -148,12 +160,19 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
 				$transient->response = array();
 			}
-			$transient->response[ MCD_PLUGIN ] = $update;
+
+			$transient->response[ MCD_PLUGIN ] = (object) array(
+				'package'     => $temp_zip,
+				'new_version' => $target_version ? $target_version : $previous_version,
+				'plugin'      => MCD_PLUGIN,
+			);
 			set_site_transient( 'update_plugins', $transient );
 
 			$skin     = new Automatic_Upgrader_Skin();
 			$upgrader = new Plugin_Upgrader( $skin );
 			$result   = $upgrader->upgrade( MCD_PLUGIN );
+
+			@unlink( $temp_zip );
 
 			if ( is_wp_error( $result ) ) {
 				return new WP_REST_Response(

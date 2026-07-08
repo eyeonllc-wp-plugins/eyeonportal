@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from EyeOn Portal.
-Version: 1.0.19
+Version: 1.0.20
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -23,7 +23,6 @@ $eyeonportal_update_checker = PucFactory::buildUpdateChecker(
 	'eyeonportal'
 );
 $eyeonportal_update_checker->setBranch('main');
-// $myUpdateChecker->setAuthentication('token_here');
 
 
 defined('MCD_REDUX_OPT_NAME')		OR define( 'MCD_REDUX_OPT_NAME', 'mcd_settings' );
