@@ -7,6 +7,8 @@ on:
 jobs:
   release:
     name: Release if version changed
+    # Skip automated map asset sync commits from threejs-map CI
+    if: ${{ !startsWith(github.event.head_commit.message, 'ThreeJS Map:') }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -52,7 +54,7 @@ jobs:
 
   slackNotification:
     needs: [release]
-    if: always() && !cancelled()
+    if: always() && !cancelled() && needs.release.result != 'skipped'
     name: Slack Notification
     runs-on: ubuntu-latest
     steps:
