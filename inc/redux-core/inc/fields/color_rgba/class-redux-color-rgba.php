@@ -54,10 +54,10 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 			$this->field['options'] = isset( $this->field['options'] ) ? wp_parse_args( $this->field['options'], $option_defaults ) : $option_defaults;
 
-			// Convert empty array to null, if there.
+			// Convert an empty array to null, if there.
 			$this->field['options']['palette'] = empty( $this->field['options']['palette'] ) ? null : $this->field['options']['palette'];
 
-			$this->field['output_transparent'] = isset( $this->field['output_transparent'] ) ? $this->field['output_transparent'] : false;
+			$this->field['output_transparent'] = $this->field['output_transparent'] ?? false;
 		}
 
 		/**
@@ -72,8 +72,8 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 			$field_id = $this->field['id'];
 
 			// Color picker container.
-			echo '<div 
-                  class="redux-color-rgba-container ' . esc_attr( $this->field['class'] ) . '" 
+			echo '<div
+                  class="redux-color-rgba-container ' . esc_attr( $this->field['class'] ) . '"
                   data-id="' . esc_attr( $field_id ) . '"
                   data-show-input="' . esc_attr( $this->field['options']['show_input'] ) . '"
                   data-show-initial="' . esc_attr( $this->field['options']['show_initial'] ) . '"
@@ -161,8 +161,8 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 			// Field dependent JS.
 			wp_enqueue_script(
-				'redux-field-color-rgba-js',
-				Redux_Core::$url . 'inc/fields/color_rgba/redux-color-rgba' . Redux_Functions::is_min() . '.js',
+				'redux-field-color-rgba',
+				Redux_Core::$url . 'inc/fields/color_rgba/redux-color-rgba' . $min . '.js',
 				array( 'jquery', 'redux-spectrum-js', 'redux-js' ),
 				$this->timestamp,
 				true
@@ -175,24 +175,23 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 
 			if ( $this->parent->args['dev_mode'] ) {
 				wp_enqueue_style(
-					'redux-field-color-rgba-css',
+					'redux-field-color-rgba',
 					Redux_Core::$url . 'inc/fields/color_rgba/redux-color-rgba.css',
 					array(),
-					$this->timestamp,
-					'all'
+					$this->timestamp
 				);
 			}
 		}
 
 		/**
 		 * -> getColorVal.  Returns formatted color val in hex or rgba.
-		 * If this field requires any scripts, or css define this function and register/enqueue the scripts/css
+		 * If this field requires any scripts or css, define this function and register/enqueue the scripts/css
 		 *
 		 * @since       1.0.0
 		 * @access      private
 		 * @return      string
 		 */
-		private function get_color_val() {
+		private function get_color_val(): string {
 
 			// No notices.
 			$color = '';
@@ -211,7 +210,6 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 					} elseif ( 'color' === $id ) {
 						$color = ! empty( $val ) ? $val : '';
 					} elseif ( 'rgba' === $id ) {
-						$rgba = ! empty( $val ) ? $val : '';
 						$rgba = Redux_Helpers::hex2rgba( $color, $alpha );
 					}
 				}
@@ -230,12 +228,10 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 		 *
 		 * @param string $data Field data.
 		 *
-		 * @return array|void
+		 * @return string
 		 */
-		public function css_style( $data ) {
-			$style = array();
-
-			return $style;
+		public function css_style( $data ): string {
+			return '';
 		}
 
 		/**
@@ -245,7 +241,7 @@ if ( ! class_exists( 'Redux_Color_Rgba', false ) ) {
 		 * @since   1.0.0
 		 * @access  public
 		 *
-		 * @param   string $style css data.
+		 * @param   string|null|array $style css data.
 		 *
 		 * @return  void
 		 */

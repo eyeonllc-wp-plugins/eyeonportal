@@ -3,13 +3,13 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from EyeOn Portal.
-Version: 0.1.90
+Version: 1.0.14
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
 */
 
-define('THREEJS_MAP_VERSION', '1.1.18');
+define('THREEJS_MAP_VERSION', '1.1.23');
 define('THREEJS_MAP_API_RESPONSE_KEY', 'eyeon_map_api_response');
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -21,7 +21,7 @@ $myUpdateChecker = PucFactory::buildUpdateChecker(
 	__FILE__,
 	'eyeonportal'
 );
-$myUpdateChecker->setBranch('master');
+$myUpdateChecker->setBranch('main');
 // $myUpdateChecker->setAuthentication('token_here');
 
 
@@ -46,6 +46,7 @@ $api_base_url = 'https://web-backend-prod.eyeonportal.com';
 if( isset($mcd_settings['api_access_token']) && !empty($mcd_settings['api_access_token']) ) {
 	if( strpos($mcd_settings['api_access_token'], 'stage_') === 0 ) {
 		$api_base_url = 'https://web-backend-staging.eyeonportal.com';
+    // $api_base_url = 'http://localhost:3002';
 	} elseif( strpos($mcd_settings['api_access_token'], 'dev_') === 0 ) {
 		$api_base_url = 'http://localhost:3002';
 	}
@@ -62,6 +63,7 @@ defined('MCD_API_NEWS')	            OR define( 'MCD_API_NEWS', '/v1/blogs' );
 defined('MCD_API_BANNERS')	        OR define( 'MCD_API_BANNERS', '/v1/web_slider' );
 
 defined('MCD_API_CENTER_HOURS')	    OR define( 'MCD_API_CENTER_HOURS', '/v1/opening_hours' );
+defined('MCD_API_CHAT')             OR define( 'MCD_API_CHAT', '/v1/chat' );
 defined('MCP_API_LINKS')			      OR define( 'MCP_API_LINKS', '/v1/links' );
 
 defined('RESTAURANTS_CATEGORY_ID')	OR define( 'RESTAURANTS_CATEGORY_ID', '4' );
@@ -87,6 +89,7 @@ if ( is_admin() ) {
 // if ( !is_admin() && !wp_is_json_request() ) {
 	// Frontend Shortcodes
 	require_once MCD_PLUGIN_PATH . 'inc/Shortcodes.php';
+	require_once MCD_PLUGIN_PATH . 'inc/Chatbot.php';
 	require_once MCD_PLUGIN_PATH . 'elementor/RegisterWidgets.php';
 // }
 

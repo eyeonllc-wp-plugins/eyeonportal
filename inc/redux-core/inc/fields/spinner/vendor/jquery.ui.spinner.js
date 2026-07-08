@@ -17,7 +17,11 @@
  * Deprecated boxSupport was removed, since Redux does not use boxSupport.
  */
 
+/* global jQuery */
+
 jQuery.uaMatch = function( ua ) {
+	'use strict';
+
 	var match;
 
 	ua = ua.toLowerCase();
@@ -34,6 +38,8 @@ jQuery.uaMatch = function( ua ) {
 };
 
 (function( $ ) {
+	'use strict';
+
 	var active   = 'ui-state-active';
 	var hover    = 'ui-state-hover';
 	var disabled = 'ui-state-disabled';
@@ -142,7 +148,6 @@ jQuery.uaMatch = function( ua ) {
 				var upButton;
 				var downButton;
 				var buttons;
-				var icons;
 				var hoverDelay;
 				var hoverDelayCallback;
 				var hovered;
@@ -172,8 +177,8 @@ jQuery.uaMatch = function( ua ) {
 						input = _this.element[0];
 						dir   = upButton === this ? 1 : - 1;
 
-						input.focus();
-						input.select();
+						input.focus;
+						input.select;
 
 						$( this ).addClass( active );
 
@@ -219,11 +224,7 @@ jQuery.uaMatch = function( ua ) {
 						return false;
 					}
 
-					if ( _this.places > 0 && ch === options.point || ch === options.group ) {
-						return false;
-					}
-
-					return true;
+					return ! ( _this.places > 0 && ch === options.point || ch === options.group );
 				}
 
 				function isSpecialKey( keyCode ) {
@@ -239,7 +240,7 @@ jQuery.uaMatch = function( ua ) {
 					return false;
 				}
 
-				wrapper                       = input.wrap( '<span class="spinner-wrpr" />' ).css(
+				wrapper = input.wrap( '<span class="spinner-wrpr" />' ).css(
 					{
 						width: ( _this.oWidth = input.outerWidth() ) - buttonWidth + '!important',
 						marginRight: '30px',
@@ -277,7 +278,6 @@ jQuery.uaMatch = function( ua ) {
 
 				upButton   = buttons[0];
 				downButton = buttons[1];
-				icons      = buttons.find( '.ui-icon' );
 
 				btnContainer.width( '135px' );
 
@@ -286,7 +286,7 @@ jQuery.uaMatch = function( ua ) {
 				}
 
 				if ( 'hover' === showOn || 'both' === showOn ) {
-					buttons.add( input ).bind(
+					buttons.add( input ).on(
 						'mouseenter' + eventNamespace,
 						function() {
 							setHoverDelay(
@@ -298,7 +298,7 @@ jQuery.uaMatch = function( ua ) {
 								}
 							);
 						}
-					).bind(
+					).on(
 						'mouseleave' + eventNamespace,
 						function() {
 							setHoverDelay(
@@ -313,7 +313,8 @@ jQuery.uaMatch = function( ua ) {
 					);
 				}
 
-				buttons.hover(
+				buttons.on(
+					'hover',
 					function() {
 						_this.buttons.removeClass( hover );
 						if ( ! options.disabled ) {
@@ -323,10 +324,23 @@ jQuery.uaMatch = function( ua ) {
 					function() {
 						$( this ).removeClass( hover );
 					}
-				).mousedown( mouseDown ).mouseup( mouseUp ).mouseout( mouseUp );
+				)
+				.on(
+					'mousedown',
+					mouseDown
+				)
+				.on(
+					'mouseup',
+					mouseUp
+				)
+				.on(
+					'mouseout',
+					mouseUp
+				);
 
 				if ( msie ) {
-					buttons.dblclick(
+					buttons.on(
+						'dblclick',
 						function() {
 							if ( ! options.disabled ) {
 								_this._change();
@@ -335,7 +349,7 @@ jQuery.uaMatch = function( ua ) {
 
 							return false;
 						}
-					).bind(
+					).on(
 						'selectstart',
 						function() {
 							return false;
@@ -343,7 +357,7 @@ jQuery.uaMatch = function( ua ) {
 					);
 				}
 
-				input.bind(
+				input.on(
 					'keydown' + eventNamespace,
 					function( e ) {
 						var dir;
@@ -408,7 +422,7 @@ jQuery.uaMatch = function( ua ) {
 							return false;
 						}
 					}
-				).bind(
+				).on(
 					'keyup' + eventNamespace,
 					function( e ) {
 						if ( e.ctrl || e.alt ) {
@@ -433,23 +447,23 @@ jQuery.uaMatch = function( ua ) {
 								return false;
 						}
 					}
-				).bind(
+				).on(
 					'keypress' + eventNamespace,
 					function( e ) {
 						if ( invalidKey( e.keyCode, e.charCode ) ) {
 							return false;
 						}
 					}
-				).bind(
+				).on(
 					'change' + eventNamespace,
 					function() {
 						_this._change();
 					}
-				).bind(
+				).on(
 					'focus' + eventNamespace,
 					function() {
 						function selectAll() {
-							_this.element.select();
+							_this.element.trigger( 'select' );
 						}
 
 						if ( msie ) {
@@ -465,7 +479,7 @@ jQuery.uaMatch = function( ua ) {
 							_this.showButtons();
 						}
 					}
-				).bind(
+				).on(
 					'blur' + eventNamespace,
 					function() {
 						_this.focused = false;
@@ -565,10 +579,10 @@ jQuery.uaMatch = function( ua ) {
 
 				_this._change();
 
-				input.unbind( mouseWheelEventName + eventNamespace );
+				input.off( mouseWheelEventName + eventNamespace );
 
 				if ( options.mouseWheel ) {
-					input.bind( mouseWheelEventName + eventNamespace, _this._mouseWheel );
+					input.on( mouseWheelEventName + eventNamespace, _this._mouseWheel );
 				}
 			},
 			_mouseWheel: function( e ) {
@@ -727,7 +741,7 @@ jQuery.uaMatch = function( ua ) {
 
 				if ( ! suppressFireEvent ) {
 					_this.selfChange = true;
-					_this.element.change();
+					_this.element.trigger( 'change' );
 					_this.selfChange = false;
 				}
 			},
@@ -755,7 +769,7 @@ jQuery.uaMatch = function( ua ) {
 			destroy: function() {
 				this.wrapper.remove();
 
-				this.element.unbind( eventNamespace ).css(
+				this.element.off( eventNamespace ).css(
 					{
 						width: this.oWidth,
 						marginRight: this.oMargin

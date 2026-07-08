@@ -71,9 +71,38 @@ function mcd_api_data($url) {
 	);
 }
 
+function mcd_api_post($url, $body = array()) {
+  global $mcd_settings;
+  $url = API_BASE_URL.$url;
+  $args = array(
+    'method' => 'POST',
+    'timeout' => 90,
+    'sslverify' => false,
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Cookie' => 'webAppApiToken='.$mcd_settings['api_access_token'],
+      'Origin' => $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST']
+    ),
+    'body' => wp_json_encode($body),
+  );
+  $req = wp_remote_post( $url, $args );
+  $status = wp_remote_retrieve_response_code( $req );
+  $body_response = wp_remote_retrieve_body( $req );
+  $data = json_decode( $body_response, true );
+  return array(
+    'status' => $status,
+    'data' => $data
+  );
+}
+
 function eyeon_get_center() {
 	$response = mcd_api_data( MCD_API_CENTER );
   return $response['data'];
+}
+
+function eyeon_is_chatbot_enabled() {
+  $center = eyeon_get_center();
+  return ! empty( $center['chatbot_enabled'] );
 }
 
 function mcd_get_file_content($file_path) {

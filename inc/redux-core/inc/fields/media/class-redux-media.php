@@ -37,9 +37,47 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				'width'     => '',
 				'height'    => '',
 				'thumbnail' => '',
+				'filter'    => array(
+					'grayscale'  => array(
+						'checked' => false,
+						'value'   => 0,
+					),
+					'blur'       => array(
+						'checked' => false,
+						'value'   => 0,
+					),
+					'sepia'      => array(
+						'checked' => false,
+						'value'   => 0,
+					),
+					'saturate'   => array(
+						'checked' => false,
+						'value'   => 1,
+					),
+					'opacity'    => array(
+						'checked' => false,
+						'value'   => 1,
+					),
+					'brightness' => array(
+						'checked' => false,
+						'value'   => 100,
+					),
+					'contrast'   => array(
+						'checked' => false,
+						'value'   => 100,
+					),
+					'hue-rotate' => array(
+						'checked' => false,
+						'value'   => 0,
+					),
+					'invert'     => array(
+						'checked' => false,
+						'value'   => 0,
+					),
+				),
 			);
 
-			// Since value subarrays do not get parsed in wp_parse_args!
+			// Since value sub-arrays do not get parsed in wp_parse_args!
 			$this->value = Redux_Functions::parse_args( $this->value, $defaults );
 
 			$defaults = array(
@@ -51,6 +89,17 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				'placeholder'  => esc_html__( 'No media selected', 'redux-framework' ),
 				'readonly'     => true,
 				'class'        => '',
+				'filter'       => array(
+					'grayscale'  => false,
+					'blur'       => false,
+					'sepia'      => false,
+					'saturate'   => false,
+					'opacity'    => false,
+					'brightness' => false,
+					'contrast'   => false,
+					'hue-rotate' => false,
+					'invert'     => false,
+				),
 			);
 
 			$this->field = Redux_Functions::parse_args( $this->field, $defaults );
@@ -59,12 +108,10 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				$this->field['mode'] = 0;
 			}
 
-			if ( Redux_Core::$pro_loaded ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				$this->field = apply_filters( 'redux/pro/media/field/set_defaults', $this->field );
-
-				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				$this->value = apply_filters( 'redux/pro/media/value/set_defaults', $this->value );
+			include_once Redux_Core::$dir . 'inc/lib/image-filters/class-redux-image-filters.php';
+			if ( in_array( true, $this->field['filter'], true ) ) {
+				$this->filters_enabled = true;
+				include_once Redux_Core::$dir . 'inc/lib/image-filters/class-redux-image-filters.php';
 			}
 		}
 
@@ -117,12 +164,11 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 					if ( ! empty( $this->field['default']['url'] ) ) {
 						$this->value['url'] = $this->field['default']['url'];
 					}
-				} else {
-					if ( is_numeric( $this->field['default'] ) ) { // Check if it's an attachment ID.
-						$this->value['id'] = $this->field['default'];
-					} else { // Must be a URL.
-						$this->value['url'] = $this->field['default'];
-					}
+				} elseif ( is_numeric( $this->field['default'] ) ) {
+					// Check if it's an attachment ID.
+					$this->value['id'] = $this->field['default'];
+				} else { // Must be a URL.
+					$this->value['url'] = $this->field['default'];
 				}
 			}
 
@@ -167,7 +213,7 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				if ( ! empty( $this->value['id'] ) ) {
 					$image = wp_get_attachment_image_src( $this->value['id'], array( 150, 150 ) );
 
-					if ( empty( $image[0] ) || '' === $image[0] ) {
+					if ( empty( $image[0] ) ) {
 						$this->value['thumbnail'] = $this->value['url'];
 					} else {
 						$this->value['thumbnail'] = $image[0];
@@ -177,15 +223,10 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 				}
 			}
 
-			$css = '';
-
-			if ( Redux_Core::$pro_loaded ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				$css = apply_filters( 'redux/pro/media/render/preview_css', null );
-			}
+			$css = $this->get_filter_css( $this->value['filter'] );
 
 			$alt = wp_prepare_attachment_for_js( $this->value['id'] );
-			$alt = isset( $alt['alt'] ) ? $alt['alt'] : '';
+			$alt = $alt['alt'] ?? '';
 
 			echo '<div class="screenshot" style="' . esc_attr( $hide ) . '">';
 			echo '<a class="of-uploaded-image" href="' . esc_url( $this->value['url'] ) . '" target="_blank">';
@@ -207,15 +248,30 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 			echo '<span class="button remove-image' . esc_attr( $hide ) . '" id="reset_' . esc_attr( $this->field['id'] ) . '" rel="' . esc_attr( $this->field['id'] ) . '">' . esc_html__( 'Remove', 'redux-framework' ) . '</span>';
 			echo '</div>';
 
-			if ( Redux_Core::$pro_loaded ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidHookName, WordPress.Security.EscapeOutput
-				echo apply_filters( 'redux/pro/media/render/filters', null );
+			if ( $this->filters_enabled ) {
+				$data = array(
+					'parent' => $this->parent,
+					'field'  => $this->field,
+					'value'  => $this->value,
+					'mode'   => 'media',
+				);
+
+				echo Redux_Image_Filters::render( $data ); // phpcs:ignore WordPress.Security.EscapeOutput
 			}
 		}
 
 		/**
+		 * Do enqueue for each field instance.
+		 *
+		 * @return void
+		 */
+		public function always_enqueue() {
+			Redux_Image_Filters::enqueue( $this->filters_enabled );
+		}
+
+		/**
 		 * Enqueue Function.
-		 * If this field requires any scripts, or css define this function and register/enqueue the scripts/css
+		 * If this field requires any scripts, or CSS define this function and register/enqueue the scripts/css
 		 *
 		 * @since       1.0.0
 		 * @access      public
@@ -229,20 +285,15 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 			}
 
 			wp_enqueue_script(
-				'redux-field-media-js',
+				'redux-field-media',
 				Redux_Core::$url . 'assets/js/media/media' . Redux_Functions::is_min() . '.js',
 				array( 'jquery', 'redux-js' ),
 				$this->timestamp,
 				true
 			);
 
-			if ( Redux_Core::$pro_loaded ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				do_action( 'redux/pro/media/enqueue' );
-			}
-
 			if ( $this->parent->args['dev_mode'] ) {
-				wp_enqueue_style( 'redux-field-media-css' );
+				wp_enqueue_style( 'redux-field-media' );
 			}
 		}
 
@@ -251,17 +302,47 @@ if ( ! class_exists( 'Redux_Media', false ) ) {
 		 *
 		 * @param string $data CSS data.
 		 *
-		 * @return mixed|null|void
+		 * @return string|null
 		 */
-		public function css_style( $data ) {
-			if ( Redux_Core::$pro_loaded ) {
-				// phpcs:ignore WordPress.NamingConventions.ValidHookName
-				$pro_data = apply_filters( 'redux/pro/media/output', $data );
+		public function css_style( $data ): string {
+			$data = (array) $data;
 
-				return $pro_data;
+			if ( isset( $data['filter'] ) ) {
+				return $this->get_filter_css( $data['filter'] );
 			}
 
-			return null;
+			return '';
+		}
+
+		/**
+		 * Get filter CSS.
+		 *
+		 * @param array $data Data.
+		 *
+		 * @return string
+		 */
+		private function get_filter_css( array $data ): string {
+			$css = '';
+
+			foreach ( $data as $filter => $values ) {
+				$checked = filter_var( $values['checked'], FILTER_VALIDATE_BOOLEAN );
+
+				if ( true === $checked ) {
+					$unit = Redux_Image_Filters::get_filter_unit( $filter );
+
+					if ( '&deg;' === $unit ) {
+						$unit = 'deg';
+					}
+
+					$css .= ' ' . $filter . '(' . $values['value'] . $unit . ')';
+				}
+			}
+
+			if ( '' !== $css ) {
+				return 'filter:' . $css . ';-webkit-filter:' . $css . ';';
+			}
+
+			return '';
 		}
 	}
 }

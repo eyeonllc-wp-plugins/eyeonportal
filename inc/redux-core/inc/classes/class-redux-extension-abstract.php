@@ -5,6 +5,7 @@
  * @class   Redux_Extension_Abstract
  * @version 4.0.0
  * @package Redux Framework/Classes
+ * @noinspection PhpUnused
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -13,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  * Class Redux_Extension_Abstract
  * An abstract class to make the writing of redux extensions easier by allowing users to extend this class
  *
- * @see the samples directory to find an usage example
+ * @see the samples directory to find a usage example
  */
 abstract class Redux_Extension_Abstract {
 	/**
@@ -28,21 +29,21 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @var string
 	 */
-	protected $extension_url;
+	protected string $extension_url;
 
 	/**
 	 * The extension dir.
 	 *
 	 * @var string
 	 */
-	protected $extension_dir;
+	protected string $extension_dir;
 
 	/**
 	 * The instance of the extension
 	 *
-	 * @var static
+	 * @var null|object
 	 */
-	protected static $instance;
+	protected static ?object $instance;
 
 	/**
 	 * The extension's file
@@ -54,27 +55,27 @@ abstract class Redux_Extension_Abstract {
 	/**
 	 * The redux framework instance that spawned the extension.
 	 *
-	 * @var ReduxFramework
+	 * @var ReduxFramework|null
 	 */
-	public $parent;
+	public ?ReduxFramework $parent;
 
 	/**
 	 * The ReflectionClass of the extension
 	 *
 	 * @var ReflectionClass
 	 */
-	protected $reflection_class;
+	protected ReflectionClass $reflection_class;
 
 	/**
 	 * Redux_Extension_Abstract constructor.
 	 *
-	 * @param object $parent ReduxFramework pointer.
-	 * @param string $file   Extension file.
+	 * @param ReduxFramework $redux ReduxFramework pointer.
+	 * @param string         $file  Extension file.
 	 */
-	public function __construct( $parent, $file = '' ) {
-		$this->parent = $parent;
+	public function __construct( ReduxFramework $redux, string $file = '' ) {
+		$this->parent = $redux;
 
-		// If the file is not given make sure we have one.
+		// If the file is not given, make sure we have one.
 		if ( empty( $file ) ) {
 			$file = $this->get_reflection()->getFileName();
 		}
@@ -102,13 +103,9 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @return ReflectionClass
 	 */
-	protected function get_reflection() {
+	protected function get_reflection(): ReflectionClass {
 		if ( ! isset( $this->reflection_class ) ) {
-			try {
-				$this->reflection_class = new ReflectionClass( $this );
-			} catch ( ReflectionException $e ) { // phpcs:ignore
-				error_log( $e->getMessage() ); // phpcs:ignore
-			}
+			$this->reflection_class = new ReflectionClass( $this );
 		}
 
 		return $this->reflection_class;
@@ -119,16 +116,16 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @return string
 	 */
-	public static function get_version() {
+	public static function get_version(): string {
 		return static::$version;
 	}
 
 	/**
 	 * Returns extension instance.
 	 *
-	 * @return Redux_Extension_Abstract
+	 * @return object
 	 */
-	public static function get_instance() {
+	public static function get_instance(): object {
 		return static::$instance;
 	}
 
@@ -137,7 +134,7 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @return string
 	 */
-	public function get_dir() {
+	public function get_dir(): string {
 		return $this->extension_dir;
 	}
 
@@ -146,7 +143,7 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @return string
 	 */
-	public function get_url() {
+	public function get_url(): string {
 		return $this->extension_url;
 	}
 
@@ -155,17 +152,9 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @param string $field_name Name of field.
 	 */
-	protected function add_overload_field_filter( $field_name ) {
+	protected function add_overload_field_filter( string $field_name ) {
 		// phpcs:ignore WordPress.NamingConventions.ValidHookName
-		add_filter(
-			'redux/' . $this->parent->args['opt_name'] . '/field/class/' . $field_name,
-			array(
-				&$this,
-				'overload_field_path',
-			),
-			10,
-			2
-		);
+		add_filter( 'redux/' . $this->parent->args['opt_name'] . '/field/class/' . $field_name, array( &$this, 'overload_field_path' ), 10, 2 );
 	}
 
 	/**
@@ -173,7 +162,7 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @param string $field_name Name of field.
 	 */
-	protected function add_field( $field_name ) {
+	protected function add_field( string $field_name ) {
 		$class = $this->get_reflection()->getName();
 
 		// phpcs:ignore WordPress.NamingConventions.ValidHookName
@@ -181,6 +170,7 @@ abstract class Redux_Extension_Abstract {
 			'redux/fields',
 			function ( $classes ) use ( $field_name, $class ) {
 				$classes[ $field_name ] = $class;
+
 				return $classes;
 			}
 		);
@@ -189,14 +179,14 @@ abstract class Redux_Extension_Abstract {
 	}
 
 	/**
-	 * Overload field path.
+	 * Overload a field path.
 	 *
 	 * @param string $file  Extension file.
 	 * @param array  $field Field array.
 	 *
 	 * @return string
 	 */
-	public function overload_field_path( $file, $field ) {
+	public function overload_field_path( string $file, array $field ): string {
 		$filename_fix = str_replace( '_', '-', $field['type'] );
 
 		$files = array(
@@ -204,13 +194,11 @@ abstract class Redux_Extension_Abstract {
 			trailingslashit( dirname( $this->file ) ) . $field['type'] . DIRECTORY_SEPARATOR . 'class-redux-' . $filename_fix . '.php',
 		);
 
-		$filename = Redux_Functions::file_exists_ex( $files );
-
-		return $filename;
+		return Redux_Functions::file_exists_ex( $files );
 	}
 
 	/**
-	 * Sets the minimum version of Redux to use.  Displays a notice if requirments not met.
+	 * Sets the minimum version of Redux to use.  Displays a notice if requirements are not met.
 	 *
 	 * @param string $min_version       Minimum version to evaluate.
 	 * @param string $extension_version Extension version number.
@@ -218,19 +206,19 @@ abstract class Redux_Extension_Abstract {
 	 *
 	 * @return bool
 	 */
-	public function is_minimum_version( $min_version = '', $extension_version = '', $friendly_name = '' ) {
+	public function is_minimum_version( string $min_version = '', string $extension_version = '', string $friendly_name = '' ): bool {
 		$redux_ver = Redux_Core::$version;
 
 		if ( '' !== $min_version ) {
 			if ( version_compare( $redux_ver, $min_version ) < 0 ) {
 				// translators: %1$s Extension friendly name. %2$s: minimum Redux version.
-				$msg = '<strong>' . sprintf( esc_html__( 'The %1$s extension requires Redux Framework version %2$s or higher.', 'redux-framework' ), $friendly_name, $min_version ) . '</strong>&nbsp;&nbsp;' . esc_html__( 'You are currently running Redux Framework version ', 'redux-framework' ) . ' ' . $redux_ver . '.<br/><br/>' . esc_html__( 'This field will not render in your option panel, and featuress of this extension will not be available until the latest version of Redux Framework has been installed.', 'redux-framework' );
+				$msg = '<strong>' . sprintf( esc_html__( 'The %1$s extension requires Redux Framework version %2$s or higher.', 'redux-framework' ), $friendly_name, $min_version ) . '</strong>&nbsp;&nbsp;' . esc_html__( 'You are currently running Redux Framework version ', 'redux-framework' ) . ' ' . $redux_ver . '.<br/><br/>' . esc_html__( 'This field will not render in your option panel, and features of this extension will not be available until the latest version of Redux Framework has been installed.', 'redux-framework' );
 
 				$data = array(
 					'parent'  => $this->parent,
 					'type'    => 'error',
 					'msg'     => $msg,
-					'id'      => $this->ext_name . '_notice_' . $extension_version,
+					'id'      => $this->extension_name . '_notice_' . $extension_version,
 					'dismiss' => false,
 				);
 

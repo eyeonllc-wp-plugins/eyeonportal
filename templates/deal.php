@@ -90,12 +90,14 @@ if( isset($mycenterdeal['next']) ) {
             </ul>
           </div>
           <?php endif; ?>
+
+          <?php if( !empty($this->mcd_settings['map_page']) && $mycenterdeal['retailers'][0]['mapit'] ) :
+            $map_url = get_permalink($this->mcd_settings['map_page']).$mycenterdeal['retailers'][0]['slug'].'?r='.$mycenterdeal['retailers'][0]['id'];
+            ?>
+            <a href="<?= $map_url ?>" class="eyeon-btn">Map IT</a>
+          <?php endif; ?>				</div>
 				</div>
 			</div>
-		</div>
-
-	<?php endif; ?>	
-</div>
-
+		<?php endif; ?>
+	</div>
 <?php endif; ?>
-

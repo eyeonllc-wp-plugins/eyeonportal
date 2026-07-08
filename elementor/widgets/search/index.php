@@ -134,7 +134,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
           'size' => 42,
         ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar' => 'height: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div' => 'height: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
@@ -157,7 +157,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
           'size' => 1,
         ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar' => 'border-width: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div' => 'border-width: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
@@ -168,7 +168,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
         'label' => __( 'Background Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar' => 'background-color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div' => 'background-color: {{VALUE}}',
         ],
         'default' => '#F8F8F8',
       ]
@@ -180,7 +180,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
         'label' => __( 'Border Color', EYEON_NAMESPACE ),
         'type' => \Elementor\Controls_Manager::COLOR,
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar' => 'border-color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div' => 'border-color: {{VALUE}}',
         ],
         'default' => '#CCCCCC',
       ]
@@ -204,7 +204,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
           'size' => 4,
         ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar' => 'border-radius: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div' => 'border-radius: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
@@ -244,7 +244,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
           'size' => 20,
         ],
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar .icon-search' => 'font-size: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div .icon-search' => 'font-size: {{SIZE}}{{UNIT}};',
         ],
       ]
     );
@@ -256,7 +256,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::COLOR,
         'default' => '#888888',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar .icon-search' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div .icon-search' => 'color: {{VALUE}}',
         ],
       ]
     );
@@ -279,7 +279,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
       \Elementor\Group_Control_Typography::get_type(),
       [
         'name' => 'search_input_typography',
-        'selector' => '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar .stores-search',
+        'selector' => '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div .stores-search',
       ]
     );
 
@@ -290,7 +290,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::COLOR,
         'default' => '#444444',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar .stores-search' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div .stores-search' => 'color: {{VALUE}}',
         ],
       ]
     );
@@ -302,7 +302,7 @@ class EyeOn_Search_Widget extends \Elementor\Widget_Base {
         'type' => \Elementor\Controls_Manager::COLOR,
         'default' => '#888888',
         'selectors' => [
-          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-bar .stores-search::placeholder' => 'color: {{VALUE}}',
+          '{{WRAPPER}} .eyeon-search .eyeon-wrapper .search-div .stores-search::placeholder' => 'color: {{VALUE}}',
         ],
       ]
     );

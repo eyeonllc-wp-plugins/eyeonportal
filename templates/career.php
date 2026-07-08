@@ -83,6 +83,12 @@ if( isset($mycentercareer['next']) ) {
 						</ul>
 					</div>
 					<?php endif; ?>
+
+          <?php if( !empty($this->mcd_settings['map_page']) && $mycentercareer['retailer']['mapit'] ) :
+            $map_url = get_permalink($this->mcd_settings['map_page']).$mycentercareer['retailer']['slug'].'?r='.$mycentercareer['retailer']['id'];
+            ?>
+            <a href="<?= $map_url ?>" class="eyeon-btn">Map IT</a>
+          <?php endif; ?>				</div>
         </div>
 			</div>
 		</div>

@@ -114,7 +114,7 @@
 
 			// Allow the passing of an unwrapped function.
 			// Leaves other code a more comprehensible.
-			if ( ! $.isArray( functions ) ) {
+			if ( ! Array.isArray( functions ) ) {
 				functions = [functions];
 			}
 
@@ -334,7 +334,7 @@
 			// Prevent the change event from flowing upward.
 			if ( typeof item === 'string' ) {
 
-				item = [$( '<input type="hidden" name="' + item + '">' ).appendTo( handle ).addClass( clsList[3] ).change( function( e ) {
+				item = [$( '<input type="hidden" name="' + item + '">' ).appendTo( handle ).addClass( clsList[3] ).on( 'change', function( e ) {
 					e.stopPropagation();
 				} ), 'val'];
 			}
@@ -465,7 +465,7 @@
 			// pass the target so that it is 'this'.
 			call( callbacks, base.data( 'target' ) );
 
-			base.data( 'target' ).change();
+			base.data( 'target' ).trigger( 'change' );
 		}
 
 		// Event handlers
@@ -557,7 +557,7 @@
 			doc.off( namespace );
 
 			// Trigger the change event.
-			Dt.target.removeClass( clsList[14] + ' ' + clsList[20] ).change();
+			Dt.target.removeClass( clsList[14] + ' ' + clsList[20] ).trigger( 'change' );
 
 			// Trigger the 'end' callback.
 			call( Op['set'], Dt.target );
@@ -834,7 +834,7 @@
 				 */, 'start': {
 					'r': true, 't': function( q, o, w ) {
 						if ( o['handles'] === 1 ) {
-							if ( $.isArray( q ) ) {
+							if ( Array.isArray( q ) ) {
 								q = q[0];
 							}
 							q       = parseFloat( q );
@@ -944,7 +944,7 @@
 				 *	Not required. Must be a function.
 				 */, 'slide': {
 					't': function( q ) {
-						return $.isFunction( q );
+						return 'function' === typeof q;
 					}
 				}
 				/*	Set.
@@ -952,7 +952,7 @@
 				 *	Tested using the 'slide' test.
 				 */, 'set': {
 					't': function( q ) {
-						return $.isFunction( q );
+						return 'function' === typeof q;
 					}
 				}
 				/*	Block.
@@ -960,7 +960,7 @@
 				 *	Tested using the 'slide' test.
 				 */, 'block': {
 					't': function( q ) {
-						return $.isFunction( q );
+						return 'function' === typeof q;
 					}
 				}
 				/*	Step.
@@ -1186,7 +1186,7 @@
 
 			// If the value is to be set to a number, which is valid
 			// when using a one-handle slider, wrap it in an array.
-			if ( ! $.isArray( args ) ) {
+			if ( ! Array.isArray( args ) ) {
 				args = [args];
 			}
 
@@ -1226,7 +1226,7 @@
 					// parseFloat. Omitting this would result in a removal
 					// of decimals. This way, the developer can also
 					// input a comma separated string.
-					if ( $.type( to ) === 'string' ) {
+					if ( typeof to === 'string' ) {
 						to = to.replace( ',', '.' );
 					}
 

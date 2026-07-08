@@ -111,7 +111,7 @@ jQuery(document).ready(function($) {
       if (event_category > 0) {
         allEvents = allEvents.filter(function(event) {
           if (!event.category) return false;
-          return event.category.id === event_category;
+          return event.category && event.category.id === event_category;
         });
       }
       

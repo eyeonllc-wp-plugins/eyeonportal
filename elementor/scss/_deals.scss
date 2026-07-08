@@ -41,6 +41,10 @@
     }
 
     .deal {
+      display: block;
+      width: 100vw;
+      max-width: 100%;
+
       .image {
         position: relative;
         padding-top: 52.5%;

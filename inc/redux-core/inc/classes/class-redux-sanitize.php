@@ -22,18 +22,18 @@ if ( ! class_exists( 'Redux_Sanitize', false ) ) {
 		 * @since       4.0.0
 		 * @access      public
 		 *
-		 * @param       array $plugin_options PLugin Options.
+		 * @param       array $plugin_options Plugin Options.
 		 * @param       array $options Options.
 		 * @param       array $sections Sections array.
 		 *
 		 * @return      array $plugin_options
 		 */
-		public function sanitize( $plugin_options, $options, $sections ) {
+		public function sanitize( array $plugin_options, array $options, array $sections ): array {
 			$core = $this->core();
 
 			foreach ( $sections as $k => $section ) {
 				if ( isset( $section['fields'] ) ) {
-					foreach ( $section['fields'] as $fkey => $field ) {
+					foreach ( $section['fields'] as $field ) {
 
 						if ( is_array( $field ) ) {
 							$field['section_id'] = $k;
@@ -53,10 +53,10 @@ if ( ! class_exists( 'Redux_Sanitize', false ) ) {
 									$val_arr[] = $field['sanitize'];
 								}
 
-								foreach ( $val_arr as $idx => $function ) {
+								foreach ( $val_arr as $function ) {
 
 									// Check for empty id value.
-									if ( ! isset( $field['id'] ) || ! isset( $plugin_options[ $field['id'] ] ) || ( isset( $plugin_options[ $field['id'] ] ) && '' === $plugin_options[ $field['id'] ] ) ) {
+									if ( ! isset( $field['id'] ) || ! isset( $plugin_options[ $field['id'] ] ) || ( '' === $plugin_options[ $field['id'] ] ) ) {
 										continue;
 									}
 
@@ -65,7 +65,7 @@ if ( ! class_exists( 'Redux_Sanitize', false ) ) {
 											$options[ $field['id'] ] = '';
 										}
 
-										if ( isset( $plugin_options[ $field['id'] ] ) && is_array( $plugin_options[ $field['id'] ] ) && ! empty( $plugin_options[ $field['id'] ] ) ) {
+										if ( is_array( $plugin_options[ $field['id'] ] ) && ! empty( $plugin_options[ $field['id'] ] ) ) {
 											foreach ( $plugin_options[ $field['id'] ] as $key => $value ) {
 												$before = null;
 												$after  = null;
@@ -84,7 +84,7 @@ if ( ! class_exists( 'Redux_Sanitize', false ) ) {
 
 												$value = call_user_func( $function, $before );
 
-												if ( ! empty( $value ) || false !== $value ) {
+												if ( false !== $value ) {
 													$plugin_options[ $field['id'] ][ $key ] = $value;
 												} else {
 													unset( $plugin_options[ $field['id'] ][ $key ] );
@@ -114,7 +114,7 @@ if ( ! class_exists( 'Redux_Sanitize', false ) ) {
 											$core->sanitize[] = $field;
 										}
 
-										continue;
+										break;
 									}
 								}
 							}

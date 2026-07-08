@@ -3,6 +3,7 @@ $settings = $this->get_settings_for_display();
 $fields = [
   'day_name_type',
   'combine_days',
+  'show_child_set_title',
 ];
 $filtered_settings = array_intersect_key($settings, array_flip($fields));
 $unique_id = uniqid();
@@ -17,6 +18,7 @@ $unique_id = uniqid();
         </div>
       <?php endif; ?>
       <div class="content-col">
+        <div class="child-set-title"></div>
         <div class="center-hours"></div>
         <?php if( !empty($settings['center_hours_extra_text']) ) : ?>
           <div class="extra-text"><?= $settings['center_hours_extra_text'] ?></div>
@@ -32,6 +34,7 @@ $unique_id = uniqid();
 
     const eyeonCenterHours = $('#eyeon-center-hours-<?= $unique_id ?>');
     const centerHours = eyeonCenterHours.find('.center-hours');
+    const childSetTitle = eyeonCenterHours.find('.child-set-title');
 
     const { addDays, format, isWithinInterval, parseISO, startOfWeek } = dateFns;
 
@@ -68,7 +71,15 @@ $unique_id = uniqid();
     function renderHours(data) {
       eyeonCenterHours.removeClass('eyeon-loader').find('.eyeon-wrapper').removeClass('eyeon-hide');
       centerHours.html('');
-      
+      childSetTitle.html('').hide();
+
+      if (settings.show_child_set_title === 'yes') {
+        const activeTitle = getActiveChildSetTitle(data);
+        if (activeTitle) {
+          childSetTitle.html(activeTitle).show();
+        }
+      }
+
       const weeklyOpeningHours = getOpeningHoursForNext7Days(data);
       let formattedOpeningHours = formatOpeningHours(weeklyOpeningHours);
       if( settings.combine_days === 'yes' ) {
@@ -100,6 +111,26 @@ $unique_id = uniqid();
         `);
       <?php endif; ?>
     }
+
+    const getActiveChildSetTitle = (openingHours) => {
+      const next7Days = Array.from({ length: 7 }, (_, i) =>
+        addDays(startOfWeek(todayDate, { weekStartsOn: 1 }), i)
+      );
+      const childSets = openingHours.sets.filter((set) => !set.is_primary);
+      let matchedIndex = -1;
+      next7Days.forEach((day) => {
+        childSets.forEach((set, idx) => {
+          const inRange = isWithinInterval(day, {
+            start: parseISO(set.start_date),
+            end: parseISO(set.end_date),
+          });
+          if (inRange && idx > matchedIndex) {
+            matchedIndex = idx;
+          }
+        });
+      });
+      return matchedIndex >= 0 ? (childSets[matchedIndex].title || '') : '';
+    };
 
     const getOpeningHoursForNext7Days = (openingHours) => {
       const next7Days = Array.from({ length: 7 }, (_, i) =>

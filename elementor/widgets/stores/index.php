@@ -316,7 +316,7 @@ class EyeOn_Stores_Widget extends \Elementor\Widget_Base {
         'selectors' => [
           '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-categories-select .custom-select-wrapper .custom-select .custom-select__trigger' => 'height: {{SIZE}}{{UNIT}};',
           '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .stores-directory-heading span' => 'height: {{SIZE}}{{UNIT}};',
-          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .search-bar .stores-search' => 'height: {{SIZE}}{{UNIT}};',
+          '{{WRAPPER}} .eyeon-stores .eyeon-wrapper .stores-header .search-div .stores-search' => 'height: {{SIZE}}{{UNIT}};',
         ],
       ]
     );

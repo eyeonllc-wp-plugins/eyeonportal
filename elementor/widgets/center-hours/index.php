@@ -91,6 +91,18 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
     );
 
     $this->add_control(
+      'show_child_set_title',
+      [
+        'label' => __( 'Show Title for Child Set', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SWITCHER,
+        'label_on' => __( 'Yes', EYEON_NAMESPACE ),
+        'label_off' => __( 'No', EYEON_NAMESPACE ),
+        'return_value' => 'yes',
+        'default' => 'no',
+      ]
+    );
+
+    $this->add_control(
       'center_hours_icon',
       [
         'label' => __( 'Icon', EYEON_NAMESPACE ),
@@ -115,7 +127,7 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
     $this->start_controls_section(
       'style_settings',
       [
-        'label' => __( 'Styles', EYEON_NAMESPACE ),
+        'label' => __( 'Days & Hours Styles', EYEON_NAMESPACE ),
         'tab' => \Elementor\Controls_Manager::TAB_STYLE,
       ]
     );
@@ -235,6 +247,65 @@ class EyeOn_Center_Hours_Widget extends \Elementor\Widget_Base {
         'selectors' => [
           '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col i' => 'color: {{VALUE}}',
           '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .icon-col svg' => 'color: {{VALUE}}; fill: {{VALUE}}',
+        ],
+      ]
+    );
+
+    $this->end_controls_section();
+
+    // ================================================================
+    // CHILD SET TITLE
+    // ================================================================
+
+    $this->start_controls_section(
+      'child_set_title_style_settings',
+      [
+        'label' => __( 'Child Set Title', EYEON_NAMESPACE ),
+        'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+        'condition' => [
+          'show_child_set_title' => 'yes',
+        ],
+      ]
+    );
+
+    $this->add_group_control(
+      \Elementor\Group_Control_Typography::get_type(),
+      [
+        'name' => 'child_set_title_typography',
+        'selector' => '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .content-col .child-set-title',
+      ]
+    );
+
+    $this->add_responsive_control(
+      'child_set_title_margin_bottom',
+      [
+        'label' => __( 'Margin Bottom', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::SLIDER,
+        'range' => [
+          'px' => [
+            'min' => 0,
+            'max' => 40,
+            'step' => 1
+          ],
+        ],
+        'size_units' => ['px', '%'],
+        'default' => [
+          'unit' => 'px',
+          'size' => 8,
+        ],
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .content-col .child-set-title' => 'margin-bottom: {{SIZE}}{{UNIT}};',
+        ],
+      ]
+    );
+
+    $this->add_control(
+      'child_set_title_color',
+      [
+        'label' => __( 'Text Color', EYEON_NAMESPACE ),
+        'type' => \Elementor\Controls_Manager::COLOR,
+        'selectors' => [
+          '{{WRAPPER}} .eyeon-center-hours .center-hours-wrapper .content-col .child-set-title' => 'color: {{VALUE}}',
         ],
       ]
     );

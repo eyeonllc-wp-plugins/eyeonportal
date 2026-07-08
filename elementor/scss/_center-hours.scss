@@ -12,6 +12,10 @@
     .content-col {
       flex: 1;
 
+      .child-set-title {
+        font-weight: 600;
+      }
+
       .center-hours {
         display: flex;
         flex-direction: column;

@@ -152,7 +152,7 @@ jQuery(document).ready(function($) {
       settings.default_sorting = $(this).attr('data-value');
       eyeonDeals.find('.sorting-options .option').removeClass('active');
       $(this).addClass('active');
-      render();
+      render_deals();
     });
   <?php endif; ?>
 

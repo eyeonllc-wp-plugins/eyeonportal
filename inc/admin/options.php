@@ -134,7 +134,8 @@ $args = array(
 	'disable_save_warn'         => false,
 
 	// Order where the menu appears in the admin area. If there is any conflict, something will not show. Warning.
-	'page_priority'             => null,
+	// Settings is 80; place EyeOn Portal immediately after it.
+	'page_priority'             => 81,
 
 	// For a full list of options, visit: http://codex.wordpress.org/Function_Reference/add_submenu_page#Parameters.
 	'page_parent'               => 'themes.php',
@@ -245,6 +246,11 @@ require_once $redux_admin_path . 'sections/single-templates/career.php';
 require_once $redux_admin_path . 'sections/single-templates/blog.php';
 
 require_once $redux_admin_path . 'sections/shortcodes/shortcodes.php';
+
+$eyeon_center_for_chatbot = function_exists( 'eyeon_get_center' ) ? eyeon_get_center() : null;
+if ( ! empty( $eyeon_center_for_chatbot['chatbot_enabled'] ) ) {
+	require_once $redux_admin_path . 'sections/chatbot/settings.php';
+}
 
 /*
  * <--- END SECTIONS
