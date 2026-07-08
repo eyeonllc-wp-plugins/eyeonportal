@@ -152,7 +152,7 @@ if( isset($mycenterevent['next']) ) {
 				<div class="mcd-event-details-col">
 					<div class="mcd-event-name"><?= $mycenterevent['title'] ?></div>
 
-          <?php if( $date_display && $date_display !== 'hide_date' ) : ?>
+          <?php if( $date_display && $date_display !== 'hide' ) : ?>
             <div class="mcd-event-date-time">
               <?php if( $event_dates_list === 'range' ) : ?>
                 <span class="mcd-event-dates"><i class="far fa-calendar-alt"></i>&nbsp;<?= eyeon_format_date($mycenterevent['start_date']) ?> - <?= eyeon_format_date($mycenterevent['end_date']) ?></span>

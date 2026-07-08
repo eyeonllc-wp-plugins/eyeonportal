@@ -267,7 +267,7 @@ jQuery(document).ready(function($) {
 
     if( events.length > 0 ) {
       events.forEach(event => {
-        const showDate = event.list_page_date_display && event.list_page_date_display !== 'hide_date';
+        const showDate = event.list_page_date_display && event.list_page_date_display !== 'hide';
         const showTime = event.list_page_time_display === 'show' && !event.is_all_day_event;
 
         let dateHtml = '';
