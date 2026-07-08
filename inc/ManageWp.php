@@ -55,6 +55,87 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			return true;
 		}
 
+		private function is_allowed_package_url( $package_url ) {
+			$host = wp_parse_url( $package_url, PHP_URL_HOST );
+			if ( empty( $host ) ) {
+				return false;
+			}
+
+			$allowed_hosts = array(
+				'api.github.com',
+				'github.com',
+				'codeload.github.com',
+				'objects.githubusercontent.com',
+			);
+
+			return in_array( strtolower( $host ), $allowed_hosts, true );
+		}
+
+		private function resolve_package_data( $params ) {
+			if ( ! empty( $params['package_url'] ) && is_string( $params['package_url'] ) ) {
+				$package_url = esc_url_raw( $params['package_url'] );
+				if ( empty( $package_url ) || ! $this->is_allowed_package_url( $package_url ) ) {
+					return new WP_Error(
+						'invalid_package_url',
+						'Plugin package URL is not allowed.',
+						array( 'status' => 400 )
+					);
+				}
+
+				$response = wp_remote_get(
+					$package_url,
+					array(
+						'timeout'     => 180,
+						'redirection' => 5,
+						'user-agent'  => 'EyeOn-Portal-ManageWp/' . MCD_PLUGIN_VERSION,
+					)
+				);
+
+				if ( is_wp_error( $response ) ) {
+					return $response;
+				}
+
+				$status_code = wp_remote_retrieve_response_code( $response );
+				if ( $status_code < 200 || $status_code >= 300 ) {
+					return new WP_Error(
+						'download_failed',
+						'Failed to download plugin package.',
+						array( 'status' => 502 )
+					);
+				}
+
+				$package_data = wp_remote_retrieve_body( $response );
+				if ( empty( $package_data ) ) {
+					return new WP_Error(
+						'empty_package',
+						'Downloaded plugin package is empty.',
+						array( 'status' => 502 )
+					);
+				}
+
+				return $package_data;
+			}
+
+			if ( ! empty( $params['package_base64'] ) && is_string( $params['package_base64'] ) ) {
+				$package_data = base64_decode( $params['package_base64'], true );
+				if ( false === $package_data || '' === $package_data ) {
+					return new WP_Error(
+						'invalid_package',
+						'Invalid plugin package.',
+						array( 'status' => 400 )
+					);
+				}
+
+				return $package_data;
+			}
+
+			return new WP_Error(
+				'missing_package',
+				'Plugin package not provided.',
+				array( 'status' => 400 )
+			);
+		}
+
 		public function handle_status( $request ) {
 			$auth = $this->verify_token( $request );
 			if ( is_wp_error( $auth ) ) {
@@ -83,27 +164,19 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				return $auth;
 			}
 
-			$params = $request->get_json_params();
-			if ( empty( $params['package_base64'] ) || ! is_string( $params['package_base64'] ) ) {
-				return new WP_REST_Response(
-					array(
-						'success' => false,
-						'code'    => 'missing_package',
-						'message' => 'Plugin package not provided.',
-					),
-					400
-				);
-			}
+			$params       = $request->get_json_params();
+			$package_data = $this->resolve_package_data( $params );
+			if ( is_wp_error( $package_data ) ) {
+				$status = $package_data->get_error_data();
+				$code   = is_array( $status ) && isset( $status['status'] ) ? (int) $status['status'] : 400;
 
-			$package_data = base64_decode( $params['package_base64'], true );
-			if ( false === $package_data || '' === $package_data ) {
 				return new WP_REST_Response(
 					array(
 						'success' => false,
-						'code'    => 'invalid_package',
-						'message' => 'Invalid plugin package.',
+						'code'    => $package_data->get_error_code(),
+						'message' => $package_data->get_error_message(),
 					),
-					400
+					$code
 				);
 			}
 
@@ -114,6 +187,73 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				MCD_PLUGIN_VERSION,
 				$target_version
 			);
+		}
+
+		private function normalize_plugin_zip_file( $zip_path ) {
+			$zip = new ZipArchive();
+			if ( true !== $zip->open( $zip_path ) ) {
+				return new WP_Error(
+					'invalid_zip',
+					'Downloaded package is not a valid zip archive.',
+					array( 'status' => 502 )
+				);
+			}
+
+			if ( false !== $zip->locateName( 'eyeonportal/eyeonportal.php' ) ) {
+				$zip->close();
+				return $zip_path;
+			}
+
+			$plugin_path = false;
+			for ( $i = 0; $i < $zip->numFiles; $i++ ) {
+				$name = $zip->getNameIndex( $i );
+				if ( is_string( $name ) && preg_match( '#/eyeonportal\.php$#', $name ) ) {
+					$plugin_path = $name;
+					break;
+				}
+			}
+
+			if ( ! $plugin_path ) {
+				$zip->close();
+				return new WP_Error(
+					'plugin_entry_missing',
+					'Downloaded package is missing eyeonportal.php.',
+					array( 'status' => 502 )
+				);
+			}
+
+			$prefix      = preg_replace( '/eyeonportal\.php$/', '', $plugin_path );
+			$new_zip_path = $zip_path . '.normalized.zip';
+			$new_zip     = new ZipArchive();
+
+			if ( true !== $new_zip->open( $new_zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE ) ) {
+				$zip->close();
+				return new WP_Error(
+					'zip_create_failed',
+					'Could not create normalized plugin package.',
+					array( 'status' => 500 )
+				);
+			}
+
+			for ( $i = 0; $i < $zip->numFiles; $i++ ) {
+				$name = $zip->getNameIndex( $i );
+				if ( ! is_string( $name ) || strpos( $name, $prefix ) !== 0 || substr( $name, -1 ) === '/' ) {
+					continue;
+				}
+
+				$relative = substr( $name, strlen( $prefix ) );
+				if ( '' === $relative ) {
+					continue;
+				}
+
+				$new_zip->addFromString( 'eyeonportal/' . $relative, $zip->getFromIndex( $i ) );
+			}
+
+			$zip->close();
+			$new_zip->close();
+			@unlink( $zip_path );
+
+			return $new_zip_path;
 		}
 
 		private function install_plugin_package( $package_data, $previous_version, $target_version = null ) {
@@ -152,6 +292,20 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 					500
 				);
 			}
+
+			$normalized_zip = $this->normalize_plugin_zip_file( $temp_zip );
+			if ( is_wp_error( $normalized_zip ) ) {
+				@unlink( $temp_zip );
+				return new WP_REST_Response(
+					array(
+						'success' => false,
+						'code'    => $normalized_zip->get_error_code(),
+						'message' => $normalized_zip->get_error_message(),
+					),
+					502
+				);
+			}
+			$temp_zip = $normalized_zip;
 
 			$transient = get_site_transient( 'update_plugins' );
 			if ( ! is_object( $transient ) ) {
