@@ -153,6 +153,7 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 					'plugin_active'      => is_plugin_active( MCD_PLUGIN ),
 					'remote_version'     => MCD_PLUGIN_VERSION,
 					'update_available'   => false,
+					'plugin_slug'        => dirname( MCD_PLUGIN ),
 					'manage_api_version' => self::MANAGE_API_VERSION,
 				)
 			);
@@ -162,6 +163,23 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			$auth = $this->verify_token( $request );
 			if ( is_wp_error( $auth ) ) {
 				return $auth;
+			}
+
+			// The plugin must live in the canonical "eyeonportal" folder. When it
+			// does not (e.g. it was installed from a versioned zip as
+			// "eyeonportal-0.1.89"), an in-place update cannot reliably target the
+			// active plugin, so refuse loudly and force a proper reinstall instead
+			// of silently "succeeding" without changing anything.
+			$slug = dirname( MCD_PLUGIN );
+			if ( 'eyeonportal' !== $slug ) {
+				return $this->update_error(
+					'invalid_plugin_folder',
+					sprintf(
+						"EyeOn Portal is installed in the non-standard folder '%s'. It must live in 'wp-content/plugins/eyeonportal'. Please reinstall it into the 'eyeonportal' folder, then update again.",
+						$slug
+					),
+					409
+				);
 			}
 
 			$params       = $request->get_json_params();
