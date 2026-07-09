@@ -264,6 +264,11 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
+			// Capture activation state before the upgrade. WordPress silently
+			// deactivates the plugin during Plugin_Upgrader::upgrade(), so we
+			// only restore activation if it was active beforehand.
+			$was_active = is_plugin_active( MCD_PLUGIN );
+
 			$temp_file = wp_tempnam( 'eyeonportal-update' );
 			if ( ! $temp_file ) {
 				return new WP_REST_Response(
@@ -355,7 +360,7 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				);
 			}
 
-			$this->ensure_plugin_active();
+			$this->ensure_plugin_active( $was_active );
 
 			clearstatcache();
 			$plugin_data = get_file_data(
@@ -374,13 +379,34 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			);
 		}
 
-		private function ensure_plugin_active() {
+		private function ensure_plugin_active( $was_active = true ) {
+			// Respect the prior state: if the plugin was deactivated before the
+			// update, leave it deactivated afterwards.
+			if ( ! $was_active ) {
+				return;
+			}
+
 			if ( ! function_exists( 'activate_plugin' ) ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
-			if ( ! is_plugin_active( MCD_PLUGIN ) ) {
-				activate_plugin( MCD_PLUGIN );
+			if ( is_plugin_active( MCD_PLUGIN ) ) {
+				return;
+			}
+
+			// Activate silently. The main plugin file is already loaded in this
+			// request, so a non-silent activation would run plugin_sandbox_scrape()
+			// and re-include the file, which can fatal on redeclared symbols and
+			// leave the plugin deactivated.
+			$result = activate_plugin( MCD_PLUGIN, '', false, true );
+
+			// Fallback: force the option directly if activation still failed.
+			if ( is_wp_error( $result ) || ! is_plugin_active( MCD_PLUGIN ) ) {
+				$active = get_option( 'active_plugins', array() );
+				if ( ! in_array( MCD_PLUGIN, $active, true ) ) {
+					$active[] = MCD_PLUGIN;
+					update_option( 'active_plugins', $active );
+				}
 			}
 		}
 	}

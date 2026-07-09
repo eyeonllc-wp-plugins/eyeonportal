@@ -3,26 +3,30 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from EyeOn Portal.
-Version: 1.0.24
+Version: 1.0.25
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
 */
 
-define('THREEJS_MAP_VERSION', '1.1.30');
-define('THREEJS_MAP_API_RESPONSE_KEY', 'eyeon_map_api_response');
+defined('THREEJS_MAP_VERSION')          OR define('THREEJS_MAP_VERSION', '1.1.30');
+defined('THREEJS_MAP_API_RESPONSE_KEY') OR define('THREEJS_MAP_API_RESPONSE_KEY', 'eyeon_map_api_response');
 
 require_once __DIR__ . '/vendor/autoload.php';
-require 'plugin-update-checker/plugin-update-checker.php';
+require_once 'plugin-update-checker/plugin-update-checker.php';
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
+// Guard against re-running during activate_plugin()'s plugin_sandbox_scrape(),
+// which re-includes this file after a remote self-update.
 global $eyeonportal_update_checker;
-$eyeonportal_update_checker = PucFactory::buildUpdateChecker(
-	'https://github.com/eyeonllc-wp-plugins/eyeonportal',
-	__FILE__,
-	'eyeonportal'
-);
-$eyeonportal_update_checker->setBranch('main');
+if ( ! isset( $eyeonportal_update_checker ) ) {
+	$eyeonportal_update_checker = PucFactory::buildUpdateChecker(
+		'https://github.com/eyeonllc-wp-plugins/eyeonportal',
+		__FILE__,
+		'eyeonportal'
+	);
+	$eyeonportal_update_checker->setBranch('main');
+}
 
 
 defined('MCD_REDUX_OPT_NAME')		OR define( 'MCD_REDUX_OPT_NAME', 'mcd_settings' );
@@ -32,14 +36,16 @@ $mcd_settings = get_option(MCD_REDUX_OPT_NAME);
 
 // Common Constants
 defined('EYEON_NAMESPACE') OR define('EYEON_NAMESPACE', 'eyeon_elementor_widgets');
-define( 'MCD_PLUGIN_NAME', 'eyeonportal' );
-define( 'MCD_PLUGIN_TITLE', 'EyeOn Portal' );
-define( 'MCD_PLUGIN', plugin_basename( __FILE__ ) );
-define( 'MCD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-define( 'MCD_PLUGIN_URL', plugins_url( '', __FILE__ ).'/' );
+defined('MCD_PLUGIN_NAME')  OR define( 'MCD_PLUGIN_NAME', 'eyeonportal' );
+defined('MCD_PLUGIN_TITLE') OR define( 'MCD_PLUGIN_TITLE', 'EyeOn Portal' );
+defined('MCD_PLUGIN')       OR define( 'MCD_PLUGIN', plugin_basename( __FILE__ ) );
+defined('MCD_PLUGIN_PATH')  OR define( 'MCD_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+defined('MCD_PLUGIN_URL')   OR define( 'MCD_PLUGIN_URL', plugins_url( '', __FILE__ ).'/' );
 
-$plugin_data = get_file_data(MCD_PLUGIN_PATH.'eyeonportal.php', array("version"=>"Version"));
-define('MCD_PLUGIN_VERSION', $plugin_data['version']);
+if ( ! defined('MCD_PLUGIN_VERSION') ) {
+	$plugin_data = get_file_data(MCD_PLUGIN_PATH.'eyeonportal.php', array("version"=>"Version"));
+	define('MCD_PLUGIN_VERSION', $plugin_data['version']);
+}
 
 // API to get data from mycenterdeals portal
 $api_base_url = 'https://web-backend-prod.eyeonportal.com';
