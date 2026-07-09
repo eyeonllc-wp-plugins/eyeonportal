@@ -189,190 +189,199 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			);
 		}
 
-		private function normalize_plugin_zip_file( $zip_path ) {
-			$zip = new ZipArchive();
-			if ( true !== $zip->open( $zip_path ) ) {
-				return new WP_Error(
-					'invalid_zip',
-					'Downloaded package is not a valid zip archive.',
-					array( 'status' => 502 )
-				);
-			}
-
-			if ( false !== $zip->locateName( 'eyeonportal/eyeonportal.php' ) ) {
-				$zip->close();
-				return $zip_path;
-			}
-
-			$plugin_path = false;
-			for ( $i = 0; $i < $zip->numFiles; $i++ ) {
-				$name = $zip->getNameIndex( $i );
-				if ( is_string( $name ) && preg_match( '#/eyeonportal\.php$#', $name ) ) {
-					$plugin_path = $name;
-					break;
-				}
-			}
-
-			if ( ! $plugin_path ) {
-				$zip->close();
-				return new WP_Error(
-					'plugin_entry_missing',
-					'Downloaded package is missing eyeonportal.php.',
-					array( 'status' => 502 )
-				);
-			}
-
-			$prefix      = preg_replace( '/eyeonportal\.php$/', '', $plugin_path );
-			$new_zip_path = $zip_path . '.normalized.zip';
-			$new_zip     = new ZipArchive();
-
-			if ( true !== $new_zip->open( $new_zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE ) ) {
-				$zip->close();
-				return new WP_Error(
-					'zip_create_failed',
-					'Could not create normalized plugin package.',
-					array( 'status' => 500 )
-				);
-			}
-
-			for ( $i = 0; $i < $zip->numFiles; $i++ ) {
-				$name = $zip->getNameIndex( $i );
-				if ( ! is_string( $name ) || strpos( $name, $prefix ) !== 0 || substr( $name, -1 ) === '/' ) {
-					continue;
-				}
-
-				$relative = substr( $name, strlen( $prefix ) );
-				if ( '' === $relative ) {
-					continue;
-				}
-
-				$new_zip->addFromString( 'eyeonportal/' . $relative, $zip->getFromIndex( $i ) );
-			}
-
-			$zip->close();
-			$new_zip->close();
-			@unlink( $zip_path );
-
-			return $new_zip_path;
+		private function update_error( $code, $message, $status = 500 ) {
+			return new WP_REST_Response(
+				array(
+					'success' => false,
+					'code'    => $code,
+					'message' => $message,
+				),
+				$status
+			);
 		}
 
-		private function install_plugin_package( $package_data, $previous_version, $target_version = null ) {
-			if ( ! function_exists( 'request_filesystem_credentials' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/file.php';
+		/**
+		 * Recursively delete a directory. Best-effort; never throws.
+		 */
+		private function rrmdir( $dir ) {
+			if ( empty( $dir ) || ! file_exists( $dir ) ) {
+				return;
 			}
-			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-
-			// Capture activation state before the upgrade. WordPress silently
-			// deactivates the plugin during Plugin_Upgrader::upgrade(), so we
-			// only restore activation if it was active beforehand.
-			$was_active = is_plugin_active( MCD_PLUGIN );
-
-			$temp_file = wp_tempnam( 'eyeonportal-update' );
-			if ( ! $temp_file ) {
-				return new WP_REST_Response(
-					array(
-						'success' => false,
-						'code'    => 'temp_file_failed',
-						'message' => 'Could not create temporary file.',
-					),
-					500
-				);
+			if ( is_link( $dir ) || ! is_dir( $dir ) ) {
+				@unlink( $dir );
+				return;
 			}
-
-			$temp_zip = $temp_file . '.zip';
-			if ( ! @rename( $temp_file, $temp_zip ) ) {
-				$temp_zip = $temp_file;
-			}
-
-			if ( false === file_put_contents( $temp_zip, $package_data ) ) {
-				@unlink( $temp_zip );
-				return new WP_REST_Response(
-					array(
-						'success' => false,
-						'code'    => 'write_package_failed',
-						'message' => 'Could not write package file.',
-					),
-					500
-				);
-			}
-
-			$normalized_zip = $this->normalize_plugin_zip_file( $temp_zip );
-			if ( is_wp_error( $normalized_zip ) ) {
-				@unlink( $temp_zip );
-				return new WP_REST_Response(
-					array(
-						'success' => false,
-						'code'    => $normalized_zip->get_error_code(),
-						'message' => $normalized_zip->get_error_message(),
-					),
-					502
-				);
-			}
-			$temp_zip = $normalized_zip;
-
-			$transient = get_site_transient( 'update_plugins' );
-			if ( ! is_object( $transient ) ) {
-				$transient = new stdClass();
-			}
-			if ( ! isset( $transient->response ) || ! is_array( $transient->response ) ) {
-				$transient->response = array();
-			}
-
-			$transient->response[ MCD_PLUGIN ] = (object) array(
-				'package'     => $temp_zip,
-				'new_version' => $target_version ? $target_version : $previous_version,
-				'plugin'      => MCD_PLUGIN,
-			);
-			set_site_transient( 'update_plugins', $transient );
-
-			$skin     = new Automatic_Upgrader_Skin();
-			$upgrader = new Plugin_Upgrader( $skin );
-			$result   = $upgrader->upgrade( MCD_PLUGIN );
-
-			@unlink( $temp_zip );
-
-			if ( is_wp_error( $result ) ) {
-				return new WP_REST_Response(
-					array(
-						'success' => false,
-						'code'    => 'upgrader_failed',
-						'message' => $result->get_error_message(),
-					),
-					500
-				);
-			}
-
-			if ( false === $result ) {
-				$error_message = 'Plugin upgrade failed.';
-				if ( is_wp_error( $skin->result ) ) {
-					$error_message = $skin->result->get_error_message();
+			$items = @scandir( $dir );
+			if ( is_array( $items ) ) {
+				foreach ( $items as $item ) {
+					if ( '.' === $item || '..' === $item ) {
+						continue;
+					}
+					$path = $dir . '/' . $item;
+					if ( is_dir( $path ) && ! is_link( $path ) ) {
+						$this->rrmdir( $path );
+					} else {
+						@unlink( $path );
+					}
 				}
+			}
+			@rmdir( $dir );
+		}
 
-				return new WP_REST_Response(
-					array(
-						'success' => false,
-						'code'    => 'upgrader_failed',
-						'message' => $error_message,
-					),
-					500
-				);
+		/**
+		 * Find the directory that directly contains eyeonportal.php inside an
+		 * extracted package. Handles both a normalized "eyeonportal/" root and
+		 * GitHub's "owner-repo-<sha>/" zipball root.
+		 */
+		private function locate_plugin_root( $base ) {
+			if ( file_exists( $base . '/eyeonportal.php' ) ) {
+				return $base;
+			}
+			$items = @scandir( $base );
+			if ( ! is_array( $items ) ) {
+				return false;
+			}
+			foreach ( $items as $item ) {
+				if ( '.' === $item || '..' === $item ) {
+					continue;
+				}
+				$path = $base . '/' . $item;
+				if ( is_dir( $path ) && file_exists( $path . '/eyeonportal.php' ) ) {
+					return $path;
+				}
+			}
+			return false;
+		}
+
+		/**
+		 * Install the plugin package using native filesystem operations only.
+		 *
+		 * This deliberately avoids WP_Filesystem / Plugin_Upgrader (which fail
+		 * with an opaque "Plugin upgrade failed." whenever the host cannot get
+		 * "direct" filesystem access) and never deactivates the plugin. Files
+		 * are extracted to a staging directory on the same filesystem as the
+		 * plugins directory, then swapped in atomically with rename(), with a
+		 * full rollback if anything goes wrong.
+		 */
+		private function install_plugin_package( $package_data, $previous_version, $target_version = null ) {
+			if ( ! class_exists( 'ZipArchive' ) ) {
+				return $this->update_error( 'zip_unavailable', 'The PHP ZipArchive extension is not available on this server.', 500 );
+			}
+			if ( ! function_exists( 'is_plugin_active' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
 			}
 
+			$slug        = dirname( MCD_PLUGIN );
+			$plugins_dir = defined( 'WP_PLUGIN_DIR' ) ? WP_PLUGIN_DIR : WP_CONTENT_DIR . '/plugins';
+			$plugins_dir = rtrim( $plugins_dir, '/\\' );
+			$plugin_dir  = $plugins_dir . '/' . $slug;
+			$was_active  = is_plugin_active( MCD_PLUGIN );
+
+			// Preflight: we must be able to write into the plugins directory and
+			// (if present) the current plugin directory. Fail loudly and early,
+			// before touching anything, if we cannot.
+			if ( ! is_writable( $plugins_dir ) ) {
+				return $this->update_error( 'plugins_dir_not_writable', 'The plugins directory is not writable by the web server: ' . $plugins_dir, 500 );
+			}
+			if ( is_dir( $plugin_dir ) && ! is_writable( $plugin_dir ) ) {
+				return $this->update_error( 'plugin_dir_not_writable', 'The plugin directory is not writable by the web server: ' . $plugin_dir, 500 );
+			}
+
+			$work_id     = 'eyeon-upd-' . substr( md5( uniqid( '', true ) ), 0, 12 );
+			$tmp_zip     = $plugins_dir . '/.' . $work_id . '.zip';
+			$staging_dir = $plugins_dir . '/.' . $work_id;
+			$backup_dir  = $plugins_dir . '/.' . $work_id . '-bak';
+
+			$cleanup = function () use ( $tmp_zip, $staging_dir ) {
+				if ( file_exists( $tmp_zip ) ) {
+					@unlink( $tmp_zip );
+				}
+				$this->rrmdir( $staging_dir );
+			};
+
+			// 1) Persist the package to disk (same filesystem as the destination).
+			if ( false === @file_put_contents( $tmp_zip, $package_data ) ) {
+				$cleanup();
+				return $this->update_error( 'write_failed', 'Could not write the plugin package to disk.', 500 );
+			}
+			unset( $package_data );
+
+			// 2) Extract with the native ZipArchive (no WP_Filesystem required).
+			$zip     = new ZipArchive();
+			$opened  = $zip->open( $tmp_zip );
+			if ( true !== $opened ) {
+				$cleanup();
+				return $this->update_error( 'invalid_zip', 'The downloaded package is not a valid zip archive (code ' . $opened . ').', 502 );
+			}
+			if ( ! is_dir( $staging_dir ) && ! @mkdir( $staging_dir, 0755, true ) && ! is_dir( $staging_dir ) ) {
+				$zip->close();
+				$cleanup();
+				return $this->update_error( 'staging_failed', 'Could not create the staging directory for the update.', 500 );
+			}
+			if ( ! $zip->extractTo( $staging_dir ) ) {
+				$zip->close();
+				$cleanup();
+				return $this->update_error( 'extract_failed', 'Could not extract the plugin package.', 500 );
+			}
+			$zip->close();
+
+			// 3) Find and validate the new plugin root.
+			$new_root = $this->locate_plugin_root( $staging_dir );
+			if ( ! $new_root ) {
+				$cleanup();
+				return $this->update_error( 'plugin_entry_missing', 'The package does not contain eyeonportal.php.', 502 );
+			}
+			$new_data = get_file_data( $new_root . '/eyeonportal.php', array( 'version' => 'Version' ) );
+			if ( empty( $new_data['version'] ) ) {
+				$cleanup();
+				return $this->update_error( 'invalid_plugin', 'The new plugin package is missing a version header.', 502 );
+			}
+
+			// 4) Atomic swap with rollback. rename() is atomic on the same
+			//    filesystem, and staging/backup live inside the plugins dir.
+			$had_existing = is_dir( $plugin_dir );
+			if ( $had_existing ) {
+				$this->rrmdir( $backup_dir );
+				if ( ! @rename( $plugin_dir, $backup_dir ) ) {
+					$cleanup();
+					return $this->update_error( 'backup_failed', 'Could not move the current plugin aside for the update.', 500 );
+				}
+			}
+
+			if ( ! @rename( $new_root, $plugin_dir ) ) {
+				// Roll back to the previous version.
+				if ( $had_existing && ! is_dir( $plugin_dir ) ) {
+					@rename( $backup_dir, $plugin_dir );
+				}
+				$cleanup();
+				$this->rrmdir( $backup_dir );
+				return $this->update_error( 'install_failed', 'Could not install the new plugin files. The previous version has been restored.', 500 );
+			}
+
+			// 5) Success — remove backup and staging remnants.
+			$this->rrmdir( $backup_dir );
+			$cleanup();
+
+			// 6) Invalidate caches so the next request loads the new code.
+			clearstatcache( true );
+			if ( function_exists( 'opcache_reset' ) ) {
+				@opcache_reset();
+			}
+			if ( function_exists( 'wp_clean_plugins_cache' ) ) {
+				wp_clean_plugins_cache( true );
+			}
+
+			// 7) Keep the plugin active (it was never deactivated).
 			$this->ensure_plugin_active( $was_active );
 
-			clearstatcache();
-			$plugin_data = get_file_data(
-				MCD_PLUGIN_PATH . 'eyeonportal.php',
-				array( 'version' => 'Version' )
-			);
+			clearstatcache( true );
+			$installed = get_file_data( $plugin_dir . '/eyeonportal.php', array( 'version' => 'Version' ) );
 
 			return rest_ensure_response(
 				array(
 					'success'           => true,
 					'previous_version'  => $previous_version,
-					'installed_version' => $plugin_data['version'],
+					'installed_version' => ! empty( $installed['version'] ) ? $installed['version'] : $new_data['version'],
 					'plugin_active'     => is_plugin_active( MCD_PLUGIN ),
 					'message'           => 'Plugin updated successfully',
 				)
