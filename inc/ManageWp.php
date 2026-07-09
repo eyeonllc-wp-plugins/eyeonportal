@@ -355,6 +355,8 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				);
 			}
 
+			$this->ensure_plugin_active();
+
 			clearstatcache();
 			$plugin_data = get_file_data(
 				MCD_PLUGIN_PATH . 'eyeonportal.php',
@@ -366,9 +368,20 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 					'success'           => true,
 					'previous_version'  => $previous_version,
 					'installed_version' => $plugin_data['version'],
+					'plugin_active'     => is_plugin_active( MCD_PLUGIN ),
 					'message'           => 'Plugin updated successfully',
 				)
 			);
+		}
+
+		private function ensure_plugin_active() {
+			if ( ! function_exists( 'activate_plugin' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/plugin.php';
+			}
+
+			if ( ! is_plugin_active( MCD_PLUGIN ) ) {
+				activate_plugin( MCD_PLUGIN );
+			}
 		}
 	}
 
