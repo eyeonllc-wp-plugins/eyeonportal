@@ -248,7 +248,7 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 
 		/**
 		 * Remove dev-only paths that may be present in GitHub zipballs.
-		 * Release zips built by CI already omit these via .distignore.
+		 * Release zips built by CI already omit these paths.
 		 */
 		private function remove_dev_paths_from_plugin_root( $root ) {
 			$paths = array( '.cursor', '.github', '.vscode', '.gitignore' );
@@ -258,6 +258,44 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 					$this->rrmdir( $full );
 				} elseif ( is_file( $full ) ) {
 					@unlink( $full );
+				}
+			}
+		}
+
+		/**
+		 * Keep only the map release version referenced by THREEJS_MAP_VERSION.
+		 */
+		private function remove_unused_map_releases_from_plugin_root( $root ) {
+			$map_releases_dir = $root . '/assets/map-releases';
+			if ( ! is_dir( $map_releases_dir ) ) {
+				return;
+			}
+
+			$active_version = null;
+			$plugin_php       = $root . '/eyeonportal.php';
+			if ( is_file( $plugin_php ) ) {
+				$content = @file_get_contents( $plugin_php );
+				if ( is_string( $content ) && preg_match( "/OR define\s*\(\s*'THREEJS_MAP_VERSION'\s*,\s*'([^']+)'\s*\)/", $content, $matches ) ) {
+					$active_version = $matches[1];
+				}
+			}
+
+			if ( ! $active_version ) {
+				return;
+			}
+
+			$items = @scandir( $map_releases_dir );
+			if ( ! is_array( $items ) ) {
+				return;
+			}
+
+			foreach ( $items as $item ) {
+				if ( '.' === $item || '..' === $item ) {
+					continue;
+				}
+				$path = $map_releases_dir . '/' . $item;
+				if ( is_dir( $path ) && $item !== $active_version ) {
+					$this->rrmdir( $path );
 				}
 			}
 		}
@@ -366,6 +404,7 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				return $this->update_error( 'plugin_entry_missing', 'The package does not contain eyeonportal.php.', 502 );
 			}
 			$this->remove_dev_paths_from_plugin_root( $new_root );
+			$this->remove_unused_map_releases_from_plugin_root( $new_root );
 			$new_data = get_file_data( $new_root . '/eyeonportal.php', array( 'version' => 'Version' ) );
 			if ( empty( $new_data['version'] ) ) {
 				$cleanup();

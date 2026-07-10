@@ -45,15 +45,29 @@ jobs:
           plugin_dir="$build_dir/eyeonportal"
           mkdir -p "$plugin_dir"
 
-          excludes=()
-          while IFS= read -r line || [ -n "$line" ]; do
-            line="${line%%#*}"
-            line="$(echo "$line" | xargs)"
-            [ -z "$line" ] && continue
-            excludes+=(--exclude="$line")
-          done < .distignore
+          map_version="$(grep -E "OR define\('THREEJS_MAP_VERSION'" eyeonportal.php | head -1 | sed -E "s/.*OR define\('THREEJS_MAP_VERSION', *'([^']+)'.*/\1/")"
+          if [ -z "$map_version" ]; then
+            echo "Error: THREEJS_MAP_VERSION not found in eyeonportal.php."
+            exit 1
+          fi
 
-          rsync -a "${excludes[@]}" ./ "$plugin_dir/"
+          rsync -a \
+            --exclude='.cursor/' \
+            --exclude='.github/' \
+            --exclude='.vscode/' \
+            --exclude='.gitignore' \
+            ./ "$plugin_dir/"
+
+          map_releases_dir="$plugin_dir/assets/map-releases"
+          if [ -d "$map_releases_dir" ]; then
+            for version_dir in "$map_releases_dir"/*; do
+              [ -d "$version_dir" ] || continue
+              if [ "$(basename "$version_dir")" != "$map_version" ]; then
+                rm -rf "$version_dir"
+              fi
+            done
+          fi
+
           (cd "$build_dir" && zip -qr "$GITHUB_WORKSPACE/eyeonportal.zip" eyeonportal)
           rm -rf "$build_dir"
 
