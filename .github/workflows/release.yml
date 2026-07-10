@@ -38,6 +38,25 @@ jobs:
             exit 1
           fi
 
+      - name: Build release zip
+        run: |
+          set -euo pipefail
+          build_dir="$(mktemp -d)"
+          plugin_dir="$build_dir/eyeonportal"
+          mkdir -p "$plugin_dir"
+
+          excludes=()
+          while IFS= read -r line || [ -n "$line" ]; do
+            line="${line%%#*}"
+            line="$(echo "$line" | xargs)"
+            [ -z "$line" ] && continue
+            excludes+=(--exclude="$line")
+          done < .distignore
+
+          rsync -a "${excludes[@]}" ./ "$plugin_dir/"
+          (cd "$build_dir" && zip -qr "$GITHUB_WORKSPACE/eyeonportal.zip" eyeonportal)
+          rm -rf "$build_dir"
+
       - name: Create tag and GitHub release
         env:
           STABLE_TAG: ${{ steps.check.outputs.stable_tag }}
@@ -49,7 +68,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag "$STABLE_TAG"
           git push origin "$STABLE_TAG"
-          gh release create "$STABLE_TAG" --notes "$commit_message"
+          gh release create "$STABLE_TAG" --notes "$commit_message" eyeonportal.zip
           echo "Version released: $STABLE_TAG"
 
   slackNotification:

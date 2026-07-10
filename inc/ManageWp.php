@@ -247,6 +247,22 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 		}
 
 		/**
+		 * Remove dev-only paths that may be present in GitHub zipballs.
+		 * Release zips built by CI already omit these via .distignore.
+		 */
+		private function remove_dev_paths_from_plugin_root( $root ) {
+			$paths = array( '.cursor', '.github', '.vscode', '.gitignore' );
+			foreach ( $paths as $path ) {
+				$full = $root . '/' . $path;
+				if ( is_dir( $full ) ) {
+					$this->rrmdir( $full );
+				} elseif ( is_file( $full ) ) {
+					@unlink( $full );
+				}
+			}
+		}
+
+		/**
 		 * Find the directory that directly contains eyeonportal.php inside an
 		 * extracted package. Handles both a normalized "eyeonportal/" root and
 		 * GitHub's "owner-repo-<sha>/" zipball root.
@@ -349,6 +365,7 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 				$cleanup();
 				return $this->update_error( 'plugin_entry_missing', 'The package does not contain eyeonportal.php.', 502 );
 			}
+			$this->remove_dev_paths_from_plugin_root( $new_root );
 			$new_data = get_file_data( $new_root . '/eyeonportal.php', array( 'version' => 'Version' ) );
 			if ( empty( $new_data['version'] ) ) {
 				$cleanup();
