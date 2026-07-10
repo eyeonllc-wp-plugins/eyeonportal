@@ -251,7 +251,7 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 		 * Release zips built by CI already omit these paths.
 		 */
 		private function remove_dev_paths_from_plugin_root( $root ) {
-			$paths = array( '.cursor', '.github', '.vscode', '.gitignore' );
+			$paths = array( '.git', '.cursor', '.github', '.vscode', '.gitignore' );
 			foreach ( $paths as $path ) {
 				$full = $root . '/' . $path;
 				if ( is_dir( $full ) ) {

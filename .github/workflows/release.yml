@@ -52,6 +52,7 @@ jobs:
           fi
 
           rsync -a \
+            --exclude='.git/' \
             --exclude='.cursor/' \
             --exclude='.github/' \
             --exclude='.vscode/' \
