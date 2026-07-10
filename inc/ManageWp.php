@@ -136,7 +136,33 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 			);
 		}
 
+		/**
+		 * Prevent any cache layer (WordPress, page-cache plugins, or a server
+		 * cache such as RunCloud/Nginx FastCGI) from storing Manage WP API
+		 * responses. These must always reflect the live plugin state.
+		 */
+		private function send_no_cache_headers() {
+			if ( ! defined( 'DONOTCACHEPAGE' ) ) {
+				define( 'DONOTCACHEPAGE', true );
+			}
+			if ( ! defined( 'DONOTCACHEOBJECT' ) ) {
+				define( 'DONOTCACHEOBJECT', true );
+			}
+			if ( function_exists( 'nocache_headers' ) ) {
+				nocache_headers();
+			}
+			if ( ! headers_sent() ) {
+				header( 'Cache-Control: no-cache, no-store, must-revalidate, max-age=0' );
+				header( 'Pragma: no-cache' );
+				header( 'Expires: 0' );
+				// Nginx/RunCloud FastCGI cache honours this to skip caching.
+				header( 'X-Accel-Expires: 0' );
+			}
+		}
+
 		public function handle_status( $request ) {
+			$this->send_no_cache_headers();
+
 			$auth = $this->verify_token( $request );
 			if ( is_wp_error( $auth ) ) {
 				return $auth;
@@ -160,6 +186,8 @@ if ( ! class_exists( 'EyeOnManageWp' ) ) {
 		}
 
 		public function handle_update( $request ) {
+			$this->send_no_cache_headers();
+
 			$auth = $this->verify_token( $request );
 			if ( is_wp_error( $auth ) ) {
 				return $auth;
