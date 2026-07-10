@@ -17,6 +17,7 @@
 !composer.lock
 !eyeonportal.php
 !readme.txt
+!README.md
 !uninstall.php
 
 .DS_Store

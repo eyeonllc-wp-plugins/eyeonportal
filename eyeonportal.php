@@ -3,7 +3,7 @@
 Plugin Name: EyeOn Portal
 Plugin URI: https://eyeonllc.com/
 Description: Show Deals, Stores & Events of a Center from EyeOn Portal.
-Version: 1.0.34
+Version: 1.0.35
 Author: EyeOn LLC
 Author URI: https://eyeonllc.com/
 Licence: GPLv2 or later
@@ -21,7 +21,7 @@ use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 global $eyeonportal_update_checker;
 if ( ! isset( $eyeonportal_update_checker ) ) {
 	$eyeonportal_update_checker = PucFactory::buildUpdateChecker(
-		'https://github.com/eyeonllc-wp-plugins/eyeonportal',
+		'https://github.com/mycenterportal/wp-eyeonportal-plugin',
 		__FILE__,
 		'eyeonportal'
 	);
